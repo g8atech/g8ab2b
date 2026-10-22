@@ -35,11 +35,21 @@ const include = [
 const prima = ['Spendi migliaia di euro subito per i computer', 'Ogni guasto è una fattura del tecnico', 'Backup su una chiavetta, se qualcuno se ne ricorda', 'Tre o quattro fornitori, nessuno responsabile', 'Il titolare fa il tecnico dell\'ufficio'];
 const dopo = ['Nessun investimento iniziale: un canone mensile', 'Assistenza e riparazioni già comprese', 'Backup automatici e controllati ogni giorno', 'Un solo partner e un solo numero per tutto', 'Tu lavori, all\'informatica pensiamo noi'];
 
-const perChi = [
-  { icon: 'briefcase', t: 'Studi professionali', d: 'Commercialisti, consulenti, avvocati, tecnici' },
-  { icon: 'building', t: 'PMI e uffici', d: 'Da poche a decine di postazioni' },
-  { icon: 'medical', t: 'Studi medici e dentistici', d: 'Dati delicati, sempre protetti' },
-  { icon: 'store', t: 'Negozi e attività', d: 'Cassa, PC e stampanti che non si fermano' },
+const settori = [
+  { id: 'commercialisti', icon: 'briefcase', t: 'Commercialisti e consulenti', claim: "Archivi dei clienti al sicuro e scadenze che non aspettano un PC lento.",
+    kit: [['pc', 'Un PC veloce per ogni postazione'], ['server', 'Server o NAS con backup per gli archivi clienti'], ['printer', 'Multifunzione per stampare e scansionare i documenti'], ['shieldok', 'Firewall e protezione dei dati, in regola con il GDPR']] },
+  { id: 'immobiliari', icon: 'home', t: 'Agenzie immobiliari', claim: 'Annunci, foto e contratti sempre a portata, in ufficio e in giro.',
+    kit: [['laptop', 'Notebook per gli agenti che lavorano fuori'], ['server', 'NAS per foto, planimetrie e contratti'], ['printer', 'Stampante a colori per vetrine e annunci'], ['wifi', 'Fibra e Wi‑Fi veloce, anche per i clienti']] },
+  { id: 'medici', icon: 'medical', t: 'Studi medici e dentistici', claim: 'Agenda, cartelle e radiografie che devono esserci, sempre.',
+    kit: [['pc', 'PC in reception e negli studi'], ['server', 'Server con backup per cartelle e immagini'], ['shieldok', 'Protezione dei dati sanitari dei pazienti'], ['printer', 'Stampanti per referti, ricette e fatture']] },
+  { id: 'tecnici', icon: 'ruler', t: 'Studi tecnici', claim: 'Architetti, ingegneri e geometri: progetti pesanti, tempi stretti.',
+    kit: [['pc', 'Workstation potenti per CAD e rendering'], ['server', 'NAS per progetti e tavole condivise'], ['printer', 'Multifunzione per tavole e documenti'], ['refresh', 'Backup automatici dei progetti, ogni giorno']] },
+  { id: 'produttive', icon: 'factory', t: 'Aziende produttive', claim: "Ufficio e reparto collegati, perché un fermo costa produzione.",
+    kit: [['pc', 'PC per uffici e postazioni di reparto'], ['wifi', 'Rete cablata e Wi‑Fi anche nel capannone'], ['printer', 'Stampanti di etichette e multifunzione'], ['zap', 'Server protetti da blackout e sbalzi di corrente']] },
+  { id: 'negozi', icon: 'store', t: 'Negozi e attività', claim: 'Cassa, ordini e clienti: quando il PC si ferma, si ferma il negozio.',
+    kit: [['pc', 'PC per la cassa e il gestionale'], ['printer', 'Stampanti per ricevute, etichette e documenti'], ['wifi', 'Fibra e Wi‑Fi stabili'], ['bot', 'Assistente AI su WhatsApp per rispondere ai clienti']] },
+  { id: 'pmi', icon: 'building', t: 'PMI e uffici', claim: "Da poche a decine di postazioni: un solo partner per tutta l'informatica.",
+    kit: [['pc', 'PC e notebook per tutto il personale'], ['server', 'Server, NAS e backup automatici'], ['printer', 'Multifunzione con toner inclusi'], ['wifi', 'Rete, firewall, fibra e centralino']] },
 ];
 
 const faqLd = {
@@ -176,16 +186,35 @@ const serviceLd = {
   </section>
 
   <!-- PER CHI -->
-  <section class="section">
+  <section class="section" id="settori">
     <div class="wrap">
       <div class="head" data-reveal>
         <span class="kicker">Per chi è</span>
-        <h2 class="h h2">Per chi vuole lavorare, <span class="red">non fare il tecnico</span></h2>
+        <h2 class="h h2">Il Noleggio Assistito, <span class="red">su misura per il tuo lavoro</span></h2>
+        <p class="lead">Scegli la tua attività e guarda cosa mettiamo nel canone.</p>
       </div>
-      <div class="who">
-        {perChi.map((p, i) => (
-          <div class="who__card glow" data-reveal style={`--d:${i * 0.08}s`}><Icon name={p.icon} size={30} stroke="#e30613" width={1.8} /><h3>{p.t}</h3><p>{p.d}</p></div>
-        ))}
+      <div class="sect" data-reveal>
+        <div class="sect__tabs" role="tablist" aria-label="Settori">
+          {settori.map((x, i) => (
+            <button class="sect__tab" role="tab" type="button" id={`tab-${x.id}`} aria-controls={`pan-${x.id}`} aria-selected={i === 0 ? 'true' : 'false'} tabindex={i === 0 ? 0 : -1}>
+              <Icon name={x.icon} size={22} width={1.8} /><span>{x.t}</span>
+            </button>
+          ))}
+        </div>
+        <div class="sect__panels">
+          {settori.map((x, i) => (
+            <div class="sect__panel" role="tabpanel" id={`pan-${x.id}`} aria-labelledby={`tab-${x.id}`} hidden={i !== 0}>
+              <span class="sect__ic"><Icon name={x.icon} size={30} stroke="#fff" width={1.8} /></span>
+              <h3 class="h sect__h">{x.t}</h3>
+              <p class="sect__claim">{x.claim}</p>
+              <ul class="sect__kit">
+                {x.kit.map(([ic, txt], k) => <li style={`--k:${k}`}><span class="sect__kic"><Icon name={ic} size={20} stroke="#e30613" width={1.9} /></span>{txt}</li>)}
+              </ul>
+              <p class="sect__plus"><Icon name="check" size={16} width={3} />Sempre inclusi: assistenza, monitoraggio 24/7 e sostituzione dei guasti</p>
+              <a class="btn btn--red" href={waLink(`Ciao, ho un'attività nel settore "${x.t}" e vorrei sapere come funziona il Noleggio Assistito.`)}><Icon name="wa" />Chiedi il canone per {x.t.toLowerCase()}</a>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   </section>
@@ -292,6 +321,32 @@ const serviceLd = {
     </div>
   </section>
 </Base>
+
+<script>
+  // Schede dei settori: clic, frecce e Home/Fine come nelle tab standard.
+  const tabs = [...document.querySelectorAll<HTMLButtonElement>('.sect__tab')];
+  const select = (t: HTMLButtonElement, focus = false) => {
+    for (const x of tabs) {
+      const on = x === t;
+      x.setAttribute('aria-selected', String(on));
+      x.tabIndex = on ? 0 : -1;
+      const pan = document.getElementById(x.getAttribute('aria-controls')!);
+      if (pan) pan.hidden = !on;
+    }
+    if (focus) t.focus();
+    t.scrollIntoView({ block: 'nearest', inline: 'nearest', behavior: 'smooth' });
+  };
+  tabs.forEach((t, i) => {
+    t.addEventListener('click', () => select(t));
+    t.addEventListener('keydown', (e) => {
+      const k = e.key;
+      const n = k === 'ArrowDown' || k === 'ArrowRight' ? i + 1 : k === 'ArrowUp' || k === 'ArrowLeft' ? i - 1 : k === 'Home' ? 0 : k === 'End' ? tabs.length - 1 : null;
+      if (n === null) return;
+      e.preventDefault();
+      select(tabs[(n + tabs.length) % tabs.length], true);
+    });
+  });
+</script>
 
 <style>
   .head { display: flex; flex-direction: column; gap: 0.9rem; max-width: 50rem; }
@@ -426,11 +481,36 @@ const serviceLd = {
   @media (max-width: 560px) { .steps { grid-template-columns: 1fr; } }
 
   /* PER CHI */
-  .who { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-top: 2.75rem; }
-  .who__card { padding: 1.6rem; border-radius: 18px; background: #fff; border: 1px solid var(--line); }
-  .who__card h3 { margin-top: 1rem; font-size: 1.15rem; }
-  .who__card p { margin-top: 0.3rem; color: var(--muted); font-size: 0.95rem; }
-  @media (max-width: 900px) { .who { grid-template-columns: 1fr 1fr; } }
+  .sect { display: grid; grid-template-columns: 20rem 1fr; gap: 1.25rem; margin-top: 2.5rem; align-items: start; }
+  .sect__tabs { display: flex; flex-direction: column; gap: 0.4rem; }
+  .sect__tab { display: flex; align-items: center; gap: 0.8rem; min-height: 3.25rem; padding: 0.6rem 1rem; border-radius: 12px; border: 1px solid var(--line); background: #fff; color: var(--ink); font: inherit; font-weight: 700; font-size: 1rem; text-align: left; cursor: pointer; transition: background-color 0.2s, color 0.2s, transform 0.2s, border-color 0.2s; }
+  .sect__tab :global(svg) { flex: none; color: var(--red); }
+  .sect__tab:hover { border-color: #f3b4b7; transform: translateX(3px); }
+  .sect__tab[aria-selected='true'] { background: var(--ink); border-color: var(--ink); color: #fff; box-shadow: 0 10px 24px rgba(11, 11, 13, 0.18); }
+  .sect__tab[aria-selected='true'] :global(svg) { color: #ff4d4d; }
+  .sect__panels { position: relative; }
+  .sect__panel { position: relative; overflow: hidden; padding: clamp(1.5rem, 3vw, 2.5rem); border-radius: 22px; background: var(--paper); border: 1px solid var(--line); }
+  .sect__panel::after { content: ''; position: absolute; right: -12%; top: -30%; width: 55%; aspect-ratio: 1; border-radius: 50%; background: radial-gradient(circle, rgba(255, 26, 26, 0.14), transparent 65%); pointer-events: none; }
+  .sect__ic { display: grid; place-items: center; width: 3.6rem; height: 3.6rem; border-radius: 16px; background: var(--grad); box-shadow: 0 10px 24px rgba(227, 6, 19, 0.3); }
+  .sect__h { margin-top: 1.1rem; font-size: clamp(1.8rem, 3vw, 2.5rem); }
+  .sect__claim { margin-top: 0.5rem; font-size: 1.15rem; color: var(--muted); max-width: 38rem; }
+  .sect__kit { list-style: none; margin: 1.4rem 0 0; padding: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 0.7rem; }
+  .sect__kit li { display: flex; align-items: center; gap: 0.8rem; padding: 0.85rem 1rem; border-radius: 14px; background: #fff; border: 1px solid var(--line); font-weight: 600; }
+  .sect__kic { display: grid; place-items: center; width: 2.4rem; height: 2.4rem; border-radius: 10px; background: #fdecee; flex: none; }
+  .sect__plus { display: flex; align-items: center; gap: 0.5rem; margin: 1.1rem 0 1.4rem; font-weight: 700; font-size: 0.95rem; }
+  .sect__plus :global(svg) { color: var(--live); flex: none; }
+  .js .sect__panel:not([hidden]) .sect__kit li { animation: kitin 0.45s cubic-bezier(0.2, 0.7, 0.2, 1) both; animation-delay: calc(var(--k) * 0.07s); }
+  .js .sect__panel:not([hidden]) { animation: panin 0.4s ease both; }
+  @keyframes kitin { from { opacity: 0; transform: translateY(10px); } }
+  @keyframes panin { from { opacity: 0.4; } }
+  @media (max-width: 900px) {
+    .sect { grid-template-columns: 1fr; }
+    .sect__tabs { flex-direction: row; overflow-x: auto; padding-bottom: 0.4rem; scroll-snap-type: x mandatory; scrollbar-width: none; -webkit-mask-image: linear-gradient(90deg, #000 82%, transparent); mask-image: linear-gradient(90deg, #000 82%, transparent); }
+    .sect__tabs::-webkit-scrollbar { display: none; }
+    .sect__tab { flex: none; scroll-snap-align: start; }
+    .sect__tab:hover { transform: none; }
+  }
+  @media (max-width: 600px) { .sect__kit { grid-template-columns: 1fr; } .sect__panel .btn { width: 100%; } }
 
   /* QUANTO COSTA */
   .price { position: relative; overflow: hidden; display: grid; grid-template-columns: 1.3fr 1fr; gap: 2rem 3rem; align-items: center; padding: clamp(2rem, 5vw, 3.5rem); border-radius: 26px; background: var(--grad); color: #fff; box-shadow: 0 30px 70px rgba(227, 6, 19, 0.3); }
