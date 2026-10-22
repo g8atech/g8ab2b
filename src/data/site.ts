@@ -36,6 +36,8 @@ export const GRUPPO = [
 ];
 
 export const FAQ = [
+  { q: "Cos'è il Noleggio Assistito?", a: "È il metodo G8A: computer, server, stampanti e assistenza tecnica in un unico canone mensile. Non compri le macchine, non paghi gli interventi: ci pensiamo noi a installare, controllare, aggiornare e sostituire." },
+  { q: 'Conviene rispetto a comprare i computer?', a: "Non immobilizzi capitale, il canone è un costo fisso e prevedibile, e non paghi riparazioni né il tecnico a chiamata. Quando una macchina invecchia o si guasta, la sostituiamo noi." },
   { q: "C'è un vincolo di durata?", a: 'No, nessun vincolo: la disdetta è libera.' },
   { q: "L'assistenza è inclusa?", a: 'Sì, con un numero dedicato raggiungibile anche su WhatsApp.' },
   { q: 'Quali sono i tempi di installazione?', a: 'Di solito da 1 a 4 giorni lavorativi.' },

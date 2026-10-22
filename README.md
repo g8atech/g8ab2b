@@ -35,4 +35,5 @@ Finché il sito è in anteprima su `*.vercel.app`, `public/robots.txt` blocca l'
 
 - Foto robotiche originali in alta risoluzione (ora `robot-coppia.jpg` è un ritaglio della locandina).
 - Loghi delle altre testate (Borsa Italiana, Repubblica, La Stampa, ANSA, ItalWire, Finanza Flash, Il Secolo XIX).
+- Prezzo "da € al mese" del Noleggio Assistito, se si vuole mostrarlo.
 - Pagine servizio, sedi e città previste nell'architettura.
