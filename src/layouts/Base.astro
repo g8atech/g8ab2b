@@ -1,0 +1,182 @@
+---
+import '../styles/global.css';
+import { Image } from 'astro:assets';
+import Icon from '../components/Icon.astro';
+import logoWhite from '../assets/logo-g8a-bianco.png';
+import { SITE, SEDI, GRUPPO, waLink, telLink } from '../data/site';
+
+interface Props { title: string; description: string; jsonLd?: object[] }
+const { title, description, jsonLd = [] } = Astro.props;
+const cleanPath = Astro.url.pathname.replace(/(index)?\.html$/, '').replace(/\/$/, '') || '/';
+const canonical = new URL(cleanPath, SITE.url).href;
+const fullTitle = title.includes(SITE.name) ? title : `${title} | ${SITE.name}`;
+
+const organization = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  '@id': `${SITE.url}/#organization`,
+  name: SITE.name,
+  legalName: SITE.company,
+  vatID: `IT${SITE.vat}`,
+  url: SITE.url,
+  logo: `${SITE.url}/logo.png`,
+  email: SITE.email,
+  telephone: '+39 ' + SITE.phone,
+  slogan: SITE.tagline,
+  areaServed: ['Provincia di Varese', 'Città metropolitana di Milano', 'Provincia di Lecco'],
+  address: { '@type': 'PostalAddress', streetAddress: 'Via Caronno Varesino 33', postalCode: '21048', addressLocality: 'Solbiate Arno', addressRegion: 'VA', addressCountry: 'IT' },
+  subOrganization: GRUPPO.map((g) => ({ '@type': 'Organization', name: g.name, url: g.url })),
+};
+const stores = SEDI.filter((s) => !s.operativa).map((s) => ({
+  '@context': 'https://schema.org',
+  '@type': 'LocalBusiness',
+  name: `${SITE.name} ${s.city}`,
+  parentOrganization: { '@id': `${SITE.url}/#organization` },
+  telephone: '+39 ' + SITE.phone,
+  address: { '@type': 'PostalAddress', streetAddress: s.address, postalCode: s.cap, addressLocality: s.city, addressRegion: s.province, addressCountry: 'IT' },
+}));
+const schemas = [organization, ...stores, ...jsonLd];
+---
+<!doctype html>
+<html lang="it">
+  <head>
+    <meta charset="utf-8" />
+    <script is:inline>document.documentElement.classList.add('js');</script>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <meta name="theme-color" content="#06080e" />
+    <link rel="icon" href="/logo-icon.png" type="image/png" />
+    <link rel="apple-touch-icon" href="/logo-icon.png" />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="it_IT" />
+    <meta property="og:site_name" content={SITE.name} />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={`${SITE.url}/logo.png`} />
+    {schemas.map((s) => <script type="application/ld+json" set:html={JSON.stringify(s)} />)}
+  </head>
+  <body>
+    <a class="skip" href="#contenuto">Vai al contenuto</a>
+
+    <header class="hdr">
+      <div class="wrap hdr__row">
+        <a href="/" class="hdr__logo" aria-label="G8A Technology, home"><Image src={logoWhite} alt="G8A Technology" height={44} densities={[1, 2]} /></a>
+        <nav aria-label="Menu principale" class="hdr__nav">
+          <a href="#servizi">Servizi</a>
+          <a href="#metodo">Noleggio Assistito</a>
+          <a href="#ai">AI</a>
+          <a href="#sedi">Sedi</a>
+          <a href={SITE.ticket}>Area clienti</a>
+        </nav>
+        <div class="hdr__cta">
+          <a class="btn btn--ghost btn--sm hdr__tel" href={telLink}><Icon name="phone" />{SITE.phone}</a>
+          <a class="btn btn--wa btn--sm" href={waLink()}><Icon name="wa" />WhatsApp</a>
+        </div>
+      </div>
+    </header>
+
+    <main id="contenuto">
+      <slot />
+    </main>
+
+    <footer class="ftr">
+      <div class="wrap ftr__grid">
+        <div>
+          <Image src={logoWhite} alt="G8A Technology" height={50} densities={[1, 2]} />
+          <p class="ftr__claim">{SITE.tagline}</p>
+        </div>
+        <div>
+          <p class="ftr__h">Servizi</p>
+          <ul>
+            <li><a href="#metodo">Noleggio Assistito</a></li>
+            <li><a href="#servizi">Assistenza IT</a></li>
+            <li><a href="#servizi">Reti e sicurezza</a></li>
+            <li><a href="#ai">AI per aziende</a></li>
+          </ul>
+        </div>
+        <div>
+          <p class="ftr__h">Il gruppo</p>
+          <ul>{GRUPPO.map((g) => <li><a href={g.url}>{g.name}</a></li>)}</ul>
+        </div>
+        <div>
+          <p class="ftr__h">Contatti</p>
+          <ul>
+            <li><a href={telLink}>{SITE.phone}</a></li>
+            <li><a href={waLink()}>WhatsApp</a></li>
+            <li><a href={`mailto:${SITE.email}`}>{SITE.email}</a></li>
+            <li><a href={SITE.ticket}>Area clienti e ticket</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="wrap ftr__legal">
+        © {new Date().getFullYear()} {SITE.company} · P.IVA {SITE.vat} · REA {SITE.rea} · Cap. soc. {SITE.capital} · Sede legale {SITE.legalAddress}
+      </div>
+    </footer>
+
+    <nav class="mbar" aria-label="Contatti rapidi">
+      <a class="btn btn--red" href={telLink}><Icon name="phone" />Chiama</a>
+      <a class="btn btn--wa" href={waLink()}><Icon name="wa" />WhatsApp</a>
+    </nav>
+
+    <script>
+      // Comparsa al passaggio: gli elementi con data-reveal entrano quando arrivano a schermo.
+      const io = new IntersectionObserver((entries) => {
+        for (const e of entries) if (e.isIntersecting) { e.target.classList.add('is-in'); io.unobserve(e.target); }
+      }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+      document.querySelectorAll('[data-reveal]').forEach((el) => io.observe(el));
+
+      // Numeri che contano fino al valore quando entrano a schermo.
+      const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const co = new IntersectionObserver((entries) => {
+        for (const e of entries) {
+          if (!e.isIntersecting) continue;
+          co.unobserve(e.target);
+          const el = e.target as HTMLElement;
+          const to = Number(el.dataset.count);
+          if (reduce || !to) continue;
+          const pre = el.dataset.pre ?? '', post = el.dataset.post ?? '';
+          const t0 = performance.now(), dur = 1400;
+          const step = (t: number) => {
+            const k = Math.min(1, (t - t0) / dur), v = Math.round(to * (1 - Math.pow(1 - k, 3)));
+            el.textContent = pre + v + post;
+            if (k < 1) requestAnimationFrame(step);
+          };
+          requestAnimationFrame(step);
+        }
+      }, { threshold: 0.5 });
+      document.querySelectorAll('[data-count]').forEach((el) => co.observe(el));
+    </script>
+  </body>
+</html>
+
+<style>
+  .hdr { position: sticky; top: 0; z-index: 30; background: rgba(6, 8, 14, 0.82); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-bottom: 1px solid var(--line); }
+  .hdr__row { display: flex; align-items: center; justify-content: space-between; gap: 1rem 2rem; padding-block: 0.7rem; }
+  .hdr__logo :global(img) { width: auto; height: 44px; }
+  .hdr__nav { display: flex; gap: 1.75rem; font-weight: 600; font-size: 0.95rem; }
+  .hdr__nav a { color: var(--soft); text-decoration: none; }
+  .hdr__nav a:hover { color: #fff; }
+  .hdr__cta { display: flex; gap: 0.6rem; }
+  @media (max-width: 980px) { .hdr__nav { display: none; } }
+  @media (max-width: 640px) { .hdr__tel { display: none; } .hdr__logo :global(img) { height: 36px; } }
+
+  .ftr { background: #040509; color: #8e97a8; font-size: 0.95rem; border-top: 1px solid var(--line); padding-top: 3rem; }
+  .ftr__grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 2rem; }
+  .ftr__grid :global(img) { width: auto; height: 50px; }
+  .ftr__claim { margin-top: 0.9rem; max-width: 22rem; }
+  .ftr__h { color: #fff; font-weight: 700; margin-bottom: 0.6rem; }
+  .ftr ul { list-style: none; margin: 0; padding: 0; line-height: 2; }
+  .ftr a { color: var(--soft); text-decoration: none; }
+  .ftr a:hover { color: #fff; }
+  .ftr__legal { margin-top: 2.5rem; padding-block: 1.25rem 2rem; border-top: 1px solid var(--line); font-size: 0.8rem; }
+
+  .mbar { display: none; }
+  @media (max-width: 640px) {
+    .mbar { display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; position: fixed; left: 0; right: 0; bottom: 0; z-index: 40; padding: 0.7rem 0.9rem calc(0.7rem + env(safe-area-inset-bottom)); background: rgba(4, 5, 9, 0.94); border-top: 1px solid var(--line); backdrop-filter: blur(10px); }
+    .mbar .btn { min-height: 3.3rem; font-size: 1.05rem; }
+    :global(body) { padding-bottom: 5rem; }
+  }
+</style>

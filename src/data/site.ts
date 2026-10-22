@@ -1,0 +1,48 @@
+// Dati generali del sito g8a.it. Tutto ciò che è da confermare è segnato con TODO.
+export const SITE = {
+  name: 'G8A Technology',
+  tagline: 'Tu pensi alla tua azienda. Al resto ci pensiamo noi.',
+  url: 'https://www.g8a.it',
+  company: 'G8A Technology S.r.l.',
+  email: 'info@g8a.it',
+  // Numero della sede: telefono e WhatsApp Business.
+  phone: '0331 139 0950',
+  phoneIntl: '+3903311390950',
+  whatsapp: '3903311390950',
+  whatsappText: 'Ciao, vi scrivo dal sito g8a.it, vorrei informazioni per la mia azienda.',
+  vat: '03981970126',
+  legalAddress: 'Via Caronno Varesino 33, 21048 Solbiate Arno (VA)',
+  rea: 'VA-393252',
+  capital: '€ 10.000,00',
+  ticket: 'https://g8a.rmmservice.eu/connect/',
+};
+
+export type Sede = { city: string; address: string; cap: string; province: string; operativa?: boolean };
+
+export const SEDI: Sede[] = [
+  { city: 'Gallarate', address: 'Viale Milano 1', cap: '21013', province: 'VA' },
+  { city: 'Busto Arsizio', address: 'Via Q. Sella 27', cap: '21052', province: 'VA' },
+  { city: 'Bollate', address: 'Piazza Indipendenza 8', cap: '20021', province: 'MI' },
+  { city: 'Jerago con Orago', address: 'Via Varesina 3', cap: '21040', province: 'VA' },
+  { city: 'Lecco', address: 'Viale Dante Alighieri 22', cap: '23900', province: 'LC' },
+  { city: 'Solbiate Arno', address: 'Via Caronno Varesino 33', cap: '21048', province: 'VA', operativa: true },
+];
+
+export const GRUPPO = [
+  { name: 'FibraHero', what: 'Fibra per aziende', url: 'https://www.fibrahero.it' },
+  { name: 'TonerHero', what: 'Toner e cartucce', url: 'https://www.tonerhero.it' },
+  { name: 'RiparoHero', what: 'Riparazioni', url: 'https://www.riparohero.it' },
+  { name: 'G8A Store', what: 'PC e negozi', url: 'https://www.g8astore.it' },
+];
+
+export const FAQ = [
+  { q: "C'è un vincolo di durata?", a: 'No, nessun vincolo: la disdetta è libera.' },
+  { q: "L'assistenza è inclusa?", a: 'Sì, con un numero dedicato raggiungibile anche su WhatsApp.' },
+  { q: 'Quali sono i tempi di installazione?', a: 'Di solito da 1 a 4 giorni lavorativi.' },
+  { q: 'E se non sono soddisfatto?', a: 'Hai la garanzia soddisfatto o rimborsato di 30 giorni.' },
+  { q: 'In quali zone intervenite?', a: 'Province di Varese, Milano e Lecco, partendo dalle nostre sedi. Da remoto seguiamo aziende in tutta Italia.' },
+];
+
+export const waLink = (text: string = SITE.whatsappText) =>
+  `https://wa.me/${SITE.whatsapp}?text=${encodeURIComponent(text)}`;
+export const telLink = `tel:${SITE.phoneIntl}`;
