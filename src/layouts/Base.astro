@@ -134,6 +134,19 @@ const schemas = [organization, ...stores, ...jsonLd];
       const prog = () => { const h = document.documentElement; hdr?.style.setProperty('--progress', String(h.scrollTop / Math.max(1, h.scrollHeight - h.clientHeight))); };
       addEventListener('scroll', prog, { passive: true }); prog();
 
+      // Robot dell'apertura che seguono leggermente il mouse.
+      const tilt = document.querySelector('[data-tilt]') as HTMLElement | null;
+      if (tilt && matchMedia('(hover: hover) and (prefers-reduced-motion: no-preference)').matches) {
+        const target = tilt.querySelector('.robots') as HTMLElement;
+        tilt.addEventListener('pointermove', (e) => {
+          const r = tilt.getBoundingClientRect();
+          const x = (e.clientX - r.left) / r.width - 0.5, y = (e.clientY - r.top) / r.height - 0.5;
+          target.style.setProperty('--mx', `${x * 14}px`); target.style.setProperty('--my', `${y * 10}px`);
+          target.style.setProperty('--ry', `${x * 8}deg`); target.style.setProperty('--rx', `${-y * 6}deg`);
+        });
+        tilt.addEventListener('pointerleave', () => ['--mx', '--my', '--ry', '--rx'].forEach((k) => target.style.removeProperty(k)));
+      }
+
       // Numeri che contano fino al valore quando entrano a schermo.
       const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
       const co = new IntersectionObserver((entries) => {
