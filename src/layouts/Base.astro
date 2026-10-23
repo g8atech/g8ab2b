@@ -21,6 +21,7 @@ const NOLEGGIO = [
 ];
 const NAV = [
   { href: '/testimonianze-casistudio', t: 'Casi studio' },
+  { href: '/store', t: 'Negozi' },
   { href: '/assistenza-business', t: 'Contatti' },
 ];
 const here = Astro.url.pathname.replace(/(\.html|\/)$/, '');
@@ -151,7 +152,7 @@ const bing = import.meta.env.PUBLIC_BING_VERIFICATION;
             <li><a href="/testimonianze-casistudio">Casi studio</a></li>
           </ul>
           <p class="ftr__h" style="margin-top:1.2rem">Negozi</p>
-          <ul>{SEDI.filter((s) => s.negozio).map((s) => <li><a href={`/${s.negozio!.slug}`}>{s.city}</a></li>)}</ul>
+          <ul>{SEDI.filter((s) => s.negozio).map((s) => <li><a href={`/store/${s.negozio!.slug}`}>{s.city}</a></li>)}</ul>
         </div>
         <div>
           <p class="ftr__h">Il gruppo</p>

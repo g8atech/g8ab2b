@@ -21,6 +21,7 @@ User-agent: Google-Extended
 Allow: /
 
 Sitemap: https://www.g8a.it/sitemap-index.xml
+Sitemap: https://www.g8a.it/store/sitemap-index.xml
 `
     : `# Anteprima: il sito non è ancora su g8a.it, quindi non va indicizzato.
 User-agent: *

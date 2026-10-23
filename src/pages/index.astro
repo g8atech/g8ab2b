@@ -276,7 +276,7 @@ const serviceLd = {
         <span class="kicker">Chi siamo</span>
         <h2 class="h h2" style="margin-top:.8rem">Due fratelli che hanno <span class="red">inventato un metodo</span></h2>
         <p class="lead" style="margin-top:1.2rem">Giuseppe e Antonio Arrigo hanno fondato G8A circa quindici anni fa. Hanno ideato il Noleggio Assistito per dare alle piccole e medie imprese un reparto IT vero, senza doverlo assumere. Oggi G8A ha sei sedi in Lombardia e tecnici interni.</p>
-        <div class="sedi">{SEDI.map((s) => { const T = s.negozio ? 'a' : 'span'; return <T class:list={['sede', { 'sede--hq': s.operativa }]} href={s.negozio ? `/${s.negozio.slug}` : undefined}><strong>{s.city}</strong>{s.operativa ? 'Sede operativa' : s.address}</T>; })}</div>
+        <div class="sedi">{SEDI.map((s) => { const T = s.negozio ? 'a' : 'span'; return <T class:list={['sede', { 'sede--hq': s.operativa }]} href={s.negozio ? `/store/${s.negozio.slug}` : undefined}><strong>{s.city}</strong>{s.operativa ? 'Sede operativa' : s.address}</T>; })}</div>
       </div>
     </div>
   </section>
