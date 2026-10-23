@@ -16,6 +16,7 @@ const { kicker, crumb, lead, waText, image, imageAlt = '', chips = [], note = ['
         <a class="btn btn--red" href={telLink}><Icon name="phone" />Chiama {SITE.phone}</a>
         <a class="btn btn--wa" href={waLink(waText)}><Icon name="wa" />Scrivici su WhatsApp</a>
       </div>
+      <slot name="after-actions" />
       <p class="b-hero__note">{note.map((n) => <span><Icon name="check" size={16} width={3} />{n}</span>)}</p>
     </div>
     <div class="b-hero__visual">

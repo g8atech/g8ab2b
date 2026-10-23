@@ -1,0 +1,104 @@
+---
+// Recensioni della scheda Google della sede.
+// Senza chiave: voto, numero e link a Google (valori in site.ts).
+// Con PUBLIC_GOOGLE_MAPS_KEY su Vercel: voto, numero e recensioni caricati dal vivo con l'API ufficiale di Google
+// (Google ne restituisce al massimo 5, le più pertinenti), con l'attribuzione richiesta da Google.
+import { GOOGLE } from '../../data/site';
+interface Props { paper?: boolean }
+const { paper = false } = Astro.props;
+const key = import.meta.env.PUBLIC_GOOGLE_MAPS_KEY ?? '';
+const voto = GOOGLE.voto.toLocaleString('it-IT', { minimumFractionDigits: 1 });
+---
+<section class:list={['section', 'gr', { 'section--paper': paper }]} id="recensioni" data-key={key} data-place={GOOGLE.placeId}>
+  <div class="wrap">
+    <div class="gr__top">
+      <div class="b-head" data-reveal>
+        <span class="kicker">Recensioni Google</span>
+        <h2 class="h h2">Cosa dicono di noi <span class="red">su Google</span></h2>
+        <p class="lead">Le recensioni della scheda Google della nostra sede, scritte da clienti veri.</p>
+      </div>
+      <div class="gr__badge" data-reveal style="--d:.1s">
+        <svg class="gr__g" viewBox="0 0 48 48" aria-hidden="true"><path fill="#4285F4" d="M45.1 24.5c0-1.6-.1-3.1-.4-4.5H24v8.5h11.8c-.5 2.8-2.1 5.1-4.4 6.7v5.5h7.1c4.2-3.8 6.6-9.5 6.6-16.2z"/><path fill="#34A853" d="M24 46c5.9 0 10.9-2 14.5-5.3l-7.1-5.5c-2 1.3-4.5 2.1-7.4 2.1-5.7 0-10.6-3.9-12.3-9.1H4.4v5.7C8 41.1 15.4 46 24 46z"/><path fill="#FBBC05" d="M11.7 28.2c-.4-1.3-.7-2.7-.7-4.2s.3-2.9.7-4.2v-5.7H4.4C2.9 17.1 2 20.4 2 24s.9 6.9 2.4 9.9l7.3-5.7z"/><path fill="#EA4335" d="M24 10.7c3.2 0 6.1 1.1 8.4 3.3l6.3-6.3C34.9 4.1 29.9 2 24 2 15.4 2 8 6.9 4.4 14.1l7.3 5.7c1.7-5.2 6.6-9.1 12.3-9.1z"/></svg>
+        <div>
+          <p class="gr__score"><strong data-g="voto">{voto}</strong><span class="gr__stars" aria-hidden="true">★★★★★</span></p>
+          <p class="gr__count"><span data-g="numero">{GOOGLE.recensioni}</span> recensioni su Google</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="gr__list" data-g="lista" hidden></div>
+
+    <div class="b-actions gr__actions">
+      <a class="btn btn--ink" href={GOOGLE.leggi} target="_blank" rel="noopener">Leggi tutte le recensioni su Google</a>
+      <a class="btn btn--line" href={GOOGLE.scrivi} target="_blank" rel="noopener">Sei già cliente? Lascia una recensione</a>
+    </div>
+    <p class="gr__note" data-g="nota">Voto e numero di recensioni aggiornati a {GOOGLE.aggiornato}.</p>
+  </div>
+</section>
+
+<script>
+  // Caricamento dal vivo, solo se c'è la chiave Google.
+  const sec = document.getElementById('recensioni') as HTMLElement | null;
+  const key = sec?.dataset.key;
+  if (sec && key) {
+    const esc = (t: string) => t.replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]!);
+    const load = () => new Promise<void>((ok, ko) => {
+      const w = window as any;
+      if (w.google?.maps?.importLibrary) return ok();
+      w.__g8aMaps = () => ok();
+      const s = document.createElement('script');
+      s.src = `https://maps.googleapis.com/maps/api/js?key=${encodeURIComponent(key)}&v=weekly&language=it&loading=async&callback=__g8aMaps`;
+      s.async = true; s.onerror = ko;
+      document.head.appendChild(s);
+    });
+    const io = new IntersectionObserver(async (entries) => {
+      if (!entries.some((e) => e.isIntersecting)) return;
+      io.disconnect();
+      try {
+        await load();
+        const { Place } = await (window as any).google.maps.importLibrary('places');
+        const place = new Place({ id: sec.dataset.place, requestedLanguage: 'it' });
+        await place.fetchFields({ fields: ['rating', 'userRatingCount', 'reviews', 'googleMapsURI'] });
+        const q = (n: string) => sec.querySelector(`[data-g="${n}"]`) as HTMLElement;
+        if (place.rating) q('voto').textContent = place.rating.toLocaleString('it-IT', { minimumFractionDigits: 1 });
+        if (place.userRatingCount) q('numero').textContent = String(place.userRatingCount);
+        q('nota').textContent = 'Voto, numero e recensioni forniti da Google in tempo reale.';
+        const list = q('lista');
+        const reviews = (place.reviews || []).filter((r: any) => r.text);
+        list.innerHTML = reviews.map((r: any) => {
+          const a = r.authorAttribution || {};
+          const stars = '★★★★★'.slice(0, Math.round(r.rating || 5));
+          const foto = a.photoURI ? `<img src="${esc(a.photoURI)}" alt="" width="40" height="40" referrerpolicy="no-referrer" loading="lazy">` : `<span>${esc((a.displayName || '?').charAt(0))}</span>`;
+          const nome = a.uri ? `<a href="${esc(a.uri)}" target="_blank" rel="noopener">${esc(a.displayName || 'Utente Google')}</a>` : esc(a.displayName || 'Utente Google');
+          return `<figure class="gr__card"><div class="gr__who">${foto}<div><strong>${nome}</strong><small>${esc(r.relativePublishTimeDescription || '')}</small></div></div><div class="gr__s" aria-label="${r.rating} stelle su 5">${stars}</div><blockquote>${esc(r.text)}</blockquote></figure>`;
+        }).join('');
+        if (reviews.length) list.hidden = false;
+      } catch (e) {
+        console.warn('Recensioni Google non disponibili', e);
+      }
+    }, { rootMargin: '300px' });
+    io.observe(sec);
+  }
+</script>
+
+<style>
+  .gr__top { display: flex; flex-wrap: wrap; gap: 1.5rem 3rem; justify-content: space-between; align-items: flex-end; }
+  .gr__badge { display: flex; align-items: center; gap: 1rem; padding: 1.1rem 1.4rem; border-radius: 18px; background: #fff; border: 1px solid var(--line); box-shadow: 0 14px 34px rgba(11, 11, 13, 0.08); }
+  .gr__g { width: 44px; height: 44px; flex: none; }
+  .gr__score { display: flex; align-items: center; gap: 0.6rem; }
+  .gr__score strong { font-stretch: 78%; font-variation-settings: 'wdth' 78; font-weight: 800; font-size: 2.6rem; line-height: 1; }
+  .gr__stars { color: #fbbc05; font-size: 1.3rem; letter-spacing: 2px; }
+  .gr__count { color: var(--muted); font-weight: 600; font-size: 0.95rem; }
+  .gr__list { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1rem; margin-top: 2.5rem; }
+  .gr__list[hidden] { display: none; }
+  .gr__list :global(.gr__card) { margin: 0; display: flex; flex-direction: column; gap: 0.7rem; padding: 1.4rem; border-radius: 18px; background: #fff; border: 1px solid var(--line); }
+  .gr__list :global(.gr__who) { display: flex; align-items: center; gap: 0.7rem; }
+  .gr__list :global(.gr__who img), .gr__list :global(.gr__who span) { width: 40px; height: 40px; border-radius: 50%; flex: none; display: grid; place-items: center; background: var(--grad); color: #fff; font-weight: 800; }
+  .gr__list :global(.gr__who strong) { display: block; font-size: 0.98rem; }
+  .gr__list :global(.gr__who a) { color: inherit; text-decoration: none; }
+  .gr__list :global(.gr__who small) { color: var(--muted); }
+  .gr__list :global(.gr__s) { color: #fbbc05; letter-spacing: 2px; }
+  .gr__list :global(blockquote) { margin: 0; color: var(--ink); line-height: 1.55; display: -webkit-box; -webkit-line-clamp: 7; -webkit-box-orient: vertical; overflow: hidden; }
+  .gr__actions { margin-top: 2rem; }
+  .gr__note { margin-top: 0.9rem; font-size: 0.85rem; color: var(--muted); }
+</style>

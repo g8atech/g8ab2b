@@ -20,6 +20,7 @@ const desc = 'G8A RMM: monitoraggio e gestione da remoto di computer, server e u
 <Base title="RMM: monitoraggio e gestione IT da remoto | G8A Technology" description={desc} jsonLd={[serviceLd('G8A RMM, monitoraggio e gestione IT', desc, '/rmm'), faqLd(faq)]}>
   <PageHero kicker="G8A RMM" crumb="Monitoraggio RMM" waText={wa} note={['Antivirus gestito', 'Ticket di assistenza', 'Report periodici']}
     lead="Tutto l'occorrente per monitorare la situazione della tua azienda: controlliamo, gestiamo e supportiamo da remoto tutti i dispositivi e gli utenti, da un'unica console.">
+    <p slot="after-actions" class="rmm-login"><span>Sei già cliente?</span><a href={SITE.rmmLogin}><Icon name="wrench" size={18} />Accedi a G8A RMM</a><a href={SITE.ticket}>Apri un ticket</a></p>
     <Fragment slot="title">Vediamo i problemi <span class="red">prima che ti fermino</span></Fragment>
     <div slot="visual" class="con" aria-hidden="true">
       <div class="con__top"><span><span class="live"></span>Console G8A RMM</span><em>Esempio</em></div>
@@ -29,7 +30,7 @@ const desc = 'G8A RMM: monitoraggio e gestione da remoto di computer, server e u
         <li><span>Antivirus</span><b>attivo su tutti</b><i><i style="width:100%"></i></i></li>
         <li><span>Spazio disco server</span><b>64%</b><i><i style="width:64%"></i></i></li>
       </ul>
-      <p class="con__alert"><Icon name="alert" size={18} stroke="#ff6a5a" />Disco del PC amministrazione in degrado: <strong>sostituzione programmata</strong></p>
+      <p class="con__alert"><Icon name="alert" size={18} stroke="#ff6a5a" /><span>Disco del PC amministrazione in degrado: <strong>sostituzione programmata</strong></span></p>
     </div>
   </PageHero>
 
@@ -49,7 +50,8 @@ const desc = 'G8A RMM: monitoraggio e gestione da remoto di computer, server e u
         <h2 class="h h2" style="margin-top:.8rem">Apri un ticket <span class="red">in un clic</span></h2>
         <p class="lead" style="margin-top:1rem">Dalla piattaforma puoi aprire una richiesta di assistenza e farci collegare al tuo computer. Oppure chiamaci o scrivici, come sempre.</p>
         <div class="b-actions">
-          <a class="btn btn--ink" href={SITE.ticket}><Icon name="wrench" />Apri un ticket</a>
+          <a class="btn btn--ink" href={SITE.rmmLogin}><Icon name="wrench" />Accedi a G8A RMM</a>
+          <a class="btn btn--line" href={SITE.ticket}>Apri un ticket</a>
           <a class="btn btn--wa" href={waLink('Ciao, sono già cliente e ho bisogno di assistenza.')}><Icon name="wa" />Assistenza su WhatsApp</a>
         </div>
       </div>
@@ -67,6 +69,9 @@ const desc = 'G8A RMM: monitoraggio e gestione da remoto di computer, server e u
 </Base>
 
 <style>
+  .rmm-login { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem 1rem; margin-top: 1rem; padding: 0.7rem 1rem; border-radius: 12px; background: var(--paper); border: 1px solid var(--line); font-size: 0.95rem; }
+  .rmm-login span { color: var(--muted); }
+  .rmm-login a { display: inline-flex; align-items: center; gap: 0.4rem; font-weight: 800; color: var(--red); }
   .con { position: relative; z-index: 1; max-width: 30rem; margin-inline: auto; padding: 1.4rem; border-radius: 20px; background: #16161a; color: #fff; border: 1px solid rgba(255, 255, 255, 0.1); box-shadow: 0 30px 70px rgba(11, 11, 13, 0.35), 0 0 60px rgba(255, 26, 26, 0.2); animation: b-float 7s ease-in-out infinite; }
   .con__top { display: flex; justify-content: space-between; align-items: center; padding-bottom: 0.9rem; border-bottom: 1px solid rgba(255, 255, 255, 0.1); font-weight: 800; }
   .con__top span { display: flex; align-items: center; gap: 0.55rem; }

@@ -1,5 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
+import GoogleReviews from '../components/blocks/GoogleReviews.astro';
 import Icon from '../components/Icon.astro';
 import { SITE, SEDI, waLink, telLink } from '../data/site';
 const maps = (s: { address: string; cap: string; city: string }) => `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${s.address}, ${s.cap} ${s.city}`)}`;
@@ -49,6 +50,8 @@ const canali = [
       </div>
     </div>
   </section>
+
+  <GoogleReviews />
 
   <section class="section section--paper">
     <div class="wrap">

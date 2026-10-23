@@ -47,6 +47,9 @@ Il sito non si indicizza finché non lo dici tu: tutto passa da due variabili su
 |---|---|---|
 | `PUBLIC_SITE_LIVE` | `true` | `robots.txt` apre il sito a Google e ai motori AI, toglie il `noindex` |
 | `PUBLIC_GTM_ID` | `GTM-M5FDVQDW` (quello del vecchio sito) | attiva Google Tag Manager |
+| `PUBLIC_GOOGLE_MAPS_KEY` | chiave API Google Maps (Places API New), limitata ai domini del sito | voto, numero e ultime recensioni della scheda Google della sede caricati dal vivo |
+
+Senza la chiave Google il blocco recensioni mostra voto e numero scritti in `src/data/site.ts` (`GOOGLE`) e i link per leggerle tutte o lasciarne una: aggiornali ogni tanto. Con la chiave, Google restituisce al massimo 5 recensioni, le più pertinenti.
 
 Ogni clic su telefono, WhatsApp o email invia a GTM l'evento `contatto` con `canale` e `pagina`: in GTM basta un attivatore "Evento personalizzato = contatto" per le conversioni di GA4 e Google Ads.
 

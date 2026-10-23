@@ -83,7 +83,8 @@ const live = import.meta.env.PUBLIC_SITE_LIVE === 'true';
         <a href="/" class="hdr__logo" aria-label="G8A Technology, home"><Image src={logoColor} alt="G8A Technology" height={52} densities={[1, 2]} loading="eager" /></a>
         <nav aria-label="Menu principale" class="hdr__nav" id="menu">
           {NAV.map((n) => <a href={n.href} aria-current={here === n.href ? 'page' : undefined}>{n.t}</a>)}
-          <a class="hdr__only-m" href={SITE.ticket}>Area clienti e ticket</a>
+          <a class="hdr__only-m" href={SITE.rmmLogin}>Login G8A RMM</a>
+          <a class="hdr__only-m" href={SITE.ticket}>Apri un ticket</a>
         </nav>
         <div class="hdr__cta">
           <a class="btn btn--line btn--sm hdr__tel" href={telLink}><Icon name="phone" />{SITE.phone}</a>
@@ -123,7 +124,8 @@ const live = import.meta.env.PUBLIC_SITE_LIVE === 'true';
             <li><a href={telLink}>{SITE.phone}</a></li>
             <li><a href={waLink()}>WhatsApp</a></li>
             <li><a href={`mailto:${SITE.email}`}>{SITE.email}</a></li>
-            <li><a href={SITE.ticket}>Area clienti e ticket</a></li>
+            <li><a href={SITE.rmmLogin}>Login G8A RMM</a></li>
+            <li><a href={SITE.ticket}>Apri un ticket</a></li>
           </ul>
         </div>
       </div>

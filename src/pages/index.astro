@@ -2,7 +2,8 @@
 import { Image } from 'astro:assets';
 import Base from '../layouts/Base.astro';
 import Icon from '../components/Icon.astro';
-import { SITE, SEDI, FAQ, waLink, telLink } from '../data/site';
+import { SITE, SEDI, FAQ, GOOGLE, waLink, telLink } from '../data/site';
+import GoogleReviews from '../components/blocks/GoogleReviews.astro';
 import robotHero from '../assets/robot-hero.png';
 import mark from '../assets/g8a-mark.png';
 import logoWhite from '../assets/logo-g8a-bianco.png';
@@ -84,7 +85,7 @@ const serviceLd = {
           <a class="btn btn--red" href={telLink}><Icon name="phone" />Chiama {SITE.phone}</a>
           <a class="btn btn--wa" href={waLink('Ciao, vorrei sapere come funziona il Noleggio Assistito per la mia azienda.')}><Icon name="wa" />Scrivici su WhatsApp</a>
         </div>
-        <p class="hero__links"><a href="#come-funziona">Come funziona</a><span aria-hidden="true">·</span><a href="#quanto-costa">Quanto costa</a><span aria-hidden="true">·</span><span>Ti risponde una persona, non un call center</span></p>
+        <p class="hero__links"><a href="#come-funziona">Come funziona</a><span aria-hidden="true">·</span><a href="#quanto-costa">Quanto costa</a><span aria-hidden="true">·</span><a href="#recensioni" class="hero__g"><span aria-hidden="true">★</span> {GOOGLE.voto.toLocaleString('it-IT')} su Google · {GOOGLE.recensioni} recensioni</a></p>
         <div class="hero__press">
           <p>Hanno parlato del Noleggio Assistito</p>
           <ul>{press.map((l) => <li><Image src={l.src} alt={l.alt} height={l.h} densities={[1, 2]} loading="eager" /></li>)}</ul>
@@ -275,6 +276,8 @@ const serviceLd = {
     </div>
   </section>
 
+  <GoogleReviews paper />
+
   <!-- CHI SIAMO -->
   <section class="section section--ink" id="chi-siamo">
     <div class="wrap about">
@@ -378,6 +381,7 @@ const serviceLd = {
   .hero__links { display: flex; flex-wrap: wrap; gap: 0.4rem 0.75rem; margin-top: 0.9rem; font-size: 0.95rem; color: var(--muted); }
   .hero__links a { font-weight: 700; color: var(--ink); }
   .hero__links a:hover { color: var(--red); }
+  .hero__g span { color: #fbbc05; }
 
   .hero__visual { position: relative; padding-block: 2.8rem 0.5rem; margin-right: -3%; perspective: 1200px; }
   .stage { position: absolute; inset: -6% -8% 8% -8%; pointer-events: none; }

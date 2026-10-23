@@ -15,6 +15,7 @@ export const SITE = {
   rea: 'VA-393252',
   capital: '€ 10.000,00',
   ticket: 'https://g8a.rmmservice.eu/connect/',
+  rmmLogin: 'https://g8a.rmmservice.eu/auth/#/login',
 };
 
 export type Sede = { city: string; address: string; cap: string; province: string; operativa?: boolean };
@@ -72,3 +73,15 @@ export const serviceLd = (name: string, description: string, path: string) => ({
   provider: { '@id': 'https://www.g8a.it/#organization' },
   areaServed: ['Provincia di Varese', 'Città metropolitana di Milano', 'Provincia di Lecco'],
 });
+
+// Scheda Google Business della sede (Solbiate Arno). Voto e numero sono il valore di riserva:
+// se su Vercel c'è PUBLIC_GOOGLE_MAPS_KEY, la pagina li aggiorna dal vivo con le recensioni.
+export const GOOGLE = {
+  placeId: 'ChIJj7G_qVu2ImgR7SoyoB5PA5s',
+  nome: 'G8A Technology, Solbiate Arno',
+  voto: 4.9,
+  recensioni: 102,
+  aggiornato: 'ottobre 2026',
+  leggi: 'https://www.google.com/maps/place/?q=place_id:ChIJj7G_qVu2ImgR7SoyoB5PA5s',
+  scrivi: 'https://search.google.com/local/writereview?placeid=ChIJj7G_qVu2ImgR7SoyoB5PA5s',
+};
