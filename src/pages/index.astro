@@ -4,7 +4,6 @@ import Base from '../layouts/Base.astro';
 import Icon from '../components/Icon.astro';
 import { SITE, SEDI, FAQ, GOOGLE, waLink, telLink } from '../data/site';
 import GoogleReviews from '../components/blocks/GoogleReviews.astro';
-import GoogleBadge from '../components/blocks/GoogleBadge.astro';
 import robotHero from '../assets/robot-hero.png';
 import mark from '../assets/g8a-mark.png';
 import logoWhite from '../assets/logo-g8a-bianco.png';
@@ -79,9 +78,8 @@ const serviceLd = {
           <a class="btn btn--wa" href={waLink('Ciao, vorrei sapere come funziona il Noleggio Assistito per la mia azienda.')}><Icon name="wa" />Scrivici su WhatsApp</a>
         </div>
         <p class="hero__links"><a href="#come-funziona">Come funziona</a><span aria-hidden="true">·</span><a href="#quanto-costa">Quanto costa</a><span aria-hidden="true">·</span><span>Ti risponde una persona, non un call center</span></p>
-        <div class="hero__gb"><GoogleBadge href="#recensioni" /></div>
-        <div class="hero__press"><PressBar /></div>
       </div>
+      <div class="hero__press"><PressBar row label="Ne hanno parlato" /></div>
 
       <div class="hero__visual" data-tilt>
         <div class="stage" aria-hidden="true">
@@ -363,7 +361,7 @@ const serviceLd = {
   .hero__row { position: relative; display: grid; grid-template-columns: 1fr 1.12fr; gap: clamp(1.5rem, 4vw, 3.5rem); align-items: center; }
   .hero__tag { display: inline-flex; align-items: center; gap: 0.6rem; padding: 0.4rem 0.9rem 0.4rem 0.6rem; border-radius: 999px; background: #fff; border: 1px solid var(--line); box-shadow: 0 6px 18px rgba(11, 11, 13, 0.06); font-weight: 800; font-size: 0.9rem; letter-spacing: 0.06em; text-transform: uppercase; }
   .hero__tag :global(img) { width: auto; height: 22px; }
-  .hero__h1 { margin-top: 1rem; font-size: clamp(2.3rem, 4.3vw, 3.9rem); }
+  .hero__h1 { margin-top: 0.8rem; font-size: clamp(2.1rem, 3.5vw, 3.2rem); }
   .hero__sweep { position: relative; display: inline-block; }
   .hero__sweep::after { content: attr(data-text); position: absolute; inset: 0; background: linear-gradient(100deg, transparent 43%, rgba(255, 255, 255, 0.9) 50%, transparent 57%) 150% 0 / 250% 100%; -webkit-background-clip: text; background-clip: text; color: transparent; animation: sweep 4.5s ease-in-out 1.2s infinite; }
   @keyframes sweep { 0% { background-position: 150% 0; } 45%, to { background-position: -100% 0; } }
@@ -375,7 +373,7 @@ const serviceLd = {
   .hero__links a:hover { color: var(--red); }
   .hero__g span { color: #fbbc05; }
 
-  .hero__visual { position: relative; padding-block: 2.8rem 0.5rem; margin-right: -3%; perspective: 1200px; }
+  .hero__visual { position: relative; padding-block: 1.2rem 0.5rem; margin-right: -3%; perspective: 1200px; }
   .stage { position: absolute; inset: -6% -8% 8% -8%; pointer-events: none; }
   .stage__glow { position: absolute; left: 50%; top: 46%; width: 78%; aspect-ratio: 1; transform: translate(-50%, -50%); border-radius: 50%; background: radial-gradient(circle, rgba(255, 26, 26, 0.55) 0%, rgba(227, 6, 19, 0.25) 35%, transparent 68%); filter: blur(18px); animation: glow 4s ease-in-out infinite; }
   @keyframes glow { 50% { opacity: 0.65; transform: translate(-50%, -50%) scale(1.08); } }
@@ -421,7 +419,8 @@ const serviceLd = {
 
   .hero__gb { margin-top: 1.2rem; }
   @media (max-width: 600px) { .hero__gb { display: none; } }
-  .hero__press { margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--line); }
+  .hero__press { order: 3; grid-column: 1 / -1; padding-top: 1rem; border-top: 1px solid var(--line); }
+  @media (max-width: 900px) { .hero__copy { order: 1; } .hero__press { order: 2; } .hero__visual { order: 3; } }
 
   /* NASTRO */
   .tk { overflow: hidden; background: var(--grad); color: #fff; padding-block: 0.85rem; }

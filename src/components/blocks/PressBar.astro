@@ -2,10 +2,10 @@
 // Striscia dei loghi delle testate che scorre in continuo; ogni logo porta all'articolo.
 import { Image } from 'astro:assets';
 import { STAMPA } from '../../data/stampa';
-interface Props { label?: string; dark?: boolean }
-const { label = 'Hanno parlato del Noleggio Assistito', dark = false } = Astro.props;
+interface Props { label?: string; dark?: boolean; row?: boolean }
+const { label = 'Hanno parlato del Noleggio Assistito', dark = false, row = false } = Astro.props;
 ---
-<div class:list={['pb', { 'pb--dark': dark }]}>
+<div class:list={['pb', { 'pb--dark': dark, 'pb--row': row }]}>
   <p class="pb__l">{label}</p>
   <div class="pb__vp">
     <ul class="pb__track">
@@ -33,6 +33,10 @@ const { label = 'Hanno parlato del Noleggio Assistito', dark = false } = Astro.p
   .pb--dark .pb__l { color: #a6a9b1; }
   .pb--dark .pb__track :global(img) { filter: grayscale(1) brightness(0) invert(1); opacity: 0.6; }
   .pb--dark .pb__track a:hover :global(img) { filter: grayscale(1) brightness(0) invert(1); opacity: 1; }
+  .pb--row { display: flex; align-items: center; gap: 1.6rem; }
+  .pb--row .pb__l { flex: none; max-width: 10rem; line-height: 1.35; }
+  .pb--row .pb__vp { flex: 1; min-width: 0; margin-top: 0; }
+  @media (max-width: 700px) { .pb--row { display: block; } .pb--row .pb__l { max-width: none; } .pb--row .pb__vp { margin-top: 0.6rem; } }
   @keyframes pb-run { to { transform: translateX(calc(-50% - 1.2rem)); } }
   @media (prefers-reduced-motion: reduce) {
     .pb__track { animation: none; flex-wrap: wrap; width: auto; gap: 1rem 1.8rem; }
