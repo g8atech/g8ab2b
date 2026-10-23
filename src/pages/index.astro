@@ -4,6 +4,7 @@ import Base from '../layouts/Base.astro';
 import Icon from '../components/Icon.astro';
 import { SITE, SEDI, FAQ, GOOGLE, waLink, telLink } from '../data/site';
 import GoogleReviews from '../components/blocks/GoogleReviews.astro';
+import GoogleBadge from '../components/blocks/GoogleBadge.astro';
 import robotHero from '../assets/robot-hero.png';
 import mark from '../assets/g8a-mark.png';
 import logoWhite from '../assets/logo-g8a-bianco.png';
@@ -85,7 +86,8 @@ const serviceLd = {
           <a class="btn btn--red" href={telLink}><Icon name="phone" />Chiama {SITE.phone}</a>
           <a class="btn btn--wa" href={waLink('Ciao, vorrei sapere come funziona il Noleggio Assistito per la mia azienda.')}><Icon name="wa" />Scrivici su WhatsApp</a>
         </div>
-        <p class="hero__links"><a href="#come-funziona">Come funziona</a><span aria-hidden="true">·</span><a href="#quanto-costa">Quanto costa</a><span aria-hidden="true">·</span><a href="#recensioni" class="hero__g"><span aria-hidden="true">★</span> {GOOGLE.voto.toLocaleString('it-IT')} su Google · {GOOGLE.recensioni} recensioni</a></p>
+        <p class="hero__links"><a href="#come-funziona">Come funziona</a><span aria-hidden="true">·</span><a href="#quanto-costa">Quanto costa</a><span aria-hidden="true">·</span><span>Ti risponde una persona, non un call center</span></p>
+        <div class="hero__gb"><GoogleBadge href="#recensioni" /></div>
         <div class="hero__press">
           <p>Hanno parlato del Noleggio Assistito</p>
           <ul>{press.map((l) => <li><Image src={l.src} alt={l.alt} height={l.h} densities={[1, 2]} loading="eager" /></li>)}</ul>
@@ -427,7 +429,9 @@ const serviceLd = {
     .chip-float--b { right: 0.5rem; }
   }
 
-  .hero__press { margin-top: 1.4rem; padding-top: 1rem; border-top: 1px solid var(--line); }
+  .hero__gb { margin-top: 1.2rem; }
+  @media (max-width: 600px) { .hero__gb { display: none; } }
+  .hero__press { margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--line); }
   .hero__press p { font-size: 0.8rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
   .hero__press ul { list-style: none; margin: 0.7rem 0 0; padding: 0; display: flex; flex-wrap: wrap; align-items: center; gap: 0.9rem 1.9rem; }
   .hero__press :global(img) { width: auto; filter: grayscale(1); opacity: 0.75; transition: filter 0.2s, opacity 0.2s; }

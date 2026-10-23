@@ -1,6 +1,7 @@
 ---
 import { Image } from 'astro:assets';
 import Icon from '../Icon.astro';
+import GoogleBadge from './GoogleBadge.astro';
 import { SITE, waLink, telLink } from '../../data/site';
 interface Props { kicker: string; crumb: string; lead: string; waText: string; image?: ImageMetadata; imageAlt?: string; chips?: string[]; note?: string[] }
 const { kicker, crumb, lead, waText, image, imageAlt = '', chips = [], note = ['Nessun vincolo', 'Assistenza inclusa', 'Garanzia 30 giorni'] } = Astro.props;
@@ -17,6 +18,7 @@ const { kicker, crumb, lead, waText, image, imageAlt = '', chips = [], note = ['
         <a class="btn btn--wa" href={waLink(waText)}><Icon name="wa" />Scrivici su WhatsApp</a>
       </div>
       <slot name="after-actions" />
+      <div class="b-hero__gb"><GoogleBadge /></div>
       <p class="b-hero__note">{note.map((n) => <span><Icon name="check" size={16} width={3} />{n}</span>)}</p>
     </div>
     <div class="b-hero__visual">

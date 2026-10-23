@@ -4,9 +4,12 @@
 // Con PUBLIC_GOOGLE_MAPS_KEY su Vercel: voto, numero e recensioni caricati dal vivo con l'API ufficiale di Google
 // (Google ne restituisce al massimo 5, le più pertinenti), con l'attribuzione richiesta da Google.
 import { GOOGLE } from '../../data/site';
+import { RECENSIONI } from '../../data/recensioni';
 interface Props { paper?: boolean }
 const { paper = false } = Astro.props;
-const key = import.meta.env.PUBLIC_GOOGLE_MAPS_KEY ?? '';
+// Se ci sono recensioni copiate a mano in recensioni.ts, si mostrano quelle (tutte) e non si chiama Google.
+const manuali = RECENSIONI;
+const key = manuali.length ? '' : (import.meta.env.PUBLIC_GOOGLE_MAPS_KEY ?? '');
 const voto = GOOGLE.voto.toLocaleString('it-IT', { minimumFractionDigits: 1 });
 ---
 <section class:list={['section', 'gr', { 'section--paper': paper }]} id="recensioni" data-key={key} data-place={GOOGLE.placeId}>
@@ -26,13 +29,26 @@ const voto = GOOGLE.voto.toLocaleString('it-IT', { minimumFractionDigits: 1 });
       </div>
     </div>
 
-    <div class="gr__list" data-g="lista" hidden></div>
+    {manuali.length > 0 ? (
+      <div class="gr__list" data-g="lista">
+        {manuali.map((r) => (
+          <figure class="gr__card" data-reveal>
+            <div class="gr__who"><span>{r.nome.charAt(0)}</span><div><strong>{r.nome}</strong><small>{r.data} · su Google</small></div></div>
+            <div class="gr__s" aria-label={`${r.stelle} stelle su 5`}>{'★★★★★'.slice(0, r.stelle)}</div>
+            <blockquote>{r.testo}</blockquote>
+            {r.risposta && <p class="gr__reply"><strong>Risposta di G8A:</strong> {r.risposta}</p>}
+          </figure>
+        ))}
+      </div>
+    ) : (
+      <div class="gr__list" data-g="lista" hidden></div>
+    )}
 
     <div class="b-actions gr__actions">
       <a class="btn btn--ink" href={GOOGLE.leggi} target="_blank" rel="noopener">Leggi tutte le recensioni su Google</a>
       <a class="btn btn--line" href={GOOGLE.scrivi} target="_blank" rel="noopener">Sei già cliente? Lascia una recensione</a>
     </div>
-    <p class="gr__note" data-g="nota">Voto e numero di recensioni aggiornati a {GOOGLE.aggiornato}.</p>
+    <p class="gr__note" data-g="nota">{manuali.length > 0 ? 'Recensioni pubblicate dai clienti sulla nostra scheda Google e riportate senza modifiche: puoi verificarle tutte su Google.' : `Voto e numero di recensioni aggiornati a ${GOOGLE.aggiornato}.`}</p>
   </div>
 </section>
 
@@ -100,5 +116,6 @@ const voto = GOOGLE.voto.toLocaleString('it-IT', { minimumFractionDigits: 1 });
   .gr__list :global(.gr__s) { color: #fbbc05; letter-spacing: 2px; }
   .gr__list :global(blockquote) { margin: 0; color: var(--ink); line-height: 1.55; display: -webkit-box; -webkit-line-clamp: 7; -webkit-box-orient: vertical; overflow: hidden; }
   .gr__actions { margin-top: 2rem; }
+  .gr__list :global(.gr__reply) { margin: 0; padding: 0.7rem 0.9rem; border-radius: 10px; background: var(--paper); font-size: 0.9rem; color: var(--muted); }
   .gr__note { margin-top: 0.9rem; font-size: 0.85rem; color: var(--muted); }
 </style>

@@ -124,3 +124,6 @@
 .b-panel { position: relative; overflow: hidden; padding: clamp(1.5rem, 3vw, 2.4rem); border-radius: 22px; background: var(--paper); border: 1px solid var(--line); }
 .b-dark { background: var(--ink); color: #fff; }
 .b-dark .lead { color: #c3c6cd; }
+
+.b-hero__gb { margin-top: 1.2rem; }
+@media (max-width: 600px) { .b-hero__gb { display: none; } }
