@@ -1,0 +1,64 @@
+---
+import { Image } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
+import PageHero from '../components/blocks/PageHero.astro';
+import Problems from '../components/blocks/Problems.astro';
+import Includes from '../components/blocks/Includes.astro';
+import Guarantee from '../components/blocks/Guarantee.astro';
+import Quotes from '../components/blocks/Quotes.astro';
+import Faq from '../components/blocks/Faq.astro';
+import Cta from '../components/blocks/Cta.astro';
+import { FAQ_BASE, faqLd, serviceLd } from '../data/site';
+import foto from '../assets/foto-ufficio.jpg';
+import cpu from '../assets/foto-cpu.jpg';
+
+const wa = 'Ciao, vorrei informazioni sul noleggio computer per la mia azienda.';
+const faq = [
+  { q: 'Che computer mi date?', a: 'Configuriamo il computer giusto per il lavoro che fai: mini PC compatti per la scrivania, All in One, notebook per chi lavora fuori e workstation per CAD e grafica. Non scegliamo dal magazzino: lo prepariamo su misura.' },
+  { q: 'Cosa succede se un computer si guasta?', a: "Interveniamo da remoto o in sede e, se serve, lo sostituiamo. La sostituzione è compresa nel canone." },
+  ...FAQ_BASE,
+];
+const desc = 'Noleggio computer per aziende con assistenza inclusa: PC configurati su misura, installati, aggiornati e sostituiti da G8A. Canone mensile, nessun vincolo, garanzia 30 giorni.';
+---
+<Base title="Noleggio computer aziendali con assistenza inclusa | G8A Technology" description={desc} jsonLd={[serviceLd('Noleggio computer aziendali', desc, '/noleggio-computer'), faqLd(faq)]}>
+  <PageHero kicker="Noleggio computer aziendali" crumb="Noleggio computer" waText={wa} image={foto} imageAlt="Postazione di lavoro con notebook e monitor" chips={['PC su misura', 'Sostituzione inclusa', '1 canone al mese']}
+    lead="Computer configurati sul tuo lavoro, installati, aggiornati e sostituiti quando serve. Tutto in un canone mensile, senza investimento iniziale.">
+    <Fragment slot="title">Computer che non ti <span class="red">fermano.</span> Mai.</Fragment>
+  </PageHero>
+
+  <Problems items={[
+    { t: 'Computer lenti', d: 'Si bloccano, non si accendono, rallentano tutti. E i dipendenti restano a guardare lo schermo.' },
+    { t: 'Tempo e soldi persi', d: 'Tecnici a chiamata, soluzioni tampone, fatture a sorpresa ogni volta che qualcosa si rompe.' },
+    { t: 'Guasti da gestire', d: 'Trovare il tecnico, comprare il ricambio, reinstallare i programmi: un lavoro che non è il tuo.' },
+  ]}>I computer aziendali <span class="red">ti stanno rallentando?</span></Problems>
+
+  <Includes lead="Un sistema collaudato, già attivo in oltre 500 aziende, professionisti e studi." items={[
+    { icon: 'pc', t: 'PC configurati su misura', d: 'Non presi dal magazzino: li prepariamo con i tuoi programmi, le tue cartelle e i tuoi utenti.' },
+    { icon: 'wrench', t: 'Installazione chiavi in mano', d: 'Li portiamo, li colleghiamo e li avviamo. Il giorno dopo sei già operativo.' },
+    { icon: 'activity', t: 'Assistenza e manutenzione', d: 'Aggiornamenti, controlli e interventi da remoto o in sede, con un numero dedicato.' },
+    { icon: 'refresh', t: 'Sostituzione senza costi', d: 'Se un PC si guasta o invecchia lo sostituiamo noi, senza costi aggiuntivi.' },
+  ]} cols={4}>Il Noleggio Assistito <span class="red">per i tuoi computer</span></Includes>
+
+  <section class="section section--paper">
+    <div class="wrap b-split">
+      <div data-reveal>
+        <span class="kicker">Il computer giusto</span>
+        <h2 class="h h2" style="margin-top:.8rem">Un PC per <span class="red">ogni scrivania</span></h2>
+        <p class="lead" style="margin-top:1rem">Scegliamo insieme il formato più adatto a chi lo usa, e lo configuriamo per il suo lavoro.</p>
+        <ul class="b-list">
+          <li><span class="b-list__ok"><Icon name="check" size={14} width={3.2} /></span><span><strong>Mini PC</strong>: compatti e silenziosi, perfetti per l'ufficio e le scrivanie piccole</span></li>
+          <li><span class="b-list__ok"><Icon name="check" size={14} width={3.2} /></span><span><strong>All in One</strong>: schermo e computer in un unico pezzo, niente cavi</span></li>
+          <li><span class="b-list__ok"><Icon name="check" size={14} width={3.2} /></span><span><strong>Notebook</strong>: per chi lavora fuori sede o in smart working</span></li>
+          <li><span class="b-list__ok"><Icon name="check" size={14} width={3.2} /></span><span><strong>Workstation</strong>: per CAD, rendering e grafica</span></li>
+        </ul>
+      </div>
+      <div class="b-hero__photo" data-reveal style="--d:.12s"><Image src={cpu} alt="Processore di un computer configurato da G8A" widths={[560, 900]} sizes="(max-width: 900px) 100vw, 560px" /></div>
+    </div>
+  </section>
+
+  <Guarantee />
+  <Quotes ids={['coriani', 'testa', 'milani']}>Chi ha scelto i nostri <span class="red">computer a noleggio</span></Quotes>
+  <Faq items={faq}>Noleggio computer: <span class="red">le risposte</span></Faq>
+  <Cta lead="Dicci quante postazioni hai e che lavoro fate: ti proponiamo i computer giusti e il canone." waText={wa}>Risolvi ora il problema dei computer</Cta>
+</Base>

@@ -1,0 +1,29 @@
+---
+import { Image } from 'astro:assets';
+import { byId } from '../../data/clienti';
+interface Props { ids: string[]; full?: boolean; kicker?: string; more?: boolean; paper?: boolean }
+const { ids, full = false, kicker = 'Dicono di noi', more = true, paper = false } = Astro.props;
+const list = byId(ids);
+const cols = full ? 2 : Math.min(3, list.length);
+---
+<section class:list={['section', { 'section--paper': paper }]}>
+  <div class="wrap">
+    <div class="b-head" data-reveal>
+      <span class="kicker">{kicker}</span>
+      <h2 class="h h2"><slot /></h2>
+    </div>
+    <div class="b-quotes" style={`--cols:${cols}`}>
+      {list.map((q, i) => (
+        <figure class="b-quote" data-reveal style={`--d:${(i % cols) * 0.1}s;${paper ? 'background:#fff' : ''}`}>
+          <div class="b-stars" role="img" aria-label="5 stelle su 5">★★★★★</div>
+          <blockquote>{full ? q.testo.map((p) => <p>«{p}»</p>) : <p>«{q.breve}»</p>}</blockquote>
+          <figcaption>
+            {q.foto ? <Image class="b-ava" src={q.foto} alt={q.nome} width={52} height={52} densities={[1, 2]} /> : <span class="b-ava" aria-hidden="true">{q.sigla}</span>}
+            <span><strong>{q.nome}</strong><br />{q.ruolo}</span>
+          </figcaption>
+        </figure>
+      ))}
+    </div>
+    {more && <a class="b-more" href="/testimonianze-casistudio">Tutti i casi studio e le testimonianze →</a>}
+  </div>
+</section>

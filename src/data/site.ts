@@ -48,3 +48,27 @@ export const FAQ = [
 export const waLink = (text: string = SITE.whatsappText) =>
   `https://wa.me/${SITE.whatsapp}?text=${encodeURIComponent(text)}`;
 export const telLink = `tel:${SITE.phoneIntl}`;
+
+// Domande comuni a tutte le pagine del Noleggio Assistito (dal sito storico).
+export const FAQ_BASE = [
+  { q: 'Quanto dura il vincolo?', a: 'Nessun vincolo contrattuale: puoi disdire quando vuoi, con un messaggio, una email o una telefonata.' },
+  { q: "L'assistenza è inclusa?", a: 'Sì, è inclusa nel noleggio senza costi extra, con un numero dedicato raggiungibile anche su WhatsApp.' },
+  { q: 'Quali sono i tempi di installazione?', a: "Di solito da 1 a 4 giorni lavorativi, in base al modello e all'offerta. Per le urgenze chiedi ai nostri installatori." },
+  { q: 'E se non sono soddisfatto?', a: 'Se dopo 30 giorni non sei soddisfatto, ti rimborsiamo. Senza vincoli.' },
+];
+
+export const faqLd = (items: { q: string; a: string }[]) => ({
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: items.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })),
+});
+
+export const serviceLd = (name: string, description: string, path: string) => ({
+  '@context': 'https://schema.org',
+  '@type': 'Service',
+  name,
+  description,
+  url: `https://www.g8a.it${path}`,
+  provider: { '@id': 'https://www.g8a.it/#organization' },
+  areaServed: ['Provincia di Varese', 'Città metropolitana di Milano', 'Provincia di Lecco'],
+});

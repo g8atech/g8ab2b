@@ -21,19 +21,49 @@ npm run build    # genera il sito in dist/
 | Intestazione, piè di pagina, barra mobile Chiama/WhatsApp | `src/layouts/Base.astro` |
 | Immagini (logo, robot, foto, loghi stampa) | `src/assets/` |
 
+## Pagine
+
+Le pagine hanno **gli stessi indirizzi del vecchio sito**, così Google non perde nulla al cambio.
+
+| Indirizzo | Pagina | File |
+|---|---|---|
+| `/` | Home, Noleggio Assistito | `src/pages/index.astro` |
+| `/noleggio-computer` | Noleggio computer | `src/pages/noleggio-computer.astro` |
+| `/noleggio-stampanti` | Noleggio stampanti | `src/pages/noleggio-stampanti.astro` |
+| `/noleggio-backup` | Backup e NAS | `src/pages/noleggio-backup.astro` |
+| `/rmm` | Monitoraggio RMM | `src/pages/rmm.astro` |
+| `/testimonianze-casistudio` | Casi studio e testimonianze | `src/pages/testimonianze-casistudio.astro` |
+| `/assistenza-business` | Contatti | `src/pages/assistenza-business.astro` |
+| `/guidagratuitai7errori-3556` | Guida gratuita | `src/pages/guidagratuitai7errori-3556.astro` |
+| `/homepage` | reindirizza a `/` | `vercel.json` |
+
+Testimonianze e casi studio stanno in `src/data/clienti.ts`; i blocchi comuni delle pagine in `src/components/blocks/`.
+
 ## Pubblicazione
 
-Il progetto è collegato a Vercel: ogni modifica su `main` va online da sola. Vercel riconosce Astro senza configurazione.
+Il sito non si indicizza finché non lo dici tu: tutto passa da due variabili su Vercel (Settings → Environment Variables, ambiente Production).
 
-Finché il sito è in anteprima su `*.vercel.app`, `public/robots.txt` blocca l'indicizzazione. Al passaggio su g8a.it:
+| Variabile | Valore | Effetto |
+|---|---|---|
+| `PUBLIC_SITE_LIVE` | `true` | `robots.txt` apre il sito a Google e ai motori AI, toglie il `noindex` |
+| `PUBLIC_GTM_ID` | `GTM-M5FDVQDW` (quello del vecchio sito) | attiva Google Tag Manager |
 
-1. collegare il dominio su Vercel (Settings → Domains);
-2. sostituire `public/robots.txt` con `Allow: /` e la riga `Sitemap: https://www.g8a.it/sitemap-index.xml`;
-3. impostare i redirect 301 dagli indirizzi del vecchio sito (vedi documento di architettura).
+Ogni clic su telefono, WhatsApp o email invia a GTM l'evento `contatto` con `canale` e `pagina`: in GTM basta un attivatore "Evento personalizzato = contatto" per le conversioni di GA4 e Google Ads.
+
+### Il giorno del cambio
+
+1. Controllare l'anteprima su Vercel, pagina per pagina.
+2. Su Vercel → Settings → Domains aggiungere `www.g8a.it` (principale) e `g8a.it` (reindirizza a www).
+3. Dal registrar del dominio cambiare i DNS indicati da Vercel al posto di quelli di GoHighLevel. Le email non cambiano: non toccare i record MX.
+4. Impostare `PUBLIC_SITE_LIVE=true` e `PUBLIC_GTM_ID`, poi Redeploy.
+5. Sottodomini per città (es. `gallarate.g8a.it`): aggiungerli su Vercel con reindirizzamento 301 a `www.g8a.it` finché non nascono le pagine città.
+6. Google Search Console: inviare `https://www.g8a.it/sitemap-index.xml` e controllare le pagine indicizzate nei giorni seguenti.
+7. In GTM verificare che le conversioni di Google Ads arrivino dal nuovo evento `contatto`.
 
 ## Da completare
 
-- Foto robotiche originali in alta risoluzione (ora `robot-coppia.jpg` è un ritaglio della locandina).
+- PDF della guida "I 7 errori informatici": oggi la pagina la fa richiedere su WhatsApp o via email.
+- Foto robotiche originali in alta risoluzione.
 - Loghi delle altre testate (Borsa Italiana, Repubblica, La Stampa, ANSA, ItalWire, Finanza Flash, Il Secolo XIX).
 - Prezzo "da € al mese" del Noleggio Assistito, se si vuole mostrarlo.
-- Pagine servizio, sedi e città previste nell'architettura.
+- Pagine settore, sedi e città previste nell'architettura.

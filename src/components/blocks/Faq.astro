@@ -1,0 +1,11 @@
+---
+interface Props { items: { q: string; a: string }[]; kicker?: string }
+const { items, kicker = 'Domande frequenti' } = Astro.props;
+---
+<section class="section section--paper">
+  <div class="wrap b-faq">
+    <span class="kicker">{kicker}</span>
+    <h2 class="h h2" style="margin-top:.8rem"><slot /></h2>
+    {items.map((f) => <details><summary>{f.q}</summary><p>{f.a}</p></details>)}
+  </div>
+</section>

@@ -1,0 +1,19 @@
+---
+import { Image } from 'astro:assets';
+import Icon from '../Icon.astro';
+import mark from '../../assets/g8a-mark.png';
+import { SITE, waLink, telLink } from '../../data/site';
+interface Props { lead: string; waText: string }
+const { lead, waText } = Astro.props;
+---
+<section class="b-cta">
+  <div class="b-cta__mark" aria-hidden="true"><Image src={mark} alt="" width={520} densities={[1, 2]} /></div>
+  <div class="wrap b-cta__row">
+    <h2 class="h b-cta__h"><slot /></h2>
+    <p class="b-cta__lead">{lead}</p>
+    <div class="b-actions">
+      <a class="btn btn--white" href={telLink}><Icon name="phone" />Chiama {SITE.phone}</a>
+      <a class="btn btn--wa" href={waLink(waText)}><Icon name="wa" />Scrivici su WhatsApp</a>
+    </div>
+  </div>
+</section>

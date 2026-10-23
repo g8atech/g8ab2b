@@ -24,11 +24,11 @@ const press = [
 const canone = ['Computer nuovi', 'Server e backup', 'Stampanti e toner', 'Assistenza tecnica', 'Monitoraggio 24/7', 'Sostituzione guasti'];
 
 const include = [
-  { icon: 'pc', t: 'Computer nuovi, su misura', d: 'Configurati per il tuo lavoro, con i tuoi programmi e i tuoi dati già pronti.' },
-  { icon: 'server', t: 'Server e backup automatici', d: 'I dati aziendali al sicuro, con copie controllate ogni giorno.' },
-  { icon: 'printer', t: 'Stampanti con toner inclusi', d: 'Multifunzione per l\'ufficio, manutenzione e consumabili compresi.' },
+  { icon: 'pc', t: 'Computer nuovi, su misura', d: 'Configurati per il tuo lavoro, con i tuoi programmi e i tuoi dati già pronti.', href: '/noleggio-computer' },
+  { icon: 'server', t: 'Server e backup automatici', d: 'I dati aziendali al sicuro, con copie controllate ogni giorno.', href: '/noleggio-backup' },
+  { icon: 'printer', t: 'Stampanti con toner inclusi', d: 'Multifunzione per l\'ufficio, manutenzione e consumabili compresi.', href: '/noleggio-stampanti' },
   { icon: 'wrench', t: 'Assistenza da remoto e in sede', d: 'Un solo numero, su telefono e WhatsApp. Nessun costo a chiamata.' },
-  { icon: 'activity', t: 'Monitoraggio 24 ore su 24', d: 'Vediamo un disco che cede o un backup saltato prima che diventi un blocco.' },
+  { icon: 'activity', t: 'Monitoraggio 24 ore su 24', d: 'Vediamo un disco che cede o un backup saltato prima che diventi un blocco.', href: '/rmm' },
   { icon: 'refresh', t: 'Sostituzione e aggiornamento', d: 'Se una macchina si guasta o invecchia, la cambiamo noi.' },
 ];
 
@@ -125,14 +125,18 @@ const serviceLd = {
         <p class="lead">Non compri le macchine e non paghi gli interventi. Noi installiamo, controlliamo, aggiorniamo e sostituiamo.</p>
       </div>
       <div class="inc">
-        {include.map((x, i) => (
-          <div class="inc__card glow" data-reveal style={`--d:${(i % 3) * 0.08}s`}>
+        {include.map((x, i) => {
+          const Tag = x.href ? 'a' : 'div';
+          return (
+          <Tag class="inc__card glow" href={x.href} data-reveal style={`--d:${(i % 3) * 0.08}s`}>
             <span class="inc__n">{String(i + 1).padStart(2, '0')}</span>
             <span class="inc__ic"><Icon name={x.icon} size={28} stroke="#fff" width={1.9} /></span>
             <h3>{x.t}</h3>
             <p>{x.d}</p>
-          </div>
-        ))}
+            {x.href && <span class="inc__go">Scopri di più →</span>}
+          </Tag>
+          );
+        })}
       </div>
     </div>
   </section>
@@ -267,6 +271,7 @@ const serviceLd = {
           <figcaption><span class="avatar" aria-hidden="true">AV</span><span><strong>Dott.ssa Antonella Vallerini</strong><br />Consulente del lavoro, Gallarate</span></figcaption>
         </figure>
       </div>
+      <a class="b-more" href="/testimonianze-casistudio">Leggi i casi studio: server ripristinato in 40 minuti, centralino in 1 ora →</a>
     </div>
   </section>
 
@@ -434,11 +439,12 @@ const serviceLd = {
 
   /* COSA INCLUDE */
   .inc { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-top: 2.75rem; }
-  .inc__card { position: relative; padding: 1.75rem; border-radius: 18px; background: #fff; border: 1px solid var(--line); }
+  .inc__card { position: relative; display: flex; flex-direction: column; text-decoration: none; color: inherit; padding: 1.75rem; border-radius: 18px; background: #fff; border: 1px solid var(--line); }
   .inc__n { position: absolute; top: 1.1rem; right: 1.3rem; font-stretch: 78%; font-variation-settings: 'wdth' 78; font-weight: 800; font-size: 2.6rem; line-height: 1; color: #eceef1; }
   .inc__ic { display: grid; place-items: center; width: 3.4rem; height: 3.4rem; border-radius: 14px; background: var(--grad); box-shadow: 0 10px 24px rgba(227, 6, 19, 0.3); }
   .inc__card h3 { margin-top: 1.2rem; font-size: 1.2rem; }
   .inc__card p { margin-top: 0.4rem; color: var(--muted); }
+  .inc__go { margin-top: auto; padding-top: 0.8rem; font-weight: 800; color: var(--red); }
   @media (max-width: 900px) { .inc { grid-template-columns: 1fr 1fr; } }
   @media (max-width: 600px) { .inc { grid-template-columns: 1fr; } }
 

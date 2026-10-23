@@ -1,0 +1,40 @@
+---
+import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
+import { SITE, waLink } from '../data/site';
+const wa = "Ciao, vorrei ricevere la guida gratuita «I 7 errori informatici da evitare assolutamente nella tua azienda».";
+---
+<Base title="Guida gratuita: i 7 errori informatici da evitare in azienda | G8A Technology" description="Scarica gratis la guida di G8A Technology per imprenditori e professionisti: i 7 errori informatici da evitare assolutamente nella tua azienda.">
+  <section class="b-hero">
+    <div class="wrap b-hero__row">
+      <div>
+        <ol class="b-crumbs" aria-label="Percorso"><li><a href="/">Home</a></li><li aria-current="page">Guida gratuita</li></ol>
+        <span class="kicker">Guida gratuita</span>
+        <h1 class="h b-hero__h1">I 7 errori informatici <span class="red">da evitare assolutamente</span> nella tua azienda</h1>
+        <p class="lead b-hero__lead">Un'informatica efficiente e sicura è essenziale. Ma alcuni errori comuni rallentano il lavoro, mettono a rischio i dati e fanno perdere soldi. La guida, pensata per imprenditori e professionisti, ti aiuta a riconoscerli.</p>
+        <div class="b-actions" style="display:flex">
+          <a class="btn btn--wa" href={waLink(wa)}><Icon name="wa" />Ricevila su WhatsApp</a>
+          <a class="btn btn--line" href={`mailto:${SITE.email}?subject=${encodeURIComponent('Richiesta guida 7 errori informatici')}`}>Ricevila via email</a>
+        </div>
+        <p class="b-hero__note"><span><Icon name="check" size={16} width={3} />Gratuita</span><span><Icon name="check" size={16} width={3} />Scritta dai nostri tecnici</span></p>
+      </div>
+      <div class="b-hero__visual">
+        <span class="b-hero__glow" aria-hidden="true"></span>
+        <div class="book" aria-hidden="true">
+          <span class="book__brand">G8A Technology · Guida</span>
+          <strong>I 7 errori informatici</strong>
+          <em>da evitare assolutamente nella tua azienda</em>
+          <span class="book__n">7</span>
+        </div>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .book { position: relative; z-index: 1; width: min(19rem, 80%); aspect-ratio: 3 / 4; margin: 1rem auto; display: flex; flex-direction: column; justify-content: flex-end; gap: 0.5rem; padding: 1.8rem; border-radius: 8px 18px 18px 8px; background: var(--ink); color: #fff; box-shadow: inset 10px 0 0 #222228, 0 30px 60px rgba(11, 11, 13, 0.35), 0 0 60px rgba(255, 26, 26, 0.25); transform: rotate(-4deg); animation: b-float 7s ease-in-out infinite; overflow: hidden; }
+  .book__brand { position: absolute; top: 1.4rem; left: 1.8rem; font-size: 0.75rem; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; color: #ff6b6b; }
+  .book__n { position: absolute; top: 2.4rem; right: -0.5rem; font-stretch: 78%; font-variation-settings: 'wdth' 78; font-weight: 800; font-size: 12rem; line-height: 1; background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .book strong { position: relative; font-stretch: 78%; font-variation-settings: 'wdth' 78; text-transform: uppercase; font-size: 2rem; line-height: 0.95; }
+  .book em { position: relative; font-style: normal; color: #c3c6cd; }
+</style>

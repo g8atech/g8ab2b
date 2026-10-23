@@ -1,0 +1,61 @@
+---
+import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
+import PageHero from '../components/blocks/PageHero.astro';
+import Problems from '../components/blocks/Problems.astro';
+import Includes from '../components/blocks/Includes.astro';
+import Guarantee from '../components/blocks/Guarantee.astro';
+import Quotes from '../components/blocks/Quotes.astro';
+import Faq from '../components/blocks/Faq.astro';
+import Cta from '../components/blocks/Cta.astro';
+import { FAQ_BASE, faqLd, serviceLd } from '../data/site';
+import foto from '../assets/foto-stampante.jpg';
+
+const wa = 'Ciao, vorrei informazioni sul noleggio stampanti per il mio ufficio.';
+const faq = [
+  { q: 'I toner sono compresi?', a: 'Sì, i toner sono inclusi nel canone del noleggio, senza costi a parte.' },
+  { q: 'E se la stampante si guasta?', a: "Interveniamo da remoto o in sede e, se serve, la sostituiamo rapidamente. La sostituzione è compresa." },
+  { q: 'Avete stampanti anche per uffici piccoli?', a: 'Sì: dalle multifunzione compatte per uno o due posti di lavoro fino alle macchine per gli uffici più grandi, oltre alle stampanti di etichette a colori.' },
+  ...FAQ_BASE,
+];
+const desc = 'Noleggio stampanti multifunzione per uffici con toner, assistenza e sostituzione inclusi. G8A Technology, partner Brother. Nessun vincolo, garanzia 30 giorni.';
+---
+<Base title="Noleggio stampanti per ufficio con toner inclusi | G8A Technology" description={desc} jsonLd={[serviceLd('Noleggio stampanti multifunzione', desc, '/noleggio-stampanti'), faqLd(faq)]}>
+  <PageHero kicker="Noleggio stampanti e multifunzione" crumb="Noleggio stampanti" waText={wa} image={foto} imageAlt="Stampante multifunzione in ufficio" chips={['Toner inclusi', 'Sostituzione rapida', 'Partner Brother']}
+    lead="Stampanti professionali sempre operative, toner inclusi, sostituzione rapida e assistenza veloce. Tutto in un canone mensile.">
+    <Fragment slot="title">Stampanti che stampano. <span class="red">Sempre.</span></Fragment>
+  </PageHero>
+
+  <Problems items={[
+    { t: 'Inceppata sul più bello', d: 'Devi mandare una stampa urgente e la stampante si blocca proprio adesso.' },
+    { t: 'Toner finito', d: 'Il toner è vuoto, il ricambio non c\'è e qualcuno deve correre a comprarlo.' },
+    { t: 'Non risponde', d: 'Il computer non la vede più, la rete non la trova, e nessuno sa perché.' },
+  ]}>Ti è mai capitato <span class="red">con la stampante?</span></Problems>
+
+  <Includes lead="Il Noleggio Assistito applicato alle stampanti: non ci pensi più." cols={4} items={[
+    { icon: 'printer', t: 'Stampanti professionali', d: 'Multifunzione che stampano, copiano e scansionano, sempre operative.' },
+    { icon: 'check', t: 'Toner inclusi', d: 'Nel canone ci sono anche i toner, senza costi a parte.' },
+    { icon: 'refresh', t: 'Sostituzione rapida', d: 'Se si guasta la sostituiamo noi, in fretta.' },
+    { icon: 'wrench', t: 'Assistenza veloce', d: 'Un numero dedicato, anche su WhatsApp, e tecnici vicini a te.' },
+  ]}>Cosa include il <span class="red">noleggio stampanti</span></Includes>
+
+  <section class="section section--paper">
+    <div class="wrap">
+      <div class="b-head" data-reveal>
+        <span class="kicker">Per ogni ufficio</span>
+        <h2 class="h h2">La stampante giusta, <span class="red">non la più cara</span></h2>
+        <p class="lead">Partiamo da quante pagine stampi e da cosa ti serve, poi scegliamo la macchina. Siamo partner Brother.</p>
+      </div>
+      <div class="b-inc" style="--cols:3">
+        <div class="b-inc__card" data-reveal><span class="b-inc__ic"><Icon name="printer" size={26} stroke="#fff" width={1.9} /></span><h3>Piccoli uffici e studi</h3><p>Multifunzione laser compatte per uno o pochi posti di lavoro, con il costo giusto anche per chi stampa poco.</p></div>
+        <div class="b-inc__card" data-reveal style="--d:.08s"><span class="b-inc__ic"><Icon name="building" size={26} stroke="#fff" width={1.9} /></span><h3>Uffici strutturati</h3><p>Multifunzione condivise in rete, con scansione verso email e cartelle per tutto il personale.</p></div>
+        <div class="b-inc__card" data-reveal style="--d:.16s"><span class="b-inc__ic"><Icon name="factory" size={26} stroke="#fff" width={1.9} /></span><h3>Etichette a colori</h3><p>Stampanti di etichette a colori per prodotti, magazzino e produzione.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <Guarantee />
+  <Quotes ids={['coriani', 'milani']}>Uffici che <span class="red">stampano senza pensieri</span></Quotes>
+  <Faq items={faq}>Noleggio stampanti: <span class="red">le risposte</span></Faq>
+  <Cta lead="Dicci quanto stampi e in quanti siete: ti proponiamo la stampante giusta e il canone." waText={wa}>Risolvi ora il problema delle stampanti</Cta>
+</Base>

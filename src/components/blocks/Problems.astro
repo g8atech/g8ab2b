@@ -1,0 +1,16 @@
+---
+import Icon from '../Icon.astro';
+interface Props { kicker?: string; items: { t: string; d: string }[] }
+const { kicker = 'Ti suona familiare?', items } = Astro.props;
+---
+<section class="section section--paper">
+  <div class="wrap">
+    <div class="b-head" data-reveal>
+      <span class="kicker">{kicker}</span>
+      <h2 class="h h2"><slot /></h2>
+    </div>
+    <div class="b-probs">
+      {items.map((x, i) => <div class="b-prob" data-reveal style={`--d:${i * 0.08}s`}><span class="b-prob__x"><Icon name="x" size={16} width={3} /></span><h3>{x.t}</h3><p>{x.d}</p></div>)}
+    </div>
+  </div>
+</section>

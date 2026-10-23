@@ -1,0 +1,35 @@
+---
+import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
+import Cases from '../components/blocks/Cases.astro';
+import Quotes from '../components/blocks/Quotes.astro';
+import Cta from '../components/blocks/Cta.astro';
+import { CASI } from '../data/clienti';
+const wa = 'Ciao, ho letto i vostri casi studio e vorrei parlare della mia azienda.';
+---
+<Base title="Casi studio e testimonianze dei clienti | G8A Technology" description="Casi reali del Protocollo Emergency G8A: server ripristinato in 40 minuti, centralino in 1 ora, firewall colpito da un fulmine in 2 ore. Le testimonianze dei nostri clienti.">
+  <section class="b-hero">
+    <div class="wrap">
+      <ol class="b-crumbs" aria-label="Percorso"><li><a href="/">Home</a></li><li aria-current="page">Casi studio</li></ol>
+      <span class="kicker">Casi studio e testimonianze</span>
+      <h1 class="h b-hero__h1" style="max-width:52rem">Il nostro valore, <span class="red">spiegato da chi ci ha scelto</span></h1>
+      <p class="lead b-hero__lead">Ogni testimonianza è una storia vera. Ogni storia, un motivo per fidarsi di noi.</p>
+      <ul class="fermi" data-reveal>
+        {CASI.map((c) => <li><strong>{c.fermo}</strong><span>{c.titolo}<br /><em>{c.cliente}</em></span></li>)}
+      </ul>
+    </div>
+  </section>
+
+  <Cases lead="Con il nostro Protocollo analizziamo i rischi prima che si manifestino, agiamo con rapidità quando serve e verifichiamo dopo ogni intervento. Così risolviamo il problema oggi, e lo preveniamo domani.">Quando c'è un problema, <span class="red">noi ci siamo</span></Cases>
+  <Quotes ids={['milani', 'coriani', 'testa', 'vallerini', 'soaptec']} full more={false}>Le parole dei clienti <span class="red">sono la nostra garanzia</span></Quotes>
+  <Cta lead="Raccontaci la tua azienda: ti diciamo come la proteggeremmo, prima che serva un caso studio." waText={wa}>Se sei una PMI che vuole cambiare, contattaci</Cta>
+</Base>
+
+<style>
+  .fermi { list-style: none; margin: 2rem 0 0; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+  .fermi li { display: flex; align-items: center; gap: 1rem; padding: 1.1rem 1.2rem; border-radius: 16px; background: #fff; border: 1px solid var(--line); box-shadow: 0 10px 30px rgba(11, 11, 13, 0.06); }
+  .fermi strong { font-stretch: 78%; font-variation-settings: 'wdth' 78; font-weight: 800; font-size: 2.3rem; line-height: 1; white-space: nowrap; background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .fermi span { font-weight: 700; line-height: 1.3; }
+  .fermi em { font-style: normal; font-weight: 500; color: var(--muted); font-size: 0.9rem; }
+  @media (max-width: 800px) { .fermi { grid-template-columns: 1fr; } }
+</style>

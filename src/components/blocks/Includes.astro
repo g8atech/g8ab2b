@@ -1,0 +1,29 @@
+---
+import Icon from '../Icon.astro';
+interface Item { icon: string; t: string; d: string; href?: string; go?: string }
+interface Props { kicker?: string; lead?: string; items: Item[]; cols?: number; id?: string; paper?: boolean }
+const { kicker = 'Cosa include', lead, items, cols = 3, id, paper = false } = Astro.props;
+---
+<section class:list={['section', { 'section--paper': paper }]} id={id}>
+  <div class="wrap">
+    <div class="b-head" data-reveal>
+      <span class="kicker">{kicker}</span>
+      <h2 class="h h2"><slot /></h2>
+      {lead && <p class="lead">{lead}</p>}
+    </div>
+    <div class="b-inc" style={`--cols:${cols}`}>
+      {items.map((x, i) => {
+        const Tag = x.href ? 'a' : 'div';
+        return (
+          <Tag class="b-inc__card glow" href={x.href} data-reveal style={`--d:${(i % cols) * 0.08}s`}>
+            <span class="b-inc__n">{String(i + 1).padStart(2, '0')}</span>
+            <span class="b-inc__ic"><Icon name={x.icon} size={26} stroke="#fff" width={1.9} /></span>
+            <h3>{x.t}</h3>
+            <p>{x.d}</p>
+            {x.href && <span class="b-inc__go">{x.go ?? 'Scopri di più'} →</span>}
+          </Tag>
+        );
+      })}
+    </div>
+  </div>
+</section>

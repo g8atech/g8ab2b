@@ -1,0 +1,95 @@
+---
+import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
+import PageHero from '../components/blocks/PageHero.astro';
+import Problems from '../components/blocks/Problems.astro';
+import Includes from '../components/blocks/Includes.astro';
+import Guarantee from '../components/blocks/Guarantee.astro';
+import Cases from '../components/blocks/Cases.astro';
+import Quotes from '../components/blocks/Quotes.astro';
+import Faq from '../components/blocks/Faq.astro';
+import Cta from '../components/blocks/Cta.astro';
+import { FAQ_BASE, faqLd, serviceLd } from '../data/site';
+
+const wa = 'Ciao, vorrei informazioni sul noleggio NAS e backup per la mia azienda.';
+const faq = [
+  { q: 'Cosa devo fare io?', a: 'Niente: ti consegniamo il NAS già configurato e testato. Basta collegarlo alla rete, ai backup pensiamo noi.' },
+  { q: 'Il backup è anche fuori dall\'ufficio?', a: 'Sì, oltre alla copia sul NAS possiamo programmare backup fuori sede, su cloud o su un altro NAS, così i dati restano salvi anche in caso di furto, incendio o ransomware.' },
+  { q: 'Chi controlla che i backup funzionino?', a: 'Noi. Il NAS è monitorato da remoto: se un backup non va a buon fine o un disco dà segni di cedimento, lo vediamo e interveniamo.' },
+  ...FAQ_BASE,
+];
+const desc = 'Noleggio NAS professionale per il backup aziendale: dischi in RAID, backup automatici anche su cloud, monitoraggio e assistenza inclusi. Nessun investimento iniziale.';
+---
+<Base title="Backup aziendale e noleggio NAS professionale | G8A Technology" description={desc} jsonLd={[serviceLd('Noleggio NAS e backup aziendale', desc, '/noleggio-backup'), faqLd(faq)]}>
+  <PageHero kicker="Backup aziendale e NAS a noleggio" crumb="Backup e NAS" waText={wa} chips={['Backup automatici', 'Copia anche su cloud', 'Monitorato da remoto']}
+    lead="Ti consegniamo un NAS professionale configurato e testato, con dischi ridondati e backup automatici, anche fuori sede. Non devi fare nulla: solo collegarlo e dormire sonni tranquilli.">
+    <Fragment slot="title">I dati della tua azienda <span class="red">sono al sicuro?</span></Fragment>
+    <div slot="visual" class="nas" aria-hidden="true">
+      <div class="nas__box">
+        <p class="nas__h"><span class="live"></span>NAS G8A · Backup</p>
+        <div class="nas__disks">{[1, 2, 3, 4].map((n) => <span class="nas__disk"><i></i>Disco {n}</span>)}</div>
+        <ul class="nas__log">
+          <li><Icon name="check" size={14} width={3.2} />Backup notturno completato</li>
+          <li><Icon name="check" size={14} width={3.2} />Copia su cloud sincronizzata</li>
+          <li><Icon name="check" size={14} width={3.2} />RAID integro, 4 dischi su 4</li>
+        </ul>
+        <div class="nas__bar"><span>Spazio usato</span><b>58%</b><i><i></i></i></div>
+      </div>
+    </div>
+  </PageHero>
+
+  <Problems kicker="Il rischio" items={[
+    { t: 'Hard disk e chiavette', d: 'Copie fatte a mano, quando qualcuno se ne ricorda, su supporti che si perdono o si rompono.' },
+    { t: 'Il server si blocca', d: 'Un calo di tensione o un guasto, e i dati di anni di lavoro non sono più raggiungibili.' },
+    { t: 'Un ransomware cripta tutto', d: 'Basta un clic sbagliato: giorni di blocco, danni economici e d\'immagine.' },
+  ]}>Perché continuare a rischiare <span class="red">con i tuoi dati?</span></Problems>
+
+  <Includes lead="Un NAS professionale pronto all'uso, nel canone del Noleggio Assistito." cols={4} items={[
+    { icon: 'server', t: 'NAS pronto all\'uso', d: 'Configurato e testato da noi prima della consegna.' },
+    { icon: 'shieldok', t: 'Dischi in RAID', d: 'Dischi inclusi e ridondati: se uno si rompe, i dati restano.' },
+    { icon: 'refresh', t: 'Backup automatici', d: 'Programmati e automatici, anche fuori sede su cloud o su un altro NAS.' },
+    { icon: 'activity', t: 'Monitoraggio e assistenza', d: 'Controlliamo da remoto che tutto funzioni, e interveniamo se serve.' },
+  ]}>Il backup che <span class="red">si fa da solo</span></Includes>
+
+  <section class="section section--paper">
+    <div class="wrap">
+      <div class="b-head" data-reveal>
+        <span class="kicker">La regola d'oro</span>
+        <h2 class="h h2">Backup 3-2-1: <span class="red">la regola che ti salva</span></h2>
+        <p class="lead">È il metodo usato dai professionisti per non perdere mai i dati. Con il nostro NAS lo applichi senza pensarci.</p>
+      </div>
+      <div class="b-inc" style="--cols:3">
+        <div class="b-inc__card rule321" data-reveal><strong>3</strong><h3>copie dei dati</h3><p>L'originale sui computer più due copie di backup.</p></div>
+        <div class="b-inc__card rule321" data-reveal style="--d:.08s"><strong>2</strong><h3>supporti diversi</h3><p>Le copie stanno su dispositivi diversi, come il NAS e il cloud.</p></div>
+        <div class="b-inc__card rule321" data-reveal style="--d:.16s"><strong>1</strong><h3>copia fuori sede</h3><p>Almeno una copia lontana dall'ufficio, al riparo da furti e incendi.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <Guarantee />
+  <Cases ids={['serramenti', 'lfm']} more lead="Quando succede qualcosa, il backup fa la differenza tra un disastro e un'ora di fermo.">Il backup <span class="red">alla prova dei fatti</span></Cases>
+  <Quotes ids={['milani']} more={false}>Da nessun backup <span class="red">a dati al sicuro</span></Quotes>
+  <Faq items={faq}>Backup e NAS: <span class="red">le risposte</span></Faq>
+  <Cta lead="Ti diciamo come sono protetti oggi i tuoi dati e cosa serve per dormire tranquillo." waText={wa}>Risolvi ora il problema del backup</Cta>
+</Base>
+
+<style>
+  .nas { position: relative; z-index: 1; max-width: 26rem; margin-inline: auto; animation: b-float 7s ease-in-out infinite; }
+  .nas__box { padding: 1.4rem; border-radius: 20px; background: #16161a; color: #fff; border: 1px solid rgba(255, 255, 255, 0.1); box-shadow: 0 30px 70px rgba(11, 11, 13, 0.35), 0 0 60px rgba(255, 26, 26, 0.2); }
+  .nas__h { display: flex; align-items: center; gap: 0.55rem; font-weight: 800; padding-bottom: 0.9rem; border-bottom: 1px solid rgba(255, 255, 255, 0.1); }
+  .nas__disks { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.5rem; margin-top: 1rem; }
+  .nas__disk { display: flex; flex-direction: column; align-items: center; gap: 0.5rem; padding: 0.9rem 0.3rem; border-radius: 10px; background: #222228; font-size: 0.75rem; color: #a6a9b1; }
+  .nas__disk i { width: 0.55rem; height: 0.55rem; border-radius: 50%; background: var(--live); box-shadow: 0 0 8px var(--live); animation: blink 1.6s steps(2) infinite; }
+  .nas__disk:nth-child(2) i { animation-delay: 0.3s; } .nas__disk:nth-child(3) i { animation-delay: 0.7s; } .nas__disk:nth-child(4) i { animation-delay: 1.1s; }
+  @keyframes blink { 50% { opacity: 0.3; } }
+  .nas__log { list-style: none; margin: 1rem 0 0; padding: 0; display: grid; gap: 0.5rem; font-size: 0.92rem; }
+  .nas__log li { display: flex; align-items: center; gap: 0.55rem; }
+  .nas__log :global(svg) { color: #fff; background: var(--live); border-radius: 50%; padding: 2px; width: 18px; height: 18px; flex: none; }
+  .nas__bar { display: grid; grid-template-columns: 1fr auto; gap: 0.4rem; margin-top: 1.1rem; font-size: 0.85rem; color: #a6a9b1; }
+  .nas__bar b { color: #fff; }
+  .nas__bar > i { grid-column: 1 / -1; height: 6px; border-radius: 6px; background: #2a2a30; overflow: hidden; }
+  .nas__bar > i > i { display: block; width: 58%; height: 100%; background: var(--grad); animation: fill 2s cubic-bezier(0.2, 0.7, 0.2, 1) both; }
+  @keyframes fill { from { width: 0; } }
+  .rule321 strong { font-stretch: 78%; font-variation-settings: 'wdth' 78; font-weight: 800; font-size: 4.2rem; line-height: 1; background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .rule321 h3 { margin-top: 0.3rem; text-transform: uppercase; font-stretch: 85%; font-variation-settings: 'wdth' 85; font-size: 1.3rem; }
+</style>

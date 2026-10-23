@@ -1,0 +1,84 @@
+---
+import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
+import { SITE, SEDI, waLink, telLink } from '../data/site';
+const maps = (s: { address: string; cap: string; city: string }) => `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${s.address}, ${s.cap} ${s.city}`)}`;
+const canali = [
+  { icon: 'wa', t: 'WhatsApp', d: 'Il modo più rapido: ti risponde una persona del team.', cta: 'Scrivici', href: waLink('Ciao, vi contatto dal sito g8a.it.'), cls: 'btn--wa' },
+  { icon: 'phone', t: 'Telefono', d: SITE.phone, cta: 'Chiama', href: telLink, cls: 'btn--red' },
+  { icon: 'briefcase', t: 'Email', d: SITE.email, cta: 'Scrivi una email', href: `mailto:${SITE.email}`, cls: 'btn--ink' },
+  { icon: 'wrench', t: 'Sei già cliente?', d: "Apri un ticket dall'area clienti e ci colleghiamo da remoto.", cta: 'Apri un ticket', href: SITE.ticket, cls: 'btn--line' },
+];
+---
+<Base title="Contatti e assistenza informatica per aziende | G8A Technology" description="Contatta G8A Technology: WhatsApp e telefono 0331 139 0950, email info@g8a.it, ticket di assistenza per i clienti. Sedi a Gallarate, Busto Arsizio, Bollate, Jerago con Orago e Lecco.">
+  <section class="b-hero">
+    <div class="wrap">
+      <ol class="b-crumbs" aria-label="Percorso"><li><a href="/">Home</a></li><li aria-current="page">Contatti</li></ol>
+      <span class="kicker">Contatti e assistenza</span>
+      <h1 class="h b-hero__h1" style="max-width:50rem">Hai bisogno di noi? <span class="red">Ti risponde una persona.</span></h1>
+      <p class="lead b-hero__lead">Scegli il canale che preferisci: WhatsApp, telefono, email o ticket di assistenza. Non c'è un call center, ci siamo noi.</p>
+      <div class="ch">
+        {canali.map((c, i) => (
+          <div class="ch__card glow" data-reveal style={`--d:${i * 0.08}s`}>
+            <span class="b-inc__ic"><Icon name={c.icon} size={26} stroke="#fff" width={1.9} /></span>
+            <h2>{c.t}</h2>
+            <p>{c.d}</p>
+            <a class={`btn btn--sm ${c.cls}`} href={c.href}>{c.cta}</a>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <div class="b-head" data-reveal>
+        <span class="kicker">Le nostre sedi</span>
+        <h2 class="h h2">Vicini alla tua azienda, <span class="red">in Lombardia</span></h2>
+        <p class="lead">Cinque punti vendita e una sede operativa con magazzino, da cui partono i nostri tecnici.</p>
+      </div>
+      <div class="sd">
+        {SEDI.map((s, i) => (
+          <a class:list={['sd__card', 'glow', { 'sd__card--hq': s.operativa }]} href={maps(s)} data-reveal style={`--d:${(i % 3) * 0.08}s`}>
+            <span class="sd__kind">{s.operativa ? 'Sede operativa e legale' : 'Punto vendita'}</span>
+            <strong>{s.city}</strong>
+            <span>{s.address}, {s.cap} {s.city} ({s.province})</span>
+            <em>Apri in Google Maps →</em>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--paper">
+    <div class="wrap">
+      <div class="legal" data-reveal>
+        <p><strong>{SITE.company}</strong></p>
+        <p>Sede legale: {SITE.legalAddress}</p>
+        <p>P.IVA {SITE.vat} · REA {SITE.rea} · Capitale sociale {SITE.capital}</p>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .ch { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-top: 2rem; }
+  .ch__card { display: flex; flex-direction: column; gap: 0.5rem; padding: 1.5rem; border-radius: 18px; background: #fff; border: 1px solid var(--line); }
+  .ch__card h2 { margin-top: 0.6rem; font-size: 1.2rem; }
+  .ch__card p { color: var(--muted); flex: 1; overflow-wrap: anywhere; }
+  .ch__card .btn { align-self: flex-start; margin-top: 0.5rem; }
+  .sd { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-top: 2.5rem; }
+  .sd__card { display: flex; flex-direction: column; gap: 0.3rem; padding: 1.5rem; border-radius: 18px; border: 1px solid var(--line); background: #fff; text-decoration: none; }
+  .sd__card--hq { background: var(--ink); color: #fff; border-color: var(--ink); }
+  .sd__kind { font-size: 0.75rem; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; color: var(--red); }
+  .sd__card--hq .sd__kind { color: #ff6b6b; }
+  .sd__card strong { font-stretch: 85%; font-variation-settings: 'wdth' 85; text-transform: uppercase; font-size: 1.6rem; }
+  .sd__card span:not(.sd__kind) { color: var(--muted); }
+  .sd__card--hq span:not(.sd__kind) { color: #c3c6cd; }
+  .sd__card em { margin-top: auto; padding-top: 0.6rem; font-style: normal; font-weight: 800; color: var(--red); }
+  .sd__card--hq em { color: #ff6b6b; }
+  .legal { color: var(--muted); display: grid; gap: 0.3rem; }
+  .legal strong { color: var(--ink); }
+  @media (max-width: 1000px) { .ch { grid-template-columns: 1fr 1fr; } .sd { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 600px) { .ch, .sd { grid-template-columns: 1fr; } }
+</style>

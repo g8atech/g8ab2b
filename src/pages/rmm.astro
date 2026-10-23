@@ -1,0 +1,87 @@
+---
+import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
+import PageHero from '../components/blocks/PageHero.astro';
+import Includes from '../components/blocks/Includes.astro';
+import Cases from '../components/blocks/Cases.astro';
+import Faq from '../components/blocks/Faq.astro';
+import Cta from '../components/blocks/Cta.astro';
+import { SITE, faqLd, serviceLd, waLink } from '../data/site';
+
+const wa = 'Ciao, vorrei informazioni sul monitoraggio RMM per la mia azienda.';
+const faq = [
+  { q: "Cos'è un RMM?", a: 'RMM sta per Remote Monitoring and Management: è la piattaforma con cui controlliamo e gestiamo da remoto computer, server e dispositivi dei clienti, con antivirus, aggiornamenti, inventario e ticket in un unico posto.' },
+  { q: 'Devo installare qualcosa?', a: 'Installiamo noi un piccolo agente su ogni computer. Da quel momento vediamo lo stato dei dispositivi e possiamo intervenire senza venire in sede.' },
+  { q: 'Come apro una richiesta di assistenza?', a: 'Dalla piattaforma con un ticket, oppure come sempre al telefono o su WhatsApp.' },
+  { q: "È incluso nel Noleggio Assistito?", a: 'Sì, il monitoraggio fa parte del Noleggio Assistito. Chiedici come attivarlo per la tua azienda.' },
+];
+const desc = 'G8A RMM: monitoraggio e gestione da remoto di computer, server e utenti della tua azienda. Antivirus gestito, ticket, report periodici e inventario hardware e software.';
+---
+<Base title="RMM: monitoraggio e gestione IT da remoto | G8A Technology" description={desc} jsonLd={[serviceLd('G8A RMM, monitoraggio e gestione IT', desc, '/rmm'), faqLd(faq)]}>
+  <PageHero kicker="G8A RMM" crumb="Monitoraggio RMM" waText={wa} note={['Antivirus gestito', 'Ticket di assistenza', 'Report periodici']}
+    lead="Tutto l'occorrente per monitorare la situazione della tua azienda: controlliamo, gestiamo e supportiamo da remoto tutti i dispositivi e gli utenti, da un'unica console.">
+    <Fragment slot="title">Vediamo i problemi <span class="red">prima che ti fermino</span></Fragment>
+    <div slot="visual" class="con" aria-hidden="true">
+      <div class="con__top"><span><span class="live"></span>Console G8A RMM</span><em>Esempio</em></div>
+      <div class="con__kpi"><div><span>Dispositivi online</span><strong>24 / 24</strong></div><div><span>Minacce bloccate</span><strong class="ok">0 attive</strong></div></div>
+      <ul class="con__rows">
+        <li><span>Aggiornamenti di sicurezza</span><b>installati</b><i><i style="width:100%"></i></i></li>
+        <li><span>Antivirus</span><b>attivo su tutti</b><i><i style="width:100%"></i></i></li>
+        <li><span>Spazio disco server</span><b>64%</b><i><i style="width:64%"></i></i></li>
+      </ul>
+      <p class="con__alert"><Icon name="alert" size={18} stroke="#ff6a5a" />Disco del PC amministrazione in degrado: <strong>sostituzione programmata</strong></p>
+    </div>
+  </PageHero>
+
+  <Includes kicker="Semplice e potente" lead="Una sola piattaforma per tenere sotto controllo tutta l'informatica dell'azienda." items={[
+    { icon: 'shieldok', t: 'Antivirus gestito', d: "Un antivirus gestito da un'unica console, sempre aggiornato su tutti i computer." },
+    { icon: 'activity', t: 'Monitoraggio', d: 'Monitoriamo e gestiamo tutti gli endpoint: computer, server e dispositivi.' },
+    { icon: 'wrench', t: 'Service desk', d: 'Help desk tramite ticket di assistenza, oltre a telefono e WhatsApp.' },
+    { icon: 'briefcase', t: 'Documentazione', d: 'Documentazione dettagliata della tua infrastruttura, sempre aggiornata.' },
+    { icon: 'building', t: 'Inventario asset', d: 'Inventario dettagliato di hardware e software installato.' },
+    { icon: 'check', t: 'Report periodici', d: 'Ricevi report dettagliati sullo stato della tua informatica.' },
+  ]}>Cosa fa <span class="red">G8A RMM</span></Includes>
+
+  <section class="section section--paper">
+    <div class="wrap b-split">
+      <div data-reveal>
+        <span class="kicker">Sei già cliente?</span>
+        <h2 class="h h2" style="margin-top:.8rem">Apri un ticket <span class="red">in un clic</span></h2>
+        <p class="lead" style="margin-top:1rem">Dalla piattaforma puoi aprire una richiesta di assistenza e farci collegare al tuo computer. Oppure chiamaci o scrivici, come sempre.</p>
+        <div class="b-actions">
+          <a class="btn btn--ink" href={SITE.ticket}><Icon name="wrench" />Apri un ticket</a>
+          <a class="btn btn--wa" href={waLink('Ciao, sono già cliente e ho bisogno di assistenza.')}><Icon name="wa" />Assistenza su WhatsApp</a>
+        </div>
+      </div>
+      <ul class="b-list" data-reveal style="--d:.12s">
+        <li><span class="b-list__ok"><Icon name="check" size={14} width={3.2} /></span>Interveniamo da remoto, senza aspettare che arrivi il tecnico</li>
+        <li><span class="b-list__ok"><Icon name="check" size={14} width={3.2} /></span>Vediamo storico e configurazione del tuo computer prima ancora di rispondere</li>
+        <li><span class="b-list__ok"><Icon name="check" size={14} width={3.2} /></span>Se serve, un tecnico parte da una delle nostre sedi in Lombardia</li>
+      </ul>
+    </div>
+  </section>
+
+  <Cases ids={['diadema', 'lfm']} more lead="Monitoraggio, assistenza remota e backup lavorano insieme: per questo i fermi durano ore, non giorni.">Il Protocollo Emergency <span class="red">in azione</span></Cases>
+  <Faq items={faq}>RMM: <span class="red">le risposte</span></Faq>
+  <Cta lead="Ti mostriamo come vediamo la tua azienda dalla console, e cosa possiamo prevenire." waText={wa}>Metti sotto controllo la tua informatica</Cta>
+</Base>
+
+<style>
+  .con { position: relative; z-index: 1; max-width: 30rem; margin-inline: auto; padding: 1.4rem; border-radius: 20px; background: #16161a; color: #fff; border: 1px solid rgba(255, 255, 255, 0.1); box-shadow: 0 30px 70px rgba(11, 11, 13, 0.35), 0 0 60px rgba(255, 26, 26, 0.2); animation: b-float 7s ease-in-out infinite; }
+  .con__top { display: flex; justify-content: space-between; align-items: center; padding-bottom: 0.9rem; border-bottom: 1px solid rgba(255, 255, 255, 0.1); font-weight: 800; }
+  .con__top span { display: flex; align-items: center; gap: 0.55rem; }
+  .con__top em { font-style: normal; font-weight: 500; font-size: 0.8rem; color: #8e929c; }
+  .con__kpi { display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; margin-top: 1rem; }
+  .con__kpi div { padding: 0.9rem; border-radius: 12px; background: #222228; }
+  .con__kpi span { font-size: 0.78rem; color: #8e929c; }
+  .con__kpi strong { display: block; font-stretch: 78%; font-variation-settings: 'wdth' 78; font-size: 1.9rem; }
+  .con__kpi .ok { color: var(--live); }
+  .con__rows { list-style: none; margin: 1rem 0 0; padding: 0; display: grid; gap: 0.8rem; font-size: 0.9rem; }
+  .con__rows li { display: grid; grid-template-columns: 1fr auto; gap: 0.35rem; color: #c3c6cd; }
+  .con__rows b { color: #fff; }
+  .con__rows li > i { grid-column: 1 / -1; height: 6px; border-radius: 6px; background: #2a2a30; overflow: hidden; }
+  .con__rows li > i > i { display: block; height: 100%; background: var(--grad); animation: fill 2s cubic-bezier(0.2, 0.7, 0.2, 1) both; }
+  @keyframes fill { from { width: 0; } }
+  .con__alert { display: flex; align-items: center; gap: 0.6rem; margin-top: 1rem; padding: 0.8rem; border-radius: 12px; background: rgba(255, 26, 26, 0.12); border: 1px solid rgba(255, 106, 90, 0.35); font-size: 0.88rem; }
+  .con__alert :global(svg) { flex: none; }
+</style>

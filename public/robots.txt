@@ -1,4 +1,0 @@
-# Anteprima: finché il sito non è su g8a.it, Vercel non va indicizzato.
-# Al passaggio sul dominio definitivo sostituire con "Allow: /" e la riga Sitemap.
-User-agent: *
-Disallow: /

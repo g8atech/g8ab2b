@@ -1,5 +1,6 @@
 ---
 import '../styles/global.css';
+import '../styles/blocks.css';
 import { Image } from 'astro:assets';
 import Icon from '../components/Icon.astro';
 import logoWhite from '../assets/logo-g8a-bianco.png';
@@ -8,6 +9,15 @@ import { SITE, SEDI, GRUPPO, waLink, telLink } from '../data/site';
 
 interface Props { title: string; description: string; jsonLd?: object[] }
 const { title, description, jsonLd = [] } = Astro.props;
+const NAV = [
+  { href: '/noleggio-computer', t: 'Computer' },
+  { href: '/noleggio-stampanti', t: 'Stampanti' },
+  { href: '/noleggio-backup', t: 'Backup' },
+  { href: '/rmm', t: 'Monitoraggio RMM' },
+  { href: '/testimonianze-casistudio', t: 'Casi studio' },
+  { href: '/assistenza-business', t: 'Contatti' },
+];
+const here = Astro.url.pathname.replace(/(\.html|\/)$/, '');
 const cleanPath = Astro.url.pathname.replace(/(index)?\.html$/, '').replace(/\/$/, '') || '/';
 const canonical = new URL(cleanPath, SITE.url).href;
 const fullTitle = title.includes(SITE.name) ? title : `${title} | ${SITE.name}`;
@@ -37,6 +47,9 @@ const stores = SEDI.filter((s) => !s.operativa).map((s) => ({
   address: { '@type': 'PostalAddress', streetAddress: s.address, postalCode: s.cap, addressLocality: s.city, addressRegion: s.province, addressCountry: 'IT' },
 }));
 const schemas = [organization, ...stores, ...jsonLd];
+// Google Tag Manager: si attiva solo se su Vercel è impostata PUBLIC_GTM_ID (es. GTM-M5FDVQDW).
+const gtm = import.meta.env.PUBLIC_GTM_ID;
+const live = import.meta.env.PUBLIC_SITE_LIVE === 'true';
 ---
 <!doctype html>
 <html lang="it">
@@ -48,6 +61,8 @@ const schemas = [organization, ...stores, ...jsonLd];
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
     <meta name="theme-color" content="#ffffff" />
+    {!live && <meta name="robots" content="noindex, nofollow" />}
+    {gtm && <script is:inline define:vars={{ gtm }}>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer',gtm);</script>}
     <link rel="icon" href="/logo-icon.png" type="image/png" />
     <link rel="apple-touch-icon" href="/logo-icon.png" />
     <meta property="og:type" content="website" />
@@ -60,21 +75,20 @@ const schemas = [organization, ...stores, ...jsonLd];
     {schemas.map((s) => <script type="application/ld+json" set:html={JSON.stringify(s)} />)}
   </head>
   <body>
+    {gtm && <noscript><iframe src={`https://www.googletagmanager.com/ns.html?id=${gtm}`} height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>}
     <a class="skip" href="#contenuto">Vai al contenuto</a>
 
     <header class="hdr">
       <div class="wrap hdr__row">
         <a href="/" class="hdr__logo" aria-label="G8A Technology, home"><Image src={logoColor} alt="G8A Technology" height={52} densities={[1, 2]} loading="eager" /></a>
-        <nav aria-label="Menu principale" class="hdr__nav">
-          <a href="#include">Cosa include</a>
-          <a href="#come-funziona">Come funziona</a>
-          <a href="#quanto-costa">Quanto costa</a>
-          <a href="#chi-siamo">Chi siamo</a>
-          <a href={SITE.ticket}>Area clienti</a>
+        <nav aria-label="Menu principale" class="hdr__nav" id="menu">
+          {NAV.map((n) => <a href={n.href} aria-current={here === n.href ? 'page' : undefined}>{n.t}</a>)}
+          <a class="hdr__only-m" href={SITE.ticket}>Area clienti e ticket</a>
         </nav>
         <div class="hdr__cta">
           <a class="btn btn--line btn--sm hdr__tel" href={telLink}><Icon name="phone" />{SITE.phone}</a>
           <a class="btn btn--wa btn--sm" href={waLink()}><Icon name="wa" />WhatsApp</a>
+          <button class="hdr__burger" type="button" aria-label="Apri il menu" aria-expanded="false" aria-controls="menu"><Icon name="menu" size={22} /></button>
         </div>
       </div>
     </header>
@@ -92,10 +106,11 @@ const schemas = [organization, ...stores, ...jsonLd];
         <div>
           <p class="ftr__h">Servizi</p>
           <ul>
-            <li><a href="#include">Noleggio Assistito</a></li>
-            <li><a href="#include">Assistenza IT</a></li>
-            <li><a href="#oltre">Fibra e sicurezza</a></li>
-            <li><a href="#oltre">AI per aziende</a></li>
+            <li><a href="/noleggio-computer">Noleggio computer</a></li>
+            <li><a href="/noleggio-stampanti">Noleggio stampanti</a></li>
+            <li><a href="/noleggio-backup">Backup e NAS</a></li>
+            <li><a href="/rmm">Monitoraggio RMM</a></li>
+            <li><a href="/testimonianze-casistudio">Casi studio</a></li>
           </ul>
         </div>
         <div>
@@ -128,6 +143,26 @@ const schemas = [organization, ...stores, ...jsonLd];
         for (const e of entries) if (e.isIntersecting) { e.target.classList.add('is-in'); io.unobserve(e.target); }
       }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
       document.querySelectorAll('[data-reveal]').forEach((el) => io.observe(el));
+
+      // Conversioni: ogni clic su telefono, WhatsApp o email finisce nel dataLayer (per GA4 e Google Ads via GTM).
+      document.addEventListener('click', (e) => {
+        const a = (e.target as HTMLElement).closest('a');
+        if (!a) return;
+        const h = a.getAttribute('href') || '';
+        const canale = h.startsWith('tel:') ? 'telefono' : h.includes('wa.me/') ? 'whatsapp' : h.startsWith('mailto:') ? 'email' : null;
+        if (!canale) return;
+        const w = window as unknown as { dataLayer?: object[] };
+        (w.dataLayer = w.dataLayer || []).push({ event: 'contatto', canale, pagina: location.pathname, testo: a.textContent?.trim() });
+      });
+
+      // Menu a tendina su schermi stretti.
+      const burger = document.querySelector('.hdr__burger');
+      const menu = document.getElementById('menu');
+      burger?.addEventListener('click', () => {
+        const open = menu!.classList.toggle('is-open');
+        burger.setAttribute('aria-expanded', String(open));
+        burger.setAttribute('aria-label', open ? 'Chiudi il menu' : 'Apri il menu');
+      });
 
       // Barra rossa di avanzamento sotto l'intestazione.
       const hdr = document.querySelector('.hdr') as HTMLElement | null;
@@ -176,11 +211,19 @@ const schemas = [organization, ...stores, ...jsonLd];
   .hdr::after { content: ''; position: absolute; left: 0; right: 0; bottom: -1px; height: 2px; background: var(--grad); transform-origin: left; transform: scaleX(var(--progress, 0)); }
   .hdr__row { display: flex; align-items: center; justify-content: space-between; gap: 1rem 2rem; padding-block: 0.6rem; }
   .hdr__logo :global(img) { width: auto; height: 52px; }
-  .hdr__nav { display: flex; gap: 1.75rem; font-weight: 700; font-size: 0.95rem; }
+  .hdr__nav { display: flex; gap: 1.5rem; font-weight: 700; font-size: 0.95rem; }
+  .hdr__nav a[aria-current='page'] { color: var(--red); }
+  .hdr__only-m, .hdr__burger { display: none; }
   .hdr__nav a { color: var(--ink); text-decoration: none; }
   .hdr__nav a:hover { color: var(--red); }
   .hdr__cta { display: flex; gap: 0.6rem; }
-  @media (max-width: 980px) { .hdr__nav { display: none; } }
+  @media (max-width: 1120px) {
+    .hdr__burger { display: inline-grid; place-items: center; width: 2.9rem; height: 2.9rem; border-radius: 8px; border: 2px solid var(--ink); background: #fff; color: var(--ink); cursor: pointer; }
+    .hdr__nav { display: none; position: absolute; left: 0; right: 0; top: 100%; flex-direction: column; gap: 0; padding: 0.5rem var(--gutter) 1rem; background: #fff; border-bottom: 1px solid var(--line); box-shadow: 0 20px 40px rgba(11, 11, 13, 0.12); }
+    .hdr__nav.is-open { display: flex; }
+    .hdr__nav a { padding: 0.85rem 0; border-bottom: 1px solid var(--line); font-size: 1.05rem; }
+    .hdr__only-m { display: block; }
+  }
   @media (max-width: 640px) { .hdr__tel { display: none; } .hdr__logo :global(img) { height: 42px; } }
 
   .ftr { background: var(--ink); color: #8e929c; font-size: 0.95rem; padding-top: 3rem; border-top: 4px solid; border-image: var(--grad) 1; }
