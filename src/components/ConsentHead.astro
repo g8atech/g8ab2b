@@ -1,0 +1,49 @@
+---
+// Consenso cookie, parte in <head>: va PRIMA di Google Tag Manager.
+// Imposta Google Consent Mode v2 su "negato" e, se il visitatore ha già scelto, applica la sua scelta.
+// Microsoft Clarity si carica solo con il consenso ai cookie statistici (variabile PUBLIC_CLARITY_ID).
+const clarity = import.meta.env.PUBLIC_CLARITY_ID ?? '';
+---
+<script is:inline define:vars={{ clarity }}>
+  window.dataLayer = window.dataLayer || [];
+  function gtag() { dataLayer.push(arguments); }
+  window.gtag = gtag;
+  gtag('consent', 'default', {
+    ad_storage: 'denied', ad_user_data: 'denied', ad_personalization: 'denied',
+    analytics_storage: 'denied', functionality_storage: 'granted', security_storage: 'granted',
+    wait_for_update: 500,
+  });
+  gtag('set', 'ads_data_redaction', true);
+  gtag('set', 'url_passthrough', true);
+
+  // Scelta salvata: valida 6 mesi, come indicano le linee guida del Garante.
+  var KEY = 'g8a_consenso', MAX = 1000 * 60 * 60 * 24 * 182;
+  window.g8aConsent = {
+    read: function () {
+      try { var c = JSON.parse(localStorage.getItem(KEY)); return c && c.v === 1 && Date.now() - c.t < MAX ? c : null; } catch (e) { return null; }
+    },
+    apply: function (c) {
+      var g = function (b) { return b ? 'granted' : 'denied'; };
+      gtag('consent', 'update', {
+        analytics_storage: g(c.a), ad_storage: g(c.m), ad_user_data: g(c.m), ad_personalization: g(c.m),
+      });
+      dataLayer.push({ event: 'consenso_aggiornato', consenso_statistiche: !!c.a, consenso_marketing: !!c.m });
+      if (c.a && clarity && !window.clarity) {
+        (function (w, d, t, id) {
+          w.clarity = w.clarity || function () { (w.clarity.q = w.clarity.q || []).push(arguments); };
+          var s = d.createElement(t); s.async = 1; s.src = 'https://www.clarity.ms/tag/' + id;
+          var f = d.getElementsByTagName(t)[0]; f.parentNode.insertBefore(s, f);
+        })(window, document, 'script', clarity);
+      }
+      if (window.clarity) window.clarity('consentv2', { analytics_Storage: g(c.a), ad_Storage: g(c.m) });
+    },
+    save: function (a, m) {
+      var c = { v: 1, t: Date.now(), a: !!a, m: !!m };
+      try { localStorage.setItem(KEY, JSON.stringify(c)); } catch (e) {}
+      return c;
+    },
+  };
+  var saved = window.g8aConsent.read();
+  if (saved) window.g8aConsent.apply(saved);
+  else document.documentElement.classList.add('no-consent');
+</script>

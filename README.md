@@ -47,6 +47,9 @@ Il sito non si indicizza finché non lo dici tu: tutto passa da due variabili su
 |---|---|---|
 | `PUBLIC_SITE_LIVE` | `true` | `robots.txt` apre il sito a Google e ai motori AI, toglie il `noindex` |
 | `PUBLIC_GTM_ID` | `GTM-M5FDVQDW` (quello del vecchio sito) | attiva Google Tag Manager |
+| `PUBLIC_CLARITY_ID` | ID del progetto Microsoft Clarity (es. `abcd1234ef`) | carica Clarity, **solo dopo il consenso** ai cookie statistici |
+| `PUBLIC_GSC_VERIFICATION` | il codice `content` del meta tag di Google Search Console | verifica del sito in Search Console (se non si usa il DNS) |
+| `PUBLIC_BING_VERIFICATION` | il codice `content` del meta tag `msvalidate.01` | verifica in Bing Webmaster Tools (serve anche per Copilot) |
 | `PUBLIC_GOOGLE_MAPS_KEY` | chiave API Google Maps (Places API New), limitata ai domini del sito | voto, numero e ultime recensioni della scheda Google della sede caricati dal vivo |
 
 Le recensioni Google si possono anche inserire a mano in `src/data/recensioni.ts`, **copiate parola per parola** da Google (nome, stelle, data, testo; eventuale risposta di G8A). Se il file ne contiene, il sito mostra tutte quelle e non chiama l'API. Non vanno mai modificate o scritte da noi.
@@ -55,17 +58,35 @@ Senza la chiave Google e senza recensioni nel file, il blocco recensioni mostra 
 
 Ogni clic su telefono, WhatsApp o email invia a GTM l'evento `contatto` con `canale` e `pagina`: in GTM basta un attivatore "Evento personalizzato = contatto" per le conversioni di GA4 e Google Ads.
 
+### Cookie e consenso
+
+- Il banner (`src/components/ConsentBanner.astro`) chiede il consenso con "Accetta tutti", "Rifiuta tutti" (stesso peso) e "Personalizza"; la X equivale a rifiutare. La scelta vale 6 mesi e si cambia da "Preferenze cookie" nel footer.
+- `ConsentHead.astro` imposta **Google Consent Mode v2** su "negato" prima che parta GTM, e invia a GTM l'evento `consenso_aggiornato` quando il visitatore sceglie.
+- In GTM i tag Google (GA4, Google Ads) rispettano il consenso da soli. Per eventuali tag di altri fornitori (Meta, LinkedIn…) va impostato in GTM "Richiedi consenso aggiuntivo" (`ad_storage`).
+- **Clarity non va messo anche in GTM**: lo carica il sito con `PUBLIC_CLARITY_ID`, solo dopo il consenso.
+- Pagine: `/privacy-policy` e `/cookie-policy`. Se si aggiunge uno strumento nuovo, aggiornare la tabella dei cookie. Testi da far verificare al consulente privacy.
+
+### Search Console, Bing, Clarity
+
+1. **Google Search Console**: meglio la proprietà di tipo *Dominio* (`g8a.it`), verificata con un record TXT sul DNS: copre www, senza www e i sottodomini. In alternativa proprietà *Prefisso URL* con `PUBLIC_GSC_VERIFICATION`. Poi Sitemap → `https://www.g8a.it/sitemap-index.xml`.
+2. **Bing Webmaster Tools**: "Importa da Google Search Console" (più veloce) oppure `PUBLIC_BING_VERIFICATION`. Bing alimenta anche Copilot e altri motori AI.
+3. **Microsoft Clarity**: creare il progetto per `www.g8a.it`, mettere l'ID in `PUBLIC_CLARITY_ID`, e in Clarity → Impostazioni collegare Google Analytics. Il mascheramento resta "Bilanciato".
+4. **GA4**: nella proprietà impostare la conservazione dei dati a 14 mesi e segnare l'evento `contatto` come evento chiave.
+
 ### Il giorno del cambio
 
 1. Controllare l'anteprima su Vercel, pagina per pagina.
 2. Su Vercel → Settings → Domains aggiungere `www.g8a.it` (principale) e `g8a.it` (reindirizza a www).
 3. Dal registrar del dominio cambiare i DNS indicati da Vercel al posto di quelli di GoHighLevel. Le email non cambiano: non toccare i record MX.
-4. Impostare `PUBLIC_SITE_LIVE=true` e `PUBLIC_GTM_ID`, poi Redeploy.
+4. Impostare `PUBLIC_SITE_LIVE=true`, `PUBLIC_GTM_ID` e `PUBLIC_CLARITY_ID`, poi Redeploy. In GTM eliminare i tag del vecchio sito che non servono più.
 5. Sottodomini per città (es. `gallarate.g8a.it`): aggiungerli su Vercel con reindirizzamento 301 a `www.g8a.it` finché non nascono le pagine città.
 6. Google Search Console: inviare `https://www.g8a.it/sitemap-index.xml` e controllare le pagine indicizzate nei giorni seguenti.
 7. In GTM verificare che le conversioni di Google Ads arrivino dal nuovo evento `contatto`.
 
 ## Da completare
+
+- Revisione di privacy policy e cookie policy da parte del consulente privacy.
+- Elenco delle pagine del vecchio sito indicizzate (da Search Console) per i reindirizzamenti 301.
 
 - Foto robotiche originali in alta risoluzione.
 - Loghi delle altre testate (Borsa Italiana, Repubblica, La Stampa, ANSA, ItalWire, Finanza Flash, Il Secolo XIX).

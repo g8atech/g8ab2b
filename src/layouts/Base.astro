@@ -4,6 +4,8 @@ import '../styles/blocks.css';
 import { Image } from 'astro:assets';
 import Icon from '../components/Icon.astro';
 import GoogleBadge from '../components/blocks/GoogleBadge.astro';
+import ConsentHead from '../components/ConsentHead.astro';
+import ConsentBanner from '../components/ConsentBanner.astro';
 import logoWhite from '../assets/logo-g8a-bianco.png';
 import logoColor from '../assets/logo-g8a.png';
 import { SITE, SEDI, GRUPPO, waLink, telLink } from '../data/site';
@@ -55,6 +57,9 @@ const schemas = [organization, ...stores, ...jsonLd];
 // Google Tag Manager: si attiva solo se su Vercel è impostata PUBLIC_GTM_ID (es. GTM-M5FDVQDW).
 const gtm = import.meta.env.PUBLIC_GTM_ID;
 const live = import.meta.env.PUBLIC_SITE_LIVE === 'true';
+// Verifica proprietà: Google Search Console e Bing Webmaster Tools (solo il codice "content" del meta tag).
+const gsc = import.meta.env.PUBLIC_GSC_VERIFICATION;
+const bing = import.meta.env.PUBLIC_BING_VERIFICATION;
 ---
 <!doctype html>
 <html lang="it">
@@ -67,6 +72,9 @@ const live = import.meta.env.PUBLIC_SITE_LIVE === 'true';
     <link rel="canonical" href={canonical} />
     <meta name="theme-color" content="#ffffff" />
     {!live && <meta name="robots" content="noindex, nofollow" />}
+    {gsc && <meta name="google-site-verification" content={gsc} />}
+    {bing && <meta name="msvalidate.01" content={bing} />}
+    <ConsentHead />
     {gtm && <script is:inline define:vars={{ gtm }}>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer',gtm);</script>}
     <link rel="icon" href="/logo-icon.png" type="image/png" />
     <link rel="apple-touch-icon" href="/logo-icon.png" />
@@ -76,7 +84,11 @@ const live = import.meta.env.PUBLIC_SITE_LIVE === 'true';
     <meta property="og:title" content={fullTitle} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
-    <meta property="og:image" content={`${SITE.url}/logo.png`} />
+    <meta property="og:image" content={`${SITE.url}/og-g8a.jpg`} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="G8A Technology, Noleggio Assistito per aziende" />
+    <meta name="twitter:card" content="summary_large_image" />
     {schemas.map((s) => <script type="application/ld+json" set:html={JSON.stringify(s)} />)}
   </head>
   <body>
@@ -154,9 +166,12 @@ const live = import.meta.env.PUBLIC_SITE_LIVE === 'true';
         </div>
       </div>
       <div class="wrap ftr__legal">
-        © {new Date().getFullYear()} {SITE.company} · P.IVA {SITE.vat} · REA {SITE.rea} · Cap. soc. {SITE.capital} · Sede legale {SITE.legalAddress}
+        <span>© {new Date().getFullYear()} {SITE.company} · P.IVA {SITE.vat} · REA {SITE.rea} · Cap. soc. {SITE.capital} · Sede legale {SITE.legalAddress}</span>
+        <span class="ftr__pol"><a href="/privacy-policy">Privacy policy</a><a href="/cookie-policy">Cookie policy</a><button type="button" data-cookie-prefs>Preferenze cookie</button></span>
       </div>
     </footer>
+
+    <ConsentBanner />
 
     <nav class="mbar" aria-label="Contatti rapidi">
       <a class="btn btn--red" href={telLink}><Icon name="phone" />Chiama</a>
@@ -300,7 +315,10 @@ const live = import.meta.env.PUBLIC_SITE_LIVE === 'true';
   .ftr ul { list-style: none; margin: 0; padding: 0; line-height: 2; }
   .ftr a { color: #c3c6cd; text-decoration: none; }
   .ftr a:hover { color: #fff; }
-  .ftr__legal { margin-top: 2.5rem; padding-block: 1.25rem 2rem; border-top: 1px solid rgba(255,255,255,0.1); font-size: 0.8rem; }
+  .ftr__legal { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 0.6rem 1.5rem; margin-top: 2.5rem; padding-block: 1.25rem 2rem; border-top: 1px solid rgba(255,255,255,0.1); font-size: 0.8rem; }
+  .ftr__pol { display: flex; flex-wrap: wrap; gap: 0.4rem 1.2rem; }
+  .ftr__pol button { padding: 0; border: 0; background: none; font: inherit; color: #c3c6cd; cursor: pointer; }
+  .ftr__pol a:hover, .ftr__pol button:hover { color: #fff; }
 
   .mbar { display: none; }
   @media (max-width: 640px) {

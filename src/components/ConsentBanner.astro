@@ -1,0 +1,80 @@
+---
+// Banner dei cookie. "Rifiuta" ha lo stesso peso di "Accetta", e chiudere con la X equivale a rifiutare
+// (linee guida cookie del Garante privacy, 10 giugno 2021). Si riapre da "Preferenze cookie" nel footer.
+---
+<div class="ckb" role="dialog" aria-modal="false" aria-labelledby="ckb-t" aria-describedby="ckb-d" data-ckb>
+  <button class="ckb__x" type="button" aria-label="Chiudi e rifiuta i cookie non necessari" data-ckb-act="rifiuta">
+    <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" /></svg>
+  </button>
+  <p class="ckb__t" id="ckb-t">Rispettiamo la tua privacy</p>
+  <p class="ckb__d" id="ckb-d">
+    Usiamo cookie tecnici per far funzionare il sito. Solo se sei d'accordo usiamo anche cookie statistici (Google Analytics, Microsoft Clarity) per capire come viene usato il sito, e cookie di marketing (Google Ads) per misurare le nostre campagne.
+    Puoi cambiare idea quando vuoi da “Preferenze cookie” in fondo alla pagina. <a href="/cookie-policy">Cookie policy</a> · <a href="/privacy-policy">Privacy</a>
+  </p>
+  <div class="ckb__opts" data-ckb-opts hidden>
+    <label class="ckb__o"><input type="checkbox" checked disabled /><span><strong>Tecnici</strong><small>Necessari al funzionamento, sempre attivi.</small></span></label>
+    <label class="ckb__o"><input type="checkbox" data-ckb-a /><span><strong>Statistici</strong><small>Google Analytics e Microsoft Clarity: visite, pagine viste, mappe di clic.</small></span></label>
+    <label class="ckb__o"><input type="checkbox" data-ckb-m /><span><strong>Marketing</strong><small>Google Ads: misura le conversioni e mostra annunci pertinenti.</small></span></label>
+  </div>
+  <div class="ckb__btns">
+    <button class="btn btn--line btn--sm" type="button" data-ckb-act="personalizza">Personalizza</button>
+    <button class="btn btn--line btn--sm" type="button" data-ckb-act="salva" hidden>Salva le scelte</button>
+    <button class="btn btn--ink btn--sm" type="button" data-ckb-act="rifiuta">Rifiuta tutti</button>
+    <button class="btn btn--ink btn--sm" type="button" data-ckb-act="accetta">Accetta tutti</button>
+  </div>
+</div>
+
+<script>
+  type C = { a: boolean; m: boolean };
+  const gc = (window as unknown as { g8aConsent: { read(): C | null; apply(c: C): void; save(a: boolean, m: boolean): C } }).g8aConsent;
+  const box = document.querySelector('[data-ckb]') as HTMLElement;
+  const opts = box.querySelector('[data-ckb-opts]') as HTMLElement;
+  const ia = box.querySelector('[data-ckb-a]') as HTMLInputElement;
+  const im = box.querySelector('[data-ckb-m]') as HTMLInputElement;
+  const btn = (k: string) => box.querySelector(`[data-ckb-act="${k}"]`) as HTMLButtonElement;
+  const open = (custom = false) => {
+    const c = gc.read();
+    ia.checked = !!c?.a; im.checked = !!c?.m;
+    opts.hidden = !custom; btn('personalizza').hidden = custom; btn('salva').hidden = !custom;
+    document.documentElement.classList.add('no-consent');
+  };
+  const decide = (a: boolean, m: boolean) => {
+    const before = gc.read();
+    gc.apply(gc.save(a, m));
+    document.documentElement.classList.remove('no-consent');
+    // Se qualcosa era concesso e ora non lo è più, si ricarica per fermare gli script già partiti.
+    if (before && ((before.a && !a) || (before.m && !m))) location.reload();
+  };
+  box.addEventListener('click', (e) => {
+    const k = (e.target as HTMLElement).closest('[data-ckb-act]')?.getAttribute('data-ckb-act');
+    if (k === 'rifiuta') decide(false, false);
+    else if (k === 'accetta') decide(true, true);
+    else if (k === 'personalizza') open(true);
+    else if (k === 'salva') decide(ia.checked, im.checked);
+  });
+  document.querySelectorAll('[data-cookie-prefs]').forEach((b) => b.addEventListener('click', () => open(true)));
+</script>
+
+<style>
+  .ckb { display: none; position: fixed; z-index: 60; left: 1rem; bottom: 1rem; width: min(30rem, calc(100% - 2rem)); padding: 1.3rem 1.3rem 1.2rem; border-radius: 18px; background: #fff; border: 1px solid var(--line); border-top: 4px solid #e30613; box-shadow: 0 24px 60px rgba(11, 11, 13, 0.25); font-size: 0.92rem; }
+  :global(.no-consent) .ckb { display: block; animation: ckb-in 0.35s ease-out; }
+  @keyframes ckb-in { from { opacity: 0; transform: translateY(20px); } }
+  .ckb__x { position: absolute; top: 0.7rem; right: 0.7rem; display: grid; place-items: center; width: 2.2rem; height: 2.2rem; border: 0; border-radius: 50%; background: var(--paper); color: var(--ink); cursor: pointer; }
+  .ckb__x:hover { color: var(--red); }
+  .ckb__t { padding-right: 2.5rem; font-weight: 800; font-size: 1.05rem; }
+  .ckb__d { margin-top: 0.5rem; color: var(--muted); line-height: 1.5; }
+  .ckb__d a { color: var(--ink); font-weight: 700; }
+  .ckb__opts { display: grid; gap: 0.5rem; margin-top: 0.9rem; }
+  .ckb__opts[hidden] { display: none; }
+  .ckb__o { display: flex; gap: 0.7rem; align-items: flex-start; padding: 0.7rem 0.8rem; border-radius: 12px; background: var(--paper); cursor: pointer; }
+  .ckb__o input { width: 1.15rem; height: 1.15rem; margin-top: 0.15rem; accent-color: #e30613; flex: none; }
+  .ckb__o strong { display: block; }
+  .ckb__o small { display: block; color: var(--muted); font-size: 0.85rem; }
+  .ckb__btns { display: grid; grid-template-columns: repeat(3, auto); justify-content: end; gap: 0.5rem; margin-top: 1rem; }
+  .ckb__btns [hidden] { display: none; }
+  @media (max-width: 640px) {
+    .ckb { left: 0.5rem; right: 0.5rem; bottom: 0.5rem; width: auto; }
+    .ckb__btns { grid-template-columns: 1fr 1fr; }
+    .ckb__btns [data-ckb-act='personalizza'], .ckb__btns [data-ckb-act='salva'] { grid-column: 1 / -1; order: 2; }
+  }
+</style>
