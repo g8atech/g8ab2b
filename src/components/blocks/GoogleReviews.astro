@@ -5,8 +5,8 @@
 // (Google ne restituisce al massimo 5, le più pertinenti), con l'attribuzione richiesta da Google.
 import { GOOGLE } from '../../data/site';
 import { RECENSIONI } from '../../data/recensioni';
-interface Props { paper?: boolean }
-const { paper = false } = Astro.props;
+interface Props { paper?: boolean; show?: number }
+const { paper = false, show = 6 } = Astro.props;
 // Se ci sono recensioni copiate a mano in recensioni.ts, si mostrano quelle (tutte) e non si chiama Google.
 const manuali = RECENSIONI;
 const key = manuali.length ? '' : (import.meta.env.PUBLIC_GOOGLE_MAPS_KEY ?? '');
@@ -30,16 +30,23 @@ const voto = GOOGLE.voto.toLocaleString('it-IT', { minimumFractionDigits: 1 });
     </div>
 
     {manuali.length > 0 ? (
-      <div class="gr__list" data-g="lista">
-        {manuali.map((r) => (
-          <figure class="gr__card" data-reveal>
-            <div class="gr__who"><span>{r.nome.charAt(0)}</span><div><strong>{r.nome}</strong><small>{r.data} · su Google</small></div></div>
-            <div class="gr__s" aria-label={`${r.stelle} stelle su 5`}>{'★★★★★'.slice(0, r.stelle)}</div>
-            <blockquote>{r.testo}</blockquote>
-            {r.risposta && <p class="gr__reply"><strong>Risposta di G8A:</strong> {r.risposta}</p>}
+      <>
+      <div class="gr__list gr__list--static" data-g="lista">
+        {manuali.map((r, i) => (
+          <figure class:list={['gr__card', { 'gr__more': i >= show }]}>
+            <div class="gr__who">
+              <span class:list={{ 'gr__az': r.azienda }}>{r.nome.charAt(0).toUpperCase()}</span>
+              <div><strong>{r.nome}</strong><small>{r.data}</small></div>
+              <svg class="gr__gi" viewBox="0 0 48 48" aria-label="Recensione Google" role="img"><path fill="#4285F4" d="M45.1 24.5c0-1.6-.1-3.1-.4-4.5H24v8.5h11.8c-.5 2.8-2.1 5.1-4.4 6.7v5.5h7.1c4.2-3.8 6.6-9.5 6.6-16.2z"/><path fill="#34A853" d="M24 46c5.9 0 10.9-2 14.5-5.3l-7.1-5.5c-2 1.3-4.5 2.1-7.4 2.1-5.7 0-10.6-3.9-12.3-9.1H4.4v5.7C8 41.1 15.4 46 24 46z"/><path fill="#FBBC05" d="M11.7 28.2c-.4-1.3-.7-2.7-.7-4.2s.3-2.9.7-4.2v-5.7H4.4C2.9 17.1 2 20.4 2 24s.9 6.9 2.4 9.9l7.3-5.7z"/><path fill="#EA4335" d="M24 10.7c3.2 0 6.1 1.1 8.4 3.3l6.3-6.3C34.9 4.1 29.9 2 24 2 15.4 2 8 6.9 4.4 14.1l7.3 5.7c1.7-5.2 6.6-9.1 12.3-9.1z"/></svg>
+            </div>
+            {r.stelle && <div class="gr__s" aria-label={`${r.stelle} stelle su 5`}>{'★★★★★'.slice(0, r.stelle)}</div>}
+            <blockquote class:list={{ 'gr__long': r.testo.length > 280 }}>{r.testo}</blockquote>
+            {r.testo.length > 280 && <button class="gr__expand" type="button" aria-expanded="false">Leggi tutta</button>}
           </figure>
         ))}
       </div>
+      {manuali.length > show && <div class="gr__showall"><button class="btn btn--line" type="button" data-g="tutte">Mostra tutte le {manuali.length} recensioni con commento</button></div>}
+      </>
     ) : (
       <div class="gr__list" data-g="lista" hidden></div>
     )}
@@ -53,6 +60,18 @@ const voto = GOOGLE.voto.toLocaleString('it-IT', { minimumFractionDigits: 1 });
 </section>
 
 <script>
+  // Recensioni copiate: "Mostra tutte" e "Leggi tutta".
+  document.querySelectorAll<HTMLButtonElement>('[data-g="tutte"]').forEach((b) => b.addEventListener('click', () => {
+    b.closest('.gr')?.classList.add('gr--all');
+    b.parentElement?.remove();
+  }));
+  document.querySelectorAll<HTMLButtonElement>('.gr__expand').forEach((b) => b.addEventListener('click', () => {
+    const q = b.previousElementSibling as HTMLElement;
+    const open = q.classList.toggle('is-open');
+    b.setAttribute('aria-expanded', String(open));
+    b.textContent = open ? 'Riduci' : 'Leggi tutta';
+  }));
+
   // Caricamento dal vivo, solo se c'è la chiave Google.
   const sec = document.getElementById('recensioni') as HTMLElement | null;
   const key = sec?.dataset.key;
@@ -117,5 +136,19 @@ const voto = GOOGLE.voto.toLocaleString('it-IT', { minimumFractionDigits: 1 });
   .gr__list :global(blockquote) { margin: 0; color: var(--ink); line-height: 1.55; display: -webkit-box; -webkit-line-clamp: 7; -webkit-box-orient: vertical; overflow: hidden; }
   .gr__actions { margin-top: 2rem; }
   .gr__list :global(.gr__reply) { margin: 0; padding: 0.7rem 0.9rem; border-radius: 10px; background: var(--paper); font-size: 0.9rem; color: var(--muted); }
+  .gr__list--static { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  @media (max-width: 1000px) { .gr__list--static { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (max-width: 640px) { .gr__list--static { grid-template-columns: 1fr; } }
+  .gr__list--static :global(.gr__card) { position: relative; }
+  .gr__more { display: none !important; }
+  .gr--all .gr__more { display: flex !important; }
+  .gr__list--static blockquote { white-space: pre-line; display: block; -webkit-line-clamp: unset; overflow: visible; }
+  .gr__list--static blockquote.gr__long { display: -webkit-box; -webkit-line-clamp: 6; -webkit-box-orient: vertical; overflow: hidden; }
+  .gr__list--static blockquote.gr__long.is-open { display: block; }
+  .gr__expand { align-self: flex-start; padding: 0; border: 0; background: none; font: inherit; font-weight: 800; color: var(--red); cursor: pointer; }
+  .gr__gi { width: 20px; height: 20px; margin-left: auto; flex: none; }
+  .gr__list--static .gr__who > div { min-width: 0; }
+  .gr__list--static .gr__az { border-radius: 10px !important; background: var(--ink) !important; }
+  .gr__showall { margin-top: 1.5rem; text-align: center; }
   .gr__note { margin-top: 0.9rem; font-size: 0.85rem; color: var(--muted); }
 </style>

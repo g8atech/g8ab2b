@@ -81,7 +81,7 @@ export const GOOGLE = {
   nome: 'G8A Technology, Solbiate Arno',
   voto: 4.9,
   recensioni: 102,
-  aggiornato: 'ottobre 2026',
+  aggiornato: '23 ottobre 2026',
   leggi: 'https://www.google.com/maps/place/?q=place_id:ChIJj7G_qVu2ImgR7SoyoB5PA5s',
   scrivi: 'https://search.google.com/local/writereview?placeid=ChIJj7G_qVu2ImgR7SoyoB5PA5s',
 };
