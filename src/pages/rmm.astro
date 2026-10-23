@@ -4,6 +4,9 @@ import Icon from '../components/Icon.astro';
 import PageHero from '../components/blocks/PageHero.astro';
 import Includes from '../components/blocks/Includes.astro';
 import Cases from '../components/blocks/Cases.astro';
+import Problems from '../components/blocks/Problems.astro';
+import GoogleReviews from '../components/blocks/GoogleReviews.astro';
+import CtaBand from '../components/lp/CtaBand.astro';
 import Faq from '../components/blocks/Faq.astro';
 import Cta from '../components/blocks/Cta.astro';
 import { SITE, faqLd, serviceLd, waLink } from '../data/site';
@@ -34,6 +37,12 @@ const desc = 'G8A RMM: monitoraggio e gestione da remoto di computer, server e u
     </div>
   </PageHero>
 
+  <Problems items={[
+    { t: 'Te ne accorgi quando è tardi', d: 'Il disco era pieno da settimane, l’antivirus scaduto da mesi: lo scopri il giorno in cui tutto si ferma.' },
+    { t: 'Aggiornamenti mai fatti', d: 'Ogni PC non aggiornato è una porta aperta. E nessuno ha tempo di controllarli uno per uno.' },
+    { t: 'Il tecnico deve venire lì', d: 'Anche per un problema da cinque minuti: uscita, attesa e mezza giornata persa.' },
+  ]}>L'informatica <span class="red">la guardi solo quando si rompe?</span></Problems>
+
   <Includes kicker="Semplice e potente" lead="Una sola piattaforma per tenere sotto controllo tutta l'informatica dell'azienda." items={[
     { icon: 'shieldok', t: 'Antivirus gestito', d: "Un antivirus gestito da un'unica console, sempre aggiornato su tutti i computer." },
     { icon: 'activity', t: 'Monitoraggio', d: 'Monitoriamo e gestiamo tutti gli endpoint: computer, server e dispositivi.' },
@@ -63,7 +72,10 @@ const desc = 'G8A RMM: monitoraggio e gestione da remoto di computer, server e u
     </div>
   </section>
 
+  <CtaBand waText={wa} sub="Ti mostriamo dalla console cosa vediamo e cosa possiamo prevenire nella tua azienda.">Vuoi vedere come lavora G8A RMM?</CtaBand>
+
   <Cases ids={['diadema', 'lfm']} more lead="Monitoraggio, assistenza remota e backup lavorano insieme: per questo i fermi durano ore, non giorni.">Il Protocollo Emergency <span class="red">in azione</span></Cases>
+  <GoogleReviews paper show={3} />
   <Faq items={faq}>RMM: <span class="red">le risposte</span></Faq>
   <Cta lead="Ti mostriamo come vediamo la tua azienda dalla console, e cosa possiamo prevenire." waText={wa}>Metti sotto controllo la tua informatica</Cta>
 </Base>

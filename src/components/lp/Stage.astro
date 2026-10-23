@@ -1,0 +1,36 @@
+---
+// Palco dei prodotti nell'apertura delle landing: foto scontornate con luce, anello e pavimento animati.
+import { Image } from 'astro:assets';
+interface Item { src: ImageMetadata; alt: string; w: number; x: number; y: number; z?: number; d?: number }
+interface Props { items: Item[]; label?: string }
+const { items, label } = Astro.props;
+---
+<div class="stg" data-tilt aria-label={label}>
+  <span class="stg__glow" aria-hidden="true"></span>
+  <span class="stg__ring" aria-hidden="true"></span>
+  <span class="stg__floor" aria-hidden="true"></span>
+  <div class="robots stg__items">
+    {items.map((it, i) => (
+      <div class="stg__it" style={`--w:${it.w}%;--x:${it.x}%;--y:${it.y}%;z-index:${it.z ?? i + 1};--d:${it.d ?? i * 0.15}s`}>
+        <Image src={it.src} alt={it.alt} widths={[320, 640, 900]} sizes="(max-width: 900px) 70vw, 420px" loading="eager" />
+      </div>
+    ))}
+  </div>
+  <slot />
+</div>
+
+<style>
+  .stg { position: relative; aspect-ratio: 1 / 0.86; perspective: 1200px; }
+  .stg__glow { position: absolute; left: 50%; top: 46%; width: 92%; aspect-ratio: 1; transform: translate(-50%, -50%); border-radius: 50%; background: radial-gradient(circle, rgba(255, 26, 26, 0.32), transparent 62%); filter: blur(24px); animation: stg-glow 4.5s ease-in-out infinite; }
+  .stg__ring { position: absolute; left: 50%; top: 46%; width: 88%; aspect-ratio: 1; transform: translate(-50%, -50%); border-radius: 50%; background: conic-gradient(from 0deg, transparent 0 55%, #ff1a1a 75%, #961d22 88%, transparent 100%); -webkit-mask: radial-gradient(closest-side, transparent 95%, #000 96.5%); mask: radial-gradient(closest-side, transparent 95%, #000 96.5%); animation: stg-ring 8s linear infinite; }
+  .stg__floor { position: absolute; left: -10%; right: -10%; bottom: -4%; height: 34%; background-image: linear-gradient(rgba(227, 6, 19, 0.35) 1px, transparent 1px), linear-gradient(90deg, rgba(227, 6, 19, 0.35) 1px, transparent 1px); background-size: 38px 38px; transform: perspective(500px) rotateX(62deg); transform-origin: bottom; -webkit-mask-image: radial-gradient(60% 90% at 50% 100%, #000, transparent 75%); mask-image: radial-gradient(60% 90% at 50% 100%, #000, transparent 75%); animation: stg-floor 3s linear infinite; }
+  .stg__items { position: absolute; inset: 0; transform: translate(var(--mx, 0), var(--my, 0)) rotateY(var(--ry, 0)) rotateX(var(--rx, 0)); transition: transform 0.3s ease-out; transform-style: preserve-3d; }
+  .stg__it { position: absolute; left: var(--x); top: var(--y); width: var(--w); filter: drop-shadow(0 26px 30px rgba(11, 11, 13, 0.28)); animation: stg-in 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) var(--d) both, stg-float 7s ease-in-out calc(var(--d) + 1s) infinite; }
+  .stg__it :global(img) { width: 100%; height: auto; }
+  @keyframes stg-glow { 50% { opacity: 0.6; transform: translate(-50%, -50%) scale(1.06); } }
+  @keyframes stg-ring { to { transform: translate(-50%, -50%) rotate(360deg); } }
+  @keyframes stg-floor { to { background-position: 0 38px; } }
+  @keyframes stg-in { from { opacity: 0; transform: translateY(40px) scale(0.92); } }
+  @keyframes stg-float { 0%, to { translate: 0 0; } 50% { translate: 0 -10px; } }
+  @media (prefers-reduced-motion: reduce) { .stg__glow, .stg__ring, .stg__floor, .stg__it { animation: none; } }
+</style>

@@ -1,4 +1,5 @@
 ---
+import { Image } from 'astro:assets';
 import Base from '../layouts/Base.astro';
 import Icon from '../components/Icon.astro';
 import PageHero from '../components/blocks/PageHero.astro';
@@ -6,56 +7,118 @@ import Problems from '../components/blocks/Problems.astro';
 import Includes from '../components/blocks/Includes.astro';
 import Guarantee from '../components/blocks/Guarantee.astro';
 import Quotes from '../components/blocks/Quotes.astro';
+import GoogleReviews from '../components/blocks/GoogleReviews.astro';
 import Faq from '../components/blocks/Faq.astro';
 import Cta from '../components/blocks/Cta.astro';
-import { FAQ_BASE, faqLd, serviceLd } from '../data/site';
-import foto from '../assets/foto-stampante.jpg';
+import Stage from '../components/lp/Stage.astro';
+import CostoFermo from '../components/lp/CostoFermo.astro';
+import Confronto from '../components/lp/Confronto.astro';
+import CtaBand from '../components/lp/CtaBand.astro';
+import Passi from '../components/lp/Passi.astro';
+import { FAQ_BASE, faqLd, serviceLd, waLink } from '../data/site';
+import brother from '../assets/stampante-brother.png';
+import ricoh from '../assets/stampante-ricoh.png';
+import ufficio from '../assets/stampante-ufficio.jpg';
 
 const wa = 'Ciao, vorrei informazioni sul noleggio stampanti per il mio ufficio.';
 const faq = [
   { q: 'I toner sono compresi?', a: 'Sì, i toner sono inclusi nel canone del noleggio, senza costi a parte.' },
-  { q: 'E se la stampante si guasta?', a: "Interveniamo da remoto o in sede e, se serve, la sostituiamo rapidamente. La sostituzione è compresa." },
+  { q: 'E se la stampante si guasta?', a: 'Interveniamo da remoto o in sede e, se serve, la sostituiamo rapidamente. La sostituzione è compresa nel canone.' },
+  { q: 'Quanto costa?', a: 'Dipende da quanto stampi e da che macchina ti serve: partiamo dal tuo volume di stampa e ti proponiamo la stampante giusta con il suo canone, senza impegno.' },
   { q: 'Avete stampanti anche per uffici piccoli?', a: 'Sì: dalle multifunzione compatte per uno o due posti di lavoro fino alle macchine per gli uffici più grandi, oltre alle stampanti di etichette a colori.' },
   ...FAQ_BASE,
 ];
 const desc = 'Noleggio stampanti multifunzione per uffici con toner, assistenza e sostituzione inclusi. G8A Technology, partner Brother. Nessun vincolo, garanzia 30 giorni.';
 ---
 <Base title="Noleggio stampanti per ufficio con toner inclusi | G8A Technology" description={desc} jsonLd={[serviceLd('Noleggio stampanti multifunzione', desc, '/noleggio-stampanti'), faqLd(faq)]}>
-  <PageHero kicker="Noleggio stampanti e multifunzione" crumb="Noleggio stampanti" waText={wa} image={foto} imageAlt="Stampante multifunzione in ufficio" chips={['Toner inclusi', 'Sostituzione rapida', 'Partner Brother']}
-    lead="Stampanti professionali sempre operative, toner inclusi, sostituzione rapida e assistenza veloce. Tutto in un canone mensile.">
+  <PageHero kicker="Noleggio stampanti e multifunzione" crumb="Noleggio stampanti" waText={wa}
+    lead="Multifunzione professionali con i toner inclusi nel canone, assistenza veloce e sostituzione se si guasta. Niente più corse a comprare toner, niente più tecnici a chiamata.">
     <Fragment slot="title">Stampanti che stampano. <span class="red">Sempre.</span></Fragment>
+    <Fragment slot="visual">
+      <Stage label="Stampanti multifunzione a noleggio" items={[
+        { src: ricoh, alt: 'Multifunzione A3 a colori per uffici strutturati', w: 34, x: 8, y: 0 },
+        { src: brother, alt: 'Multifunzione laser Brother', w: 48, x: 40, y: 18, z: 5 },
+      ]}>
+        <span class="b-chip b-chip--1"><Icon name="check" size={14} width={3.2} />Toner inclusi</span>
+        <span class="b-chip b-chip--2"><Icon name="check" size={14} width={3.2} />Sostituzione rapida</span>
+        <span class="b-chip b-chip--3">Partner Brother</span>
+      </Stage>
+    </Fragment>
   </PageHero>
 
   <Problems items={[
-    { t: 'Inceppata sul più bello', d: 'Devi mandare una stampa urgente e la stampante si blocca proprio adesso.' },
-    { t: 'Toner finito', d: 'Il toner è vuoto, il ricambio non c\'è e qualcuno deve correre a comprarlo.' },
-    { t: 'Non risponde', d: 'Il computer non la vede più, la rete non la trova, e nessuno sa perché.' },
+    { t: 'Si inceppa sul più bello', d: 'Il contratto da firmare, la fattura da mandare: e la stampante si blocca proprio adesso.' },
+    { t: 'Il toner è finito. Di nuovo.', d: 'Il ricambio non c’è, qualcuno deve correre a comprarlo e intanto in ufficio non si stampa.' },
+    { t: 'Il computer non la vede più', d: 'La rete non la trova, la scansione non arriva, e nessuno in ufficio sa perché.' },
   ]}>Ti è mai capitato <span class="red">con la stampante?</span></Problems>
 
-  <Includes lead="Il Noleggio Assistito applicato alle stampanti: non ci pensi più." cols={4} items={[
-    { icon: 'printer', t: 'Stampanti professionali', d: 'Multifunzione che stampano, copiano e scansionano, sempre operative.' },
-    { icon: 'check', t: 'Toner inclusi', d: 'Nel canone ci sono anche i toner, senza costi a parte.' },
-    { icon: 'refresh', t: 'Sostituzione rapida', d: 'Se si guasta la sostituiamo noi, in fretta.' },
+  <CostoFermo waText={wa} personeLabel="Persone che usano la stampante" oreLabel="Ore perse al mese da ogni persona (inceppamenti, toner, stampante che non risponde)" persone={4} costo={30} ore={1}>
+    Una stampante ferma <span class="red">costa più di quanto pensi</span>
+    <Fragment slot="lead">Ogni volta che si blocca, qualcuno smette di lavorare per sistemarla. Metti i tuoi numeri e guarda il conto di un anno.</Fragment>
+  </CostoFermo>
+
+  <Includes kicker="La soluzione" lead="Il Noleggio Assistito applicato alle stampanti: tu stampi, al resto pensiamo noi." cols={4} items={[
+    { icon: 'printer', t: 'Multifunzione professionali', d: 'Stampano, copiano e scansionano, anche verso email e cartelle di rete.' },
+    { icon: 'check', t: 'Toner inclusi', d: 'Sono già nel canone: niente acquisti a parte, niente scorte da gestire.' },
+    { icon: 'refresh', t: 'Sostituzione rapida', d: 'Se si guasta e non si ripara al volo, la sostituiamo noi.' },
     { icon: 'wrench', t: 'Assistenza veloce', d: 'Un numero dedicato, anche su WhatsApp, e tecnici vicini a te.' },
   ]}>Cosa include il <span class="red">noleggio stampanti</span></Includes>
 
   <section class="section section--paper">
-    <div class="wrap">
-      <div class="b-head" data-reveal>
+    <div class="wrap b-split">
+      <div data-reveal>
         <span class="kicker">Per ogni ufficio</span>
-        <h2 class="h h2">La stampante giusta, <span class="red">non la più cara</span></h2>
-        <p class="lead">Partiamo da quante pagine stampi e da cosa ti serve, poi scegliamo la macchina. Siamo partner Brother.</p>
+        <h2 class="h h2" style="margin-top:.8rem">La stampante giusta, <span class="red">non la più cara</span></h2>
+        <p class="lead" style="margin-top:1rem">Partiamo da quante pagine stampi e da cosa ti serve, poi scegliamo la macchina. Siamo partner Brother.</p>
+        <div class="tipi">
+          <a class="tipo glow" href={waLink('Ciao, cerco una multifunzione per un piccolo ufficio o studio.')}>
+            <span class="b-inc__ic"><Icon name="printer" size={22} stroke="#fff" width={1.9} /></span>
+            <span><strong>Piccoli uffici e studi</strong><small>Multifunzione laser compatte, con il costo giusto anche per chi stampa poco.</small></span>
+          </a>
+          <a class="tipo glow" href={waLink('Ciao, cerco una multifunzione di rete per un ufficio strutturato.')}>
+            <span class="b-inc__ic"><Icon name="building" size={22} stroke="#fff" width={1.9} /></span>
+            <span><strong>Uffici strutturati</strong><small>Multifunzione condivise in rete, anche A3 e a colori, per tutto il personale.</small></span>
+          </a>
+          <a class="tipo glow" href={waLink('Ciao, mi interessa una stampante di etichette a colori.')}>
+            <span class="b-inc__ic"><Icon name="factory" size={22} stroke="#fff" width={1.9} /></span>
+            <span><strong>Etichette a colori</strong><small>Per prodotti, magazzino e produzione.</small></span>
+          </a>
+        </div>
       </div>
-      <div class="b-inc" style="--cols:3">
-        <div class="b-inc__card" data-reveal><span class="b-inc__ic"><Icon name="printer" size={26} stroke="#fff" width={1.9} /></span><h3>Piccoli uffici e studi</h3><p>Multifunzione laser compatte per uno o pochi posti di lavoro, con il costo giusto anche per chi stampa poco.</p></div>
-        <div class="b-inc__card" data-reveal style="--d:.08s"><span class="b-inc__ic"><Icon name="building" size={26} stroke="#fff" width={1.9} /></span><h3>Uffici strutturati</h3><p>Multifunzione condivise in rete, con scansione verso email e cartelle per tutto il personale.</p></div>
-        <div class="b-inc__card" data-reveal style="--d:.16s"><span class="b-inc__ic"><Icon name="factory" size={26} stroke="#fff" width={1.9} /></span><h3>Etichette a colori</h3><p>Stampanti di etichette a colori per prodotti, magazzino e produzione.</p></div>
-      </div>
+      <div class="b-hero__photo" data-reveal style="--d:.12s"><Image src={ufficio} alt="Multifunzione da ufficio in un open space" widths={[560, 900]} sizes="(max-width: 900px) 100vw, 560px" /></div>
     </div>
   </section>
 
+  <Confronto oggi="Stampante comprata" rows={[
+    { t: 'Toner', oggi: 'Li compri tu, spesso all’ultimo momento', g8a: 'Inclusi nel canone' },
+    { t: 'Quando si guasta', oggi: 'Riparazione a pagamento, o stampante nuova', g8a: 'Riparazione o sostituzione incluse' },
+    { t: 'Rete e scansione', oggi: 'Configurazione fai da te', g8a: 'Configuriamo noi stampa e scansione' },
+    { t: 'Assistenza', oggi: 'Attese al numero del produttore', g8a: 'Un numero dedicato, anche su WhatsApp' },
+    { t: 'Costi', oggi: 'Imprevedibili', g8a: 'Un canone fisso, nessun vincolo' },
+  ]}>Comprarla o noleggiarla? <span class="red">Guarda la differenza.</span></Confronto>
+
+  <CtaBand waText={wa} sub="Dicci quante pagine stampate al mese, più o meno, e in quanti siete: ti proponiamo la macchina giusta e il canone.">Quanto stampate in ufficio?</CtaBand>
+
+  <Quotes ids={['coriani', 'milani', 'vallerini']}>Uffici che <span class="red">stampano senza pensieri</span></Quotes>
+  <GoogleReviews paper show={3} />
+
+  <Passi items={[
+    { t: 'Ci chiami o ci scrivi', d: 'Ci dici quanto stampate, a colori o in bianco e nero, e quante persone la usano.' },
+    { t: 'Ti proponiamo la macchina', d: 'La stampante giusta per il tuo volume, con il suo canone.' },
+    { t: 'La installiamo', d: 'La colleghiamo in rete e configuriamo stampa e scansione sui vostri computer.' },
+    { t: 'Stampi e basta', d: 'Toner, assistenza e sostituzioni sono già nel canone.' },
+  ]}>Dalla telefonata alla prima stampa <span class="red">in quattro passi</span></Passi>
+
   <Guarantee />
-  <Quotes ids={['coriani', 'milani']}>Uffici che <span class="red">stampano senza pensieri</span></Quotes>
   <Faq items={faq}>Noleggio stampanti: <span class="red">le risposte</span></Faq>
-  <Cta lead="Dicci quanto stampi e in quanti siete: ti proponiamo la stampante giusta e il canone." waText={wa}>Risolvi ora il problema delle stampanti</Cta>
+  <Cta lead="Dicci quanto stampi e in quanti siete: ti proponiamo la stampante giusta e il canone. Se dopo 30 giorni non sei soddisfatto, ti rimborsiamo." waText={wa}>L'ultima volta che compri <span style="color:#ff6b6b">un toner.</span></Cta>
 </Base>
+
+<style>
+  .tipi { display: grid; gap: 0.7rem; margin-top: 1.5rem; }
+  .tipo { position: relative; display: flex; gap: 1rem; align-items: center; padding: 1rem 1.1rem; border-radius: 16px; background: #fff; border: 1px solid var(--line); text-decoration: none; color: inherit; }
+  .tipo .b-inc__ic { width: 2.9rem; height: 2.9rem; flex: none; }
+  .tipo strong { display: block; font-size: 1.08rem; }
+  .tipo small { display: block; font-size: 0.93rem; color: var(--muted); }
+  .tipo:hover strong { color: var(--red); }
+</style>

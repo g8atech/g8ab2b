@@ -1,0 +1,30 @@
+---
+// Fascia di contatto a metà pagina: una frase, due pulsanti.
+import Icon from '../Icon.astro';
+import { SITE, waLink, telLink } from '../../data/site';
+interface Props { waText: string; sub?: string }
+const { waText, sub } = Astro.props;
+---
+<aside class="band" aria-label="Contattaci">
+  <div class="wrap band__row">
+    <div>
+      <p class="h band__t"><slot /></p>
+      {sub && <p class="band__s">{sub}</p>}
+    </div>
+    <div class="band__btns">
+      <a class="btn btn--white" href={telLink}><Icon name="phone" />Chiama {SITE.phone}</a>
+      <a class="btn btn--wa" href={waLink(waText)}><Icon name="wa" />WhatsApp</a>
+    </div>
+  </div>
+</aside>
+
+<style>
+  .band { position: relative; overflow: hidden; background: var(--grad); color: #fff; }
+  .band::before { content: ''; position: absolute; inset: 0; background: linear-gradient(110deg, transparent 30%, rgba(255, 255, 255, 0.18) 45%, transparent 60%); background-size: 250% 100%; animation: band-sh 5s linear infinite; pointer-events: none; }
+  @keyframes band-sh { from { background-position: 150% 0; } to { background-position: -100% 0; } }
+  .band__row { position: relative; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1.2rem 2rem; padding-block: 2rem; }
+  .band__t { font-size: clamp(1.5rem, 3vw, 2.2rem); }
+  .band__s { margin-top: 0.3rem; color: #ffe1e1; max-width: 40rem; }
+  .band__btns { display: flex; flex-wrap: wrap; gap: 0.6rem; }
+  @media (prefers-reduced-motion: reduce) { .band::before { animation: none; } }
+</style>

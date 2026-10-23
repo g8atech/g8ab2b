@@ -7,58 +7,133 @@ import Problems from '../components/blocks/Problems.astro';
 import Includes from '../components/blocks/Includes.astro';
 import Guarantee from '../components/blocks/Guarantee.astro';
 import Quotes from '../components/blocks/Quotes.astro';
+import Cases from '../components/blocks/Cases.astro';
+import GoogleReviews from '../components/blocks/GoogleReviews.astro';
 import Faq from '../components/blocks/Faq.astro';
 import Cta from '../components/blocks/Cta.astro';
-import { FAQ_BASE, faqLd, serviceLd } from '../data/site';
-import foto from '../assets/foto-ufficio.jpg';
-import cpu from '../assets/foto-cpu.jpg';
+import Stage from '../components/lp/Stage.astro';
+import CostoFermo from '../components/lp/CostoFermo.astro';
+import Confronto from '../components/lp/Confronto.astro';
+import CtaBand from '../components/lp/CtaBand.astro';
+import Passi from '../components/lp/Passi.astro';
+import { FAQ_BASE, faqLd, serviceLd, waLink } from '../data/site';
+import zenith from '../assets/pc-zenith.png';
+import b6n from '../assets/pc-b6n.png';
+import n16l from '../assets/pc-n16l.png';
+import n17 from '../assets/pc-n17.png';
 
 const wa = 'Ciao, vorrei informazioni sul noleggio computer per la mia azienda.';
+const PC = [
+  { img: zenith, nome: 'G8A Zenith', tipo: 'All in One 27"', per: 'Uffici, reception, amministrazione', d: 'Schermo e computer in un unico pezzo: la scrivania resta in ordine, consuma poco e può gestire un secondo monitor.', wa: 'Ciao, mi interessa il G8A Zenith All in One a noleggio.' },
+  { img: b6n, nome: 'G8A B6N', tipo: 'Desktop ad alte prestazioni', per: 'CAD, grafica, progettazione', d: 'Processori Intel Core di 12ª e 13ª generazione e spazio per una scheda grafica dedicata: per i programmi pesanti.', wa: 'Ciao, mi serve un PC per CAD o grafica: mi interessa il G8A B6N a noleggio.' },
+  { img: n16l, nome: 'G8A N16L', tipo: 'Notebook 16"', per: 'Chi lavora tra ufficio e clienti', d: 'Intel Core i5 di 13ª generazione in un notebook da 16 pollici: leggero da portare, comodo da usare tutto il giorno.', wa: 'Ciao, mi interessano notebook G8A N16L a noleggio.' },
+  { img: n17, nome: 'G8A N17 V2', tipo: 'Notebook 17"', per: 'Chi vuole lo schermo grande', d: 'Schermo da 17 pollici, Intel di 13ª generazione, tastiera retroilluminata e consumi bassi.', wa: 'Ciao, mi interessano notebook G8A N17 V2 a noleggio.' },
+];
 const faq = [
-  { q: 'Che computer mi date?', a: 'Configuriamo il computer giusto per il lavoro che fai: mini PC compatti per la scrivania, All in One, notebook per chi lavora fuori e workstation per CAD e grafica. Non scegliamo dal magazzino: lo prepariamo su misura.' },
-  { q: 'Cosa succede se un computer si guasta?', a: "Interveniamo da remoto o in sede e, se serve, lo sostituiamo. La sostituzione è compresa nel canone." },
+  { q: 'Quanto costa il noleggio di un computer?', a: 'Dipende da quante postazioni hai e da che computer servono: per questo ti facciamo una proposta su misura, senza impegno. Il canone è fisso e comprende computer, assistenza e sostituzione in caso di guasto.' },
+  { q: 'Che computer mi date?', a: 'I computer a marchio G8A, configurati sul lavoro che fai: All in One per l’ufficio, desktop ad alte prestazioni per CAD e grafica, notebook per chi lavora fuori. Li prepariamo noi con i tuoi programmi, le tue cartelle e i tuoi utenti.' },
+  { q: 'Cosa succede se un computer si guasta?', a: 'Interveniamo da remoto o in sede e, se serve, lo sostituiamo. La sostituzione è compresa nel canone: non paghi né il tecnico né il ricambio.' },
+  { q: 'Devo comprare qualcosa all’inizio?', a: 'No. Il Noleggio Assistito non richiede un investimento iniziale: paghi solo il canone mensile.' },
   ...FAQ_BASE,
 ];
-const desc = 'Noleggio computer per aziende con assistenza inclusa: PC configurati su misura, installati, aggiornati e sostituiti da G8A. Canone mensile, nessun vincolo, garanzia 30 giorni.';
+const desc = 'Noleggio computer per aziende con assistenza inclusa: PC G8A configurati su misura, installati, controllati e sostituiti se si guastano. Canone mensile, nessun vincolo, garanzia 30 giorni.';
 ---
 <Base title="Noleggio computer aziendali con assistenza inclusa | G8A Technology" description={desc} jsonLd={[serviceLd('Noleggio computer aziendali', desc, '/noleggio-computer'), faqLd(faq)]}>
-  <PageHero kicker="Noleggio computer aziendali" crumb="Noleggio computer" waText={wa} image={foto} imageAlt="Postazione di lavoro con notebook e monitor" chips={['PC su misura', 'Sostituzione inclusa', '1 canone al mese']}
-    lead="Computer configurati sul tuo lavoro, installati, aggiornati e sostituiti quando serve. Tutto in un canone mensile, senza investimento iniziale.">
-    <Fragment slot="title">Computer che non ti <span class="red">fermano.</span> Mai.</Fragment>
+  <PageHero kicker="Noleggio computer aziendali" crumb="Noleggio computer" waText={wa}
+    lead="Computer G8A configurati sul vostro lavoro, installati, controllati e sostituiti se si guastano. Un canone al mese, nessun investimento iniziale, nessun vincolo.">
+    <Fragment slot="title">Il PC si blocca? <span class="red">Non è più un problema tuo.</span></Fragment>
+    <Fragment slot="visual">
+      <Stage label="Computer G8A: All in One Zenith, notebook N16L e desktop B6N" items={[
+        { src: zenith, alt: 'All in One G8A Zenith 27 pollici', w: 58, x: 2, y: 4 },
+        { src: b6n, alt: 'Computer desktop G8A B6N', w: 30, x: 66, y: 16 },
+        { src: n16l, alt: 'Notebook G8A N16L', w: 64, x: 22, y: 50, z: 5 },
+      ]}>
+        <span class="b-chip b-chip--1"><Icon name="check" size={14} width={3.2} />Pronti all'uso</span>
+        <span class="b-chip b-chip--2"><Icon name="check" size={14} width={3.2} />Sostituzione inclusa</span>
+        <span class="b-chip b-chip--3">Monitoraggio continuo</span>
+      </Stage>
+    </Fragment>
   </PageHero>
 
-  <Problems items={[
-    { t: 'Computer lenti', d: 'Si bloccano, non si accendono, rallentano tutti. E i dipendenti restano a guardare lo schermo.' },
-    { t: 'Tempo e soldi persi', d: 'Tecnici a chiamata, soluzioni tampone, fatture a sorpresa ogni volta che qualcosa si rompe.' },
-    { t: 'Guasti da gestire', d: 'Trovare il tecnico, comprare il ricambio, reinstallare i programmi: un lavoro che non è il tuo.' },
-  ]}>I computer aziendali <span class="red">ti stanno rallentando?</span></Problems>
+  <Problems kicker="Ti suona familiare?" items={[
+    { t: 'Dieci minuti per accendersi', d: 'Ogni mattina, per ogni persona. Il programma si pianta, il file non si salva, e il lavoro aspetta.' },
+    { t: 'Il tecnico arriva quando può', d: 'Chiami, aspetti, paghi l’uscita. E intanto quella scrivania è ferma e il cliente al telefono aspetta.' },
+    { t: 'La spesa che non ti aspettavi', d: 'Un disco che muore, un PC da ricomprare, i dati da recuperare: sempre nel momento peggiore.' },
+  ]}>I computer <span class="red">ti stanno rallentando?</span></Problems>
 
-  <Includes lead="Un sistema collaudato, già attivo in oltre 500 aziende, professionisti e studi." items={[
-    { icon: 'pc', t: 'PC configurati su misura', d: 'Non presi dal magazzino: li prepariamo con i tuoi programmi, le tue cartelle e i tuoi utenti.' },
-    { icon: 'wrench', t: 'Installazione chiavi in mano', d: 'Li portiamo, li colleghiamo e li avviamo. Il giorno dopo sei già operativo.' },
-    { icon: 'activity', t: 'Assistenza e manutenzione', d: 'Aggiornamenti, controlli e interventi da remoto o in sede, con un numero dedicato.' },
-    { icon: 'refresh', t: 'Sostituzione senza costi', d: 'Se un PC si guasta o invecchia lo sostituiamo noi, senza costi aggiuntivi.' },
-  ]} cols={4}>Il Noleggio Assistito <span class="red">per i tuoi computer</span></Includes>
+  <CostoFermo waText={wa} oreLabel="Ore perse al mese da ogni persona (PC lenti, blocchi, attese)" persone={5} costo={30} ore={2}>
+    Quanto ti costano davvero <span class="red">i computer che non vanno?</span>
+    <Fragment slot="lead">Un PC lento non si vede in fattura, ma lo paghi tutti i giorni. Sposta i cursori con i numeri della tua azienda.</Fragment>
+  </CostoFermo>
 
-  <section class="section section--paper">
-    <div class="wrap b-split">
-      <div data-reveal>
-        <span class="kicker">Il computer giusto</span>
-        <h2 class="h h2" style="margin-top:.8rem">Un PC per <span class="red">ogni scrivania</span></h2>
-        <p class="lead" style="margin-top:1rem">Scegliamo insieme il formato più adatto a chi lo usa, e lo configuriamo per il suo lavoro.</p>
-        <ul class="b-list">
-          <li><span class="b-list__ok"><Icon name="check" size={14} width={3.2} /></span><span><strong>Mini PC</strong>: compatti e silenziosi, perfetti per l'ufficio e le scrivanie piccole</span></li>
-          <li><span class="b-list__ok"><Icon name="check" size={14} width={3.2} /></span><span><strong>All in One</strong>: schermo e computer in un unico pezzo, niente cavi</span></li>
-          <li><span class="b-list__ok"><Icon name="check" size={14} width={3.2} /></span><span><strong>Notebook</strong>: per chi lavora fuori sede o in smart working</span></li>
-          <li><span class="b-list__ok"><Icon name="check" size={14} width={3.2} /></span><span><strong>Workstation</strong>: per CAD, rendering e grafica</span></li>
-        </ul>
+  <Includes kicker="La soluzione" lead="Già scelto da oltre 500 aziende, professionisti e studi: tu lavori, ai computer pensiamo noi." cols={4} items={[
+    { icon: 'pc', t: 'PC configurati su misura', d: 'Li prepariamo con i tuoi programmi, le tue cartelle e i tuoi utenti. Accendi e lavori.' },
+    { icon: 'wrench', t: 'Installazione chiavi in mano', d: 'Li portiamo, li colleghiamo e li avviamo noi, in 1–4 giorni lavorativi.' },
+    { icon: 'activity', t: 'Controllati di continuo', d: 'Aggiornamenti e controlli da remoto: spesso risolviamo prima che tu te ne accorga.' },
+    { icon: 'refresh', t: 'Sostituzione senza costi', d: 'Se un PC si guasta lo ripariamo o lo sostituiamo noi. Zero fatture a sorpresa.' },
+  ]}>Il Noleggio Assistito: <span class="red">il PC diventa un problema nostro</span></Includes>
+
+  <section class="section section--paper" id="computer">
+    <div class="wrap">
+      <div class="b-head" data-reveal>
+        <span class="kicker">I computer G8A</span>
+        <h2 class="h h2">Il computer giusto <span class="red">per ogni scrivania</span></h2>
+        <p class="lead">Computer a marchio G8A, configurati da noi sul lavoro di chi li usa. Dicci cosa fate e ti diciamo quale serve.</p>
       </div>
-      <div class="b-hero__photo" data-reveal style="--d:.12s"><Image src={cpu} alt="Processore di un computer configurato da G8A" widths={[560, 900]} sizes="(max-width: 900px) 100vw, 560px" /></div>
+      <div class="pcs">
+        {PC.map((p, i) => (
+          <article class="pc glow" data-reveal style={`--d:${i * 0.08}s`}>
+            <div class="pc__img"><Image src={p.img} alt={`${p.nome}, ${p.tipo}`} widths={[300, 600]} sizes="(max-width: 600px) 80vw, 300px" /></div>
+            <span class="pc__tipo">{p.tipo}</span>
+            <h3 class="pc__nome">{p.nome}</h3>
+            <p class="pc__per"><Icon name="briefcase" size={15} width={2.2} />{p.per}</p>
+            <p class="pc__d">{p.d}</p>
+            <a class="pc__go" href={waLink(p.wa)}>Chiedi la proposta →</a>
+          </article>
+        ))}
+      </div>
     </div>
   </section>
 
-  <Guarantee />
+  <Confronto oggi="Comprare i PC" rows={[
+    { t: 'Spesa iniziale', oggi: 'Migliaia di euro subito, per macchine che invecchiano', g8a: 'Nessun investimento: un canone al mese' },
+    { t: 'Quando si rompe', oggi: 'Cerchi un tecnico, paghi uscita e ricambi', g8a: 'Riparazione o sostituzione incluse' },
+    { t: 'Aggiornamenti e controlli', oggi: 'Se qualcuno se ne ricorda', g8a: 'Li facciamo noi, da remoto' },
+    { t: 'Assistenza', oggi: 'Un numero diverso ogni volta', g8a: 'Un numero dedicato, anche su WhatsApp' },
+    { t: 'Quando invecchia', oggi: 'Lo ricompri, e si ricomincia', g8a: 'Lo sostituiamo noi' },
+    { t: 'Costi', oggi: 'Imprevedibili', g8a: 'Fissi e prevedibili, nessun vincolo' },
+  ]}>Comprare o noleggiare? <span class="red">Guarda la differenza.</span></Confronto>
+
+  <CtaBand waText={wa} sub="Dicci quante postazioni avete e che lavoro fate: ti prepariamo una proposta su misura, senza impegno.">Quanti PC avete in ufficio?</CtaBand>
+
+  <Cases ids={['serramenti', 'lfm']} more lead="Quando qualcosa si rompe davvero, conta solo quanto in fretta si riparte.">Fermi di ore, <span class="red">non di giorni</span></Cases>
   <Quotes ids={['coriani', 'testa', 'milani']}>Chi ha scelto i nostri <span class="red">computer a noleggio</span></Quotes>
+  <GoogleReviews paper show={3} />
+
+  <Passi items={[
+    { t: 'Ci chiami o ci scrivi', d: 'Su telefono o WhatsApp ti risponde una persona del nostro team.' },
+    { t: 'Capiamo come lavorate', d: 'Quante postazioni, che programmi, chi lavora fuori: poi ti proponiamo computer e canone.' },
+    { t: 'Installiamo tutto', d: 'In 1–4 giorni lavorativi: PC configurati, programmi e cartelle al loro posto.' },
+    { t: 'Ci pensiamo noi', d: 'Controlli, aggiornamenti, assistenza e sostituzioni: tutto nel canone.' },
+  ]}>Da oggi a computer nuovi <span class="red">in quattro passi</span></Passi>
+
+  <Guarantee />
   <Faq items={faq}>Noleggio computer: <span class="red">le risposte</span></Faq>
-  <Cta lead="Dicci quante postazioni hai e che lavoro fate: ti proponiamo i computer giusti e il canone." waText={wa}>Risolvi ora il problema dei computer</Cta>
+  <Cta lead="Dicci quante postazioni hai e che lavoro fate: ti proponiamo i computer giusti e il canone. Se dopo 30 giorni non sei soddisfatto, ti rimborsiamo." waText={wa}>Il prossimo PC che si blocca <span style="color:#ff6b6b">è un problema nostro.</span></Cta>
 </Base>
+
+<style>
+  .pcs { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-top: 2.5rem; }
+  .pc { position: relative; display: flex; flex-direction: column; padding: 1.4rem; border-radius: 20px; background: #fff; border: 1px solid var(--line); }
+  .pc__img { display: grid; place-items: center; height: 11rem; margin-bottom: 1rem; border-radius: 14px; background: radial-gradient(70% 70% at 50% 60%, rgba(255, 26, 26, 0.12), transparent 70%), var(--paper); }
+  .pc__img :global(img) { max-height: 9.5rem; width: auto; max-width: 88%; object-fit: contain; filter: drop-shadow(0 14px 16px rgba(11, 11, 13, 0.22)); transition: transform 0.3s; }
+  .pc:hover .pc__img :global(img) { transform: translateY(-6px) scale(1.04); }
+  .pc__tipo { font-size: 0.75rem; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; color: var(--red); }
+  .pc__nome { margin-top: 0.2rem; font-stretch: 85%; font-variation-settings: 'wdth' 85; text-transform: uppercase; font-size: 1.5rem; }
+  .pc__per { display: flex; align-items: center; gap: 0.4rem; margin-top: 0.3rem; font-size: 0.88rem; font-weight: 700; color: var(--ink); }
+  .pc__d { margin-top: 0.6rem; color: var(--muted); font-size: 0.95rem; }
+  .pc__go { margin-top: auto; padding-top: 0.9rem; font-weight: 800; color: var(--red); text-decoration: none; }
+  .pc__go:hover { text-decoration: underline; }
+  @media (max-width: 1050px) { .pcs { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 560px) { .pcs { grid-template-columns: 1fr; } }
+</style>

@@ -9,10 +9,18 @@ import Cases from '../components/blocks/Cases.astro';
 import Quotes from '../components/blocks/Quotes.astro';
 import Faq from '../components/blocks/Faq.astro';
 import Cta from '../components/blocks/Cta.astro';
+import GoogleReviews from '../components/blocks/GoogleReviews.astro';
+import Checkup from '../components/lp/Checkup.astro';
+import Confronto from '../components/lp/Confronto.astro';
+import CtaBand from '../components/lp/CtaBand.astro';
+import Passi from '../components/lp/Passi.astro';
+import { Image } from 'astro:assets';
+import nas from '../assets/nas-synology.png';
 import { FAQ_BASE, faqLd, serviceLd } from '../data/site';
 
 const wa = 'Ciao, vorrei informazioni sul noleggio NAS e backup per la mia azienda.';
 const faq = [
+  { q: 'Ho già un hard disk esterno per i backup: non basta?', a: 'Un disco esterno collegato al computer viene colpito insieme a lui: da un guasto, da un furto, da un ransomware. E funziona solo se qualcuno si ricorda di fare la copia. Con il NAS le copie sono automatiche, ridondate e anche fuori sede.' },
   { q: 'Cosa devo fare io?', a: 'Niente: ti consegniamo il NAS già configurato e testato. Basta collegarlo alla rete, ai backup pensiamo noi.' },
   { q: 'Il backup è anche fuori dall\'ufficio?', a: 'Sì, oltre alla copia sul NAS possiamo programmare backup fuori sede, su cloud o su un altro NAS, così i dati restano salvi anche in caso di furto, incendio o ransomware.' },
   { q: 'Chi controlla che i backup funzionino?', a: 'Noi. Il NAS è monitorato da remoto: se un backup non va a buon fine o un disco dà segni di cedimento, lo vediamo e interveniamo.' },
@@ -22,8 +30,8 @@ const desc = 'Noleggio NAS professionale per il backup aziendale: dischi in RAID
 ---
 <Base title="Backup aziendale e noleggio NAS professionale | G8A Technology" description={desc} jsonLd={[serviceLd('Noleggio NAS e backup aziendale', desc, '/noleggio-backup'), faqLd(faq)]}>
   <PageHero kicker="Backup aziendale e NAS a noleggio" crumb="Backup e NAS" waText={wa} chips={['Backup automatici', 'Copia anche su cloud', 'Monitorato da remoto']}
-    lead="Ti consegniamo un NAS professionale configurato e testato, con dischi ridondati e backup automatici, anche fuori sede. Non devi fare nulla: solo collegarlo e dormire sonni tranquilli.">
-    <Fragment slot="title">I dati della tua azienda <span class="red">sono al sicuro?</span></Fragment>
+    lead="Basta poco per perdere anni di lavoro. Ti consegniamo un NAS professionale configurato da noi, con backup automatici anche fuori sede e controllati di continuo. Tu non devi fare nulla.">
+    <Fragment slot="title">Un guasto, un furto, un clic sbagliato. <span class="red">E i tuoi dati?</span></Fragment>
     <div slot="visual" class="nas" aria-hidden="true">
       <div class="nas__box">
         <p class="nas__h"><span class="live"></span>NAS G8A · Backup</p>
@@ -39,10 +47,20 @@ const desc = 'Noleggio NAS professionale per il backup aziendale: dischi in RAID
   </PageHero>
 
   <Problems kicker="Il rischio" items={[
-    { t: 'Hard disk e chiavette', d: 'Copie fatte a mano, quando qualcuno se ne ricorda, su supporti che si perdono o si rompono.' },
-    { t: 'Il server si blocca', d: 'Un calo di tensione o un guasto, e i dati di anni di lavoro non sono più raggiungibili.' },
-    { t: 'Un ransomware cripta tutto', d: 'Basta un clic sbagliato: giorni di blocco, danni economici e d\'immagine.' },
-  ]}>Perché continuare a rischiare <span class="red">con i tuoi dati?</span></Problems>
+    { t: 'Il backup “quando ci si ricorda”', d: 'Copie fatte a mano su chiavette e dischi esterni che si perdono, si rompono, o sono vecchie di mesi.' },
+    { t: 'Il server si blocca', d: 'Un calo di tensione o un guasto, e fatture, progetti e contabilità di anni non sono più raggiungibili.' },
+    { t: 'Un ransomware cripta tutto', d: 'Basta aprire l’allegato sbagliato: giorni di blocco, clienti da avvisare, danni economici e d’immagine.' },
+  ]}>Il giorno in cui servirà il backup, <span class="red">ci sarà?</span></Problems>
+
+  <Checkup waText={wa} domande={[
+    'I backup partono da soli, ogni giorno?',
+    'Esiste una copia dei dati fuori dall’ufficio?',
+    'Qualcuno controlla che i backup vadano a buon fine?',
+    'Avete mai provato a recuperare i dati da un backup?',
+  ]}>
+    I tuoi dati <span class="red">sono davvero al sicuro?</span>
+    <Fragment slot="lead">Quattro domande, risposte sincere. Se anche una sola è un “no”, è lì che di solito comincia il problema.</Fragment>
+  </Checkup>
 
   <Includes lead="Un NAS professionale pronto all'uso, nel canone del Noleggio Assistito." cols={4} items={[
     { icon: 'server', t: 'NAS pronto all\'uso', d: 'Configurato e testato da noi prima della consegna.' },
@@ -50,6 +68,23 @@ const desc = 'Noleggio NAS professionale per il backup aziendale: dischi in RAID
     { icon: 'refresh', t: 'Backup automatici', d: 'Programmati e automatici, anche fuori sede su cloud o su un altro NAS.' },
     { icon: 'activity', t: 'Monitoraggio e assistenza', d: 'Controlliamo da remoto che tutto funzioni, e interveniamo se serve.' },
   ]}>Il backup che <span class="red">si fa da solo</span></Includes>
+
+  <section class="section">
+    <div class="wrap b-split">
+      <div class="nasfoto" data-reveal><Image src={nas} alt="NAS professionale a due dischi per il backup aziendale" widths={[400, 700]} sizes="(max-width: 900px) 80vw, 460px" /></div>
+      <div data-reveal style="--d:.1s">
+        <span class="kicker">Il NAS G8A</span>
+        <h2 class="h h2" style="margin-top:.8rem">Lo colleghi. <span class="red">Al resto pensiamo noi.</span></h2>
+        <p class="lead" style="margin-top:1rem">Arriva già configurato e testato. I backup partono da soli, le copie vanno anche fuori sede e noi controlliamo da remoto che tutto funzioni.</p>
+        <ul class="b-list">
+          <li><span class="b-list__ok"><Icon name="check" size={14} width={3.2} /></span><span>Dischi inclusi e ridondati: se uno si rompe, i dati restano</span></li>
+          <li><span class="b-list__ok"><Icon name="check" size={14} width={3.2} /></span><span>Backup automatici dei computer e delle cartelle condivise</span></li>
+          <li><span class="b-list__ok"><Icon name="check" size={14} width={3.2} /></span><span>Copia fuori sede, su cloud o su un altro NAS</span></li>
+          <li><span class="b-list__ok"><Icon name="check" size={14} width={3.2} /></span><span>Se un backup non va a buon fine, lo vediamo noi e interveniamo</span></li>
+        </ul>
+      </div>
+    </div>
+  </section>
 
   <section class="section section--paper">
     <div class="wrap">
@@ -66,11 +101,30 @@ const desc = 'Noleggio NAS professionale per il backup aziendale: dischi in RAID
     </div>
   </section>
 
-  <Guarantee />
+  <Confronto oggi="Disco esterno o chiavetta" rows={[
+    { t: 'Quando si fa la copia', oggi: 'Quando qualcuno se ne ricorda', g8a: 'In automatico, ogni giorno' },
+    { t: 'Se si rompe un disco', oggi: 'I dati se ne vanno con lui', g8a: 'Dischi ridondati: i dati restano' },
+    { t: 'Furto, incendio, ransomware', oggi: 'Colpiscono anche la copia', g8a: 'Una copia è sempre fuori sede' },
+    { t: 'Chi controlla', oggi: 'Nessuno, finché non serve', g8a: 'Noi, da remoto, di continuo' },
+    { t: 'Costi', oggi: 'Il giorno del disastro, altissimi', g8a: 'Un canone fisso, nessun vincolo' },
+  ]}>Il backup fai da te <span class="red">contro il NAS G8A</span></Confronto>
+
+  <CtaBand waText={wa} sub="Ti diciamo come sono protetti oggi i tuoi dati e cosa serve davvero, senza impegno.">Non aspettare di perdere i dati per scoprirlo.</CtaBand>
+
   <Cases ids={['serramenti', 'lfm']} more lead="Quando succede qualcosa, il backup fa la differenza tra un disastro e un'ora di fermo.">Il backup <span class="red">alla prova dei fatti</span></Cases>
-  <Quotes ids={['milani']} more={false}>Da nessun backup <span class="red">a dati al sicuro</span></Quotes>
+  <Quotes ids={['milani', 'testa']}>Da nessun backup <span class="red">a dati al sicuro</span></Quotes>
+  <GoogleReviews paper show={3} />
+
+  <Passi items={[
+    { t: 'Ci chiami o ci scrivi', d: 'Ci racconti dove sono oggi i dati e come fate le copie.' },
+    { t: 'Ti diciamo cosa serve', d: 'Quanto spazio, quali computer e cartelle proteggere, dove tenere la copia fuori sede.' },
+    { t: 'Consegniamo il NAS', d: 'Già configurato e testato: lo colleghiamo e facciamo partire i backup.' },
+    { t: 'Controlliamo noi', d: 'Monitoriamo i backup da remoto e interveniamo se qualcosa non va.' },
+  ]}>Dati al sicuro <span class="red">in quattro passi</span></Passi>
+
+  <Guarantee />
   <Faq items={faq}>Backup e NAS: <span class="red">le risposte</span></Faq>
-  <Cta lead="Ti diciamo come sono protetti oggi i tuoi dati e cosa serve per dormire tranquillo." waText={wa}>Risolvi ora il problema del backup</Cta>
+  <Cta lead="Ti diciamo come sono protetti oggi i tuoi dati e cosa serve per dormire tranquillo. Se dopo 30 giorni non sei soddisfatto, ti rimborsiamo." waText={wa}>Dormi tranquillo: <span style="color:#ff6b6b">i dati li guardiamo noi.</span></Cta>
 </Base>
 
 <style>
@@ -90,6 +144,8 @@ const desc = 'Noleggio NAS professionale per il backup aziendale: dischi in RAID
   .nas__bar > i { grid-column: 1 / -1; height: 6px; border-radius: 6px; background: #2a2a30; overflow: hidden; }
   .nas__bar > i > i { display: block; width: 58%; height: 100%; background: var(--grad); animation: fill 2s cubic-bezier(0.2, 0.7, 0.2, 1) both; }
   @keyframes fill { from { width: 0; } }
+  .nasfoto { position: relative; display: grid; place-items: center; padding: 2rem; border-radius: 24px; background: radial-gradient(60% 60% at 50% 55%, rgba(255, 26, 26, 0.16), transparent 70%), var(--paper); }
+  .nasfoto :global(img) { width: min(100%, 420px); height: auto; filter: drop-shadow(0 26px 30px rgba(11, 11, 13, 0.25)); animation: b-float 7s ease-in-out infinite; }
   .rule321 strong { font-stretch: 78%; font-variation-settings: 'wdth' 78; font-weight: 800; font-size: 4.2rem; line-height: 1; background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent; }
   .rule321 h3 { margin-top: 0.3rem; text-transform: uppercase; font-stretch: 85%; font-variation-settings: 'wdth' 85; font-size: 1.3rem; }
 </style>

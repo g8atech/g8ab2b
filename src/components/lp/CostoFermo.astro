@@ -1,0 +1,73 @@
+---
+// Calcolatore del costo dei fermi: il visitatore mette i suoi numeri e vede quanto perde in un anno.
+// Il messaggio WhatsApp si aggiorna con il risultato, così la conversazione parte già dal problema.
+import Icon from '../Icon.astro';
+import { SITE, waLink, telLink } from '../../data/site';
+interface Props { kicker?: string; persone?: number; costo?: number; ore?: number; oreLabel: string; personeLabel?: string; waText: string; id?: string }
+const { kicker = 'Fai due conti', persone = 5, costo = 30, ore = 2, oreLabel, personeLabel = 'Persone che usano il computer', waText, id = 'costo' } = Astro.props;
+---
+<section class="section cf" id={id} data-cf data-wa={waText}>
+  <div class="wrap cf__row">
+    <div data-reveal>
+      <span class="kicker">{kicker}</span>
+      <h2 class="h h2" style="margin-top:.8rem"><slot /></h2>
+      <p class="lead" style="margin-top:1rem"><slot name="lead" /></p>
+      <div class="cf__inputs">
+        <label class="cf__f"><span>{personeLabel}</span><span class="cf__ctl"><input type="range" min="1" max="50" value={persone} data-k="p" /><output data-o="p">{persone}</output></span></label>
+        <label class="cf__f"><span>Costo medio di un'ora di lavoro (€)</span><span class="cf__ctl"><input type="range" min="15" max="100" step="5" value={costo} data-k="c" /><output data-o="c">{costo} €</output></span></label>
+        <label class="cf__f"><span>{oreLabel}</span><span class="cf__ctl"><input type="range" min="0.5" max="10" step="0.5" value={ore} data-k="h" /><output data-o="h">{String(ore).replace('.', ',')} h</output></span></label>
+      </div>
+    </div>
+    <div class="cf__res glow" data-reveal style="--d:.12s">
+      <p class="cf__lbl">Quanto ti costano in un anno</p>
+      <p class="cf__big" data-o="tot">{(persone * costo * ore * 12).toLocaleString('it-IT')} €</p>
+      <p class="cf__sub"><strong data-o="ore">{(persone * ore * 12).toLocaleString('it-IT')}</strong> ore di lavoro buttate, senza contare clienti che aspettano e scadenze saltate.</p>
+      <p class="cf__fix">Con il Noleggio Assistito questo numero lo prendiamo in carico noi: un canone fisso, e i problemi li risolviamo noi.</p>
+      <div class="cf__btns">
+        <a class="btn btn--red" href={telLink}><Icon name="phone" />Chiama {SITE.phone}</a>
+        <a class="btn btn--wa" href={waLink(waText)} data-cf-wa><Icon name="wa" />Mandaci il risultato</a>
+      </div>
+      <p class="cf__note">Stima indicativa, calcolata solo con i numeri che hai inserito.</p>
+    </div>
+  </div>
+</section>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-cf]').forEach((root) => {
+    const val = (k: string) => Number((root.querySelector(`[data-k="${k}"]`) as HTMLInputElement).value);
+    const out = (k: string, t: string) => root.querySelectorAll(`[data-o="${k}"]`).forEach((o) => (o.textContent = t));
+    const wa = root.querySelector('[data-cf-wa]') as HTMLAnchorElement;
+    const base = root.dataset.wa || '';
+    const fmt = (n: number) => Math.round(n).toLocaleString('it-IT');
+    const upd = () => {
+      const p = val('p'), c = val('c'), h = val('h');
+      const tot = p * c * h * 12;
+      out('p', String(p)); out('c', `${c} €`); out('h', `${String(h).replace('.', ',')} h`);
+      out('tot', `${fmt(tot)} €`); out('ore', fmt(p * h * 12));
+      const txt = `${base} Siamo in ${p} e dal vostro calcolo i fermi ci costano circa ${fmt(tot)} € l'anno.`;
+      wa.href = wa.href.replace(/text=.*$/, 'text=' + encodeURIComponent(txt));
+    };
+    root.querySelectorAll('input').forEach((i) => i.addEventListener('input', upd));
+  });
+</script>
+
+<style>
+  .cf { background: radial-gradient(50% 60% at 90% 50%, rgba(255, 26, 26, 0.08), transparent 70%), #fff; }
+  .cf__row { display: grid; grid-template-columns: 1.05fr 1fr; gap: clamp(2rem, 5vw, 4rem); align-items: center; }
+  .cf__inputs { display: grid; gap: 1.2rem; margin-top: 2rem; }
+  .cf__f { display: grid; gap: 0.5rem; font-weight: 700; }
+  .cf__ctl { display: grid; grid-template-columns: 1fr 4.5rem; gap: 1rem; align-items: center; }
+  .cf__ctl output { justify-self: end; font-stretch: 85%; font-variation-settings: 'wdth' 85; font-weight: 800; font-size: 1.35rem; color: var(--red); }
+  .cf input[type='range'] { -webkit-appearance: none; appearance: none; width: 100%; height: 8px; border-radius: 8px; background: #eceef1; outline-offset: 6px; }
+  .cf input[type='range']::-webkit-slider-thumb { -webkit-appearance: none; width: 26px; height: 26px; border-radius: 50%; background: var(--grad); border: 3px solid #fff; box-shadow: 0 4px 12px rgba(227, 6, 19, 0.4); cursor: pointer; }
+  .cf input[type='range']::-moz-range-thumb { width: 22px; height: 22px; border-radius: 50%; background: #e30613; border: 3px solid #fff; box-shadow: 0 4px 12px rgba(227, 6, 19, 0.4); cursor: pointer; }
+  .cf__res { position: relative; padding: clamp(1.6rem, 3vw, 2.4rem); border-radius: 24px; background: var(--ink); color: #fff; box-shadow: 0 30px 70px rgba(11, 11, 13, 0.25); }
+  .cf__lbl { font-size: 0.8rem; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; color: #ff8a8a; }
+  .cf__big { margin-top: 0.4rem; font-stretch: 78%; font-variation-settings: 'wdth' 78; font-weight: 800; font-size: clamp(3.2rem, 7vw, 5.2rem); line-height: 1; background: linear-gradient(#fff, #ffb3ad); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .cf__sub { margin-top: 0.8rem; color: #c3c6cd; }
+  .cf__sub strong { color: #fff; }
+  .cf__fix { margin-top: 1.2rem; padding: 0.9rem 1rem; border-radius: 12px; background: rgba(22, 193, 114, 0.12); border: 1px solid rgba(22, 193, 114, 0.35); font-weight: 700; }
+  .cf__btns { display: flex; flex-wrap: wrap; gap: 0.6rem; margin-top: 1.3rem; }
+  .cf__note { margin-top: 0.9rem; font-size: 0.8rem; color: #8e929c; }
+  @media (max-width: 900px) { .cf__row { grid-template-columns: 1fr; } }
+</style>

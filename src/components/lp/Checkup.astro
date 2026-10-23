@@ -1,0 +1,78 @@
+---
+// Test lampo sì/no: chi risponde "no" vede il proprio livello di rischio e può mandarcelo su WhatsApp.
+import Icon from '../Icon.astro';
+import { SITE, waLink, telLink } from '../../data/site';
+interface Props { kicker?: string; domande: string[]; waText: string }
+const { kicker = 'Test in 30 secondi', domande, waText } = Astro.props;
+---
+<section class="section ck" data-ck data-wa={waText} data-n={domande.length}>
+  <div class="wrap ck__row">
+    <div data-reveal>
+      <span class="kicker">{kicker}</span>
+      <h2 class="h h2" style="margin-top:.8rem"><slot /></h2>
+      <p class="lead" style="margin-top:1rem"><slot name="lead" /></p>
+    </div>
+    <div class="ck__box" data-reveal style="--d:.1s">
+      <ol class="ck__q">
+        {domande.map((q, i) => (
+          <li>
+            <span>{q}</span>
+            <span class="ck__yn" role="group" aria-label={q}>
+              <button type="button" data-a="si" data-i={i} aria-pressed="false">Sì</button>
+              <button type="button" data-a="no" data-i={i} aria-pressed="false">No</button>
+            </span>
+          </li>
+        ))}
+      </ol>
+      <div class="ck__res" data-res="vuoto"><p>Rispondi alle domande: ti diciamo subito come sei messo.</p></div>
+      <div class="ck__res" data-res="ok" hidden><p><strong class="ck__ok">Sei messo bene.</strong> Vuoi una verifica da parte nostra? Ti diciamo se c'è qualcosa da migliorare.</p></div>
+      <div class="ck__res" data-res="medio" hidden><p><strong class="ck__mid">Rischio medio.</strong> C'è almeno un punto scoperto: è proprio da lì che di solito parte il problema.</p></div>
+      <div class="ck__res" data-res="alto" hidden><p><strong class="ck__hi">Rischio alto.</strong> Oggi i tuoi dati sono esposti. Parliamone prima che succeda qualcosa.</p></div>
+      <div class="ck__btns">
+        <a class="btn btn--red" href={telLink}><Icon name="phone" />Chiama {SITE.phone}</a>
+        <a class="btn btn--wa" href={waLink(waText)} data-ck-wa><Icon name="wa" />Mandaci il risultato</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-ck]').forEach((root) => {
+    const n = Number(root.dataset.n);
+    const ans: Record<string, string> = {};
+    const wa = root.querySelector('[data-ck-wa]') as HTMLAnchorElement;
+    const qs = [...root.querySelectorAll('.ck__q li > span:first-child')].map((s) => s.textContent);
+    root.querySelectorAll<HTMLButtonElement>('.ck__yn button').forEach((b) => b.addEventListener('click', () => {
+      const i = b.dataset.i!;
+      ans[i] = b.dataset.a!;
+      b.parentElement!.querySelectorAll('button').forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+      const no = Object.values(ans).filter((a) => a === 'no').length;
+      const done = Object.keys(ans).length;
+      const k = no >= 2 ? 'alto' : no === 1 ? 'medio' : done === n ? 'ok' : 'vuoto';
+      root.querySelectorAll<HTMLElement>('[data-res]').forEach((r) => (r.hidden = r.dataset.res !== k));
+      const scoperti = Object.entries(ans).filter(([, a]) => a === 'no').map(([j]) => `- ${qs[Number(j)]} No`).join('\n');
+      const txt = `${root.dataset.wa}${scoperti ? `\nAl vostro test ho risposto di no a:\n${scoperti}` : ''}`;
+      wa.href = wa.href.replace(/text=.*$/, 'text=' + encodeURIComponent(txt));
+    }));
+  });
+</script>
+
+<style>
+  .ck { background: var(--ink); color: #fff; }
+  .ck .lead { color: #c3c6cd; }
+  .ck__row { display: grid; grid-template-columns: 0.9fr 1.1fr; gap: clamp(2rem, 5vw, 4rem); align-items: center; }
+  .ck__box { padding: clamp(1.3rem, 3vw, 2rem); border-radius: 24px; background: #16161a; border: 1px solid rgba(255, 255, 255, 0.1); box-shadow: 0 0 60px rgba(255, 26, 26, 0.15); }
+  .ck__q { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.6rem; counter-reset: q; }
+  .ck__q li { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 0.8rem 0.9rem; border-radius: 12px; background: #1f1f25; font-weight: 600; }
+  .ck__yn { display: flex; gap: 0.35rem; flex: none; }
+  .ck__yn button { min-width: 3.2rem; padding: 0.5rem 0.7rem; border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.2); background: transparent; color: #fff; font: inherit; font-weight: 800; cursor: pointer; }
+  .ck__yn button:hover { border-color: #fff; }
+  .ck__yn button[data-a='si'][aria-pressed='true'] { background: var(--live); border-color: var(--live); }
+  .ck__yn button[data-a='no'][aria-pressed='true'] { background: var(--red); border-color: var(--red); }
+  .ck__res { margin-top: 1.1rem; min-height: 3rem; color: #c3c6cd; }
+  .ck__res strong { font-stretch: 85%; font-variation-settings: 'wdth' 85; text-transform: uppercase; font-size: 1.25rem; margin-right: 0.3rem; }
+  .ck__ok { color: var(--live); } .ck__mid { color: #ffb020; } .ck__hi { color: #ff4d4d; }
+  .ck__btns { display: flex; flex-wrap: wrap; gap: 0.6rem; margin-top: 1rem; }
+  @media (max-width: 900px) { .ck__row { grid-template-columns: 1fr; } }
+  @media (max-width: 480px) { .ck__q li { flex-direction: column; align-items: flex-start; } }
+</style>

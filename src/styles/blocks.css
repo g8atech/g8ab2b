@@ -127,3 +127,10 @@
 
 .b-hero__gb { margin-top: 1.2rem; }
 @media (max-width: 600px) { .b-hero__gb { display: none; } }
+
+/* Apertura con il palco dei prodotti: la luce la porta il palco */
+.b-hero__visual:has(.stg) > .b-hero__glow, .b-hero__visual:has(.stg) > .b-hero__ring { display: none; }
+.stg .b-chip { z-index: 10; }
+.stg .b-chip--1 { top: 2%; left: 0; }
+.stg .b-chip--2 { bottom: 6%; right: 0; }
+.stg .b-chip--3 { bottom: -2%; left: 4%; }

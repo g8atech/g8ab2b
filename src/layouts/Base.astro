@@ -10,15 +10,19 @@ import { SITE, SEDI, GRUPPO, waLink, telLink } from '../data/site';
 
 interface Props { title: string; description: string; jsonLd?: object[] }
 const { title, description, jsonLd = [] } = Astro.props;
+// Il Noleggio Assistito raccoglie i servizi in un menu a tendina, per tenere la barra corta.
+const NOLEGGIO = [
+  { href: '/noleggio-computer', t: 'Computer', d: 'PC, All in One e notebook G8A', icon: 'pc' },
+  { href: '/noleggio-stampanti', t: 'Stampanti', d: 'Multifunzione con toner inclusi', icon: 'printer' },
+  { href: '/noleggio-backup', t: 'Backup e NAS', d: 'I dati al sicuro, anche fuori sede', icon: 'server' },
+  { href: '/rmm', t: 'Monitoraggio RMM', d: 'Controlliamo i tuoi PC di continuo', icon: 'activity' },
+];
 const NAV = [
-  { href: '/noleggio-computer', t: 'Computer' },
-  { href: '/noleggio-stampanti', t: 'Stampanti' },
-  { href: '/noleggio-backup', t: 'Backup' },
-  { href: '/rmm', t: 'Monitoraggio RMM' },
   { href: '/testimonianze-casistudio', t: 'Casi studio' },
   { href: '/assistenza-business', t: 'Contatti' },
 ];
 const here = Astro.url.pathname.replace(/(\.html|\/)$/, '');
+const inNoleggio = NOLEGGIO.some((n) => n.href === here);
 const cleanPath = Astro.url.pathname.replace(/(index)?\.html$/, '').replace(/\/$/, '') || '/';
 const canonical = new URL(cleanPath, SITE.url).href;
 const fullTitle = title.includes(SITE.name) ? title : `${title} | ${SITE.name}`;
@@ -90,6 +94,18 @@ const live = import.meta.env.PUBLIC_SITE_LIVE === 'true';
       <div class="wrap hdr__row">
         <a href="/" class="hdr__logo" aria-label="G8A Technology, home"><Image src={logoColor} alt="G8A Technology" height={52} densities={[1, 2]} loading="eager" /></a>
         <nav aria-label="Menu principale" class="hdr__nav" id="menu">
+          <div class="dd" data-dd>
+            <button class="dd__btn" type="button" aria-expanded="false" aria-controls="dd-noleggio" data-current={inNoleggio ? '' : undefined}>Noleggio Assistito<svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4l4 4 4-4" fill="none" stroke="currentColor" stroke-width="2" /></svg></button>
+            <div class="dd__panel" id="dd-noleggio">
+              <a class="dd__intro" href="/#include"><strong>Il Noleggio Assistito</strong><span>Tutta l'informatica in un canone. Come funziona →</span></a>
+              {NOLEGGIO.map((n) => (
+                <a class="dd__item" href={n.href} aria-current={here === n.href ? 'page' : undefined}>
+                  <span class="dd__ic"><Icon name={n.icon} size={20} stroke="#fff" width={2} /></span>
+                  <span><strong>{n.t}</strong><small>{n.d}</small></span>
+                </a>
+              ))}
+            </div>
+          </div>
           {NAV.map((n) => <a href={n.href} aria-current={here === n.href ? 'page' : undefined}>{n.t}</a>)}
           <a class="hdr__only-m" href={SITE.rmmLogin}>Login G8A RMM</a>
           <a class="hdr__only-m" href={SITE.ticket}>Apri un ticket</a>
@@ -174,6 +190,16 @@ const live = import.meta.env.PUBLIC_SITE_LIVE === 'true';
         burger.setAttribute('aria-label', open ? 'Chiudi il menu' : 'Apri il menu');
       });
 
+      // Menu Noleggio Assistito: si apre al passaggio del mouse (CSS) e al clic o da tastiera (qui).
+      document.querySelectorAll('[data-dd]').forEach((dd) => {
+        const btn = dd.querySelector('.dd__btn')!;
+        const set = (open: boolean) => { dd.classList.toggle('is-open', open); btn.setAttribute('aria-expanded', String(open)); };
+        btn.addEventListener('click', () => set(!dd.classList.contains('is-open')));
+        dd.addEventListener('keydown', (e) => { if ((e as KeyboardEvent).key === 'Escape') { set(false); (btn as HTMLElement).focus(); } });
+        document.addEventListener('click', (e) => { if (!dd.contains(e.target as Node)) set(false); });
+        dd.addEventListener('focusout', (e) => { if (!dd.contains((e as FocusEvent).relatedTarget as Node)) set(false); });
+      });
+
       // Barra rossa di avanzamento sotto l'intestazione.
       const hdr = document.querySelector('.hdr') as HTMLElement | null;
       const prog = () => { const h = document.documentElement; hdr?.style.setProperty('--progress', String(h.scrollTop / Math.max(1, h.scrollHeight - h.clientHeight))); };
@@ -233,13 +259,37 @@ const live = import.meta.env.PUBLIC_SITE_LIVE === 'true';
   .hdr__nav a { color: var(--ink); text-decoration: none; }
   .hdr__nav a:hover { color: var(--red); }
   .hdr__cta { display: flex; gap: 0.6rem; }
-  @media (max-width: 1120px) {
+  .hdr__nav { align-items: center; }
+  .dd { position: relative; }
+  .dd__btn { display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.4rem 0; border: 0; background: none; font: inherit; font-weight: 700; color: var(--ink); cursor: pointer; }
+  .dd__btn[data-current] { color: var(--red); }
+  .dd__btn svg { transition: transform 0.2s; }
+  .dd__btn:hover { color: var(--red); }
+  .dd__panel { position: absolute; top: calc(100% + 0.9rem); left: 50%; width: 25rem; display: grid; gap: 0.25rem; padding: 0.6rem; border-radius: 18px; background: #fff; border: 1px solid var(--line); box-shadow: 0 30px 60px rgba(11, 11, 13, 0.18); opacity: 0; visibility: hidden; transform: translate(-50%, 8px); transition: opacity 0.18s, transform 0.18s, visibility 0.18s; }
+  .dd__panel::before { content: ''; position: absolute; left: 0; right: 0; top: -1rem; height: 1rem; }
+  .dd.is-open .dd__panel { opacity: 1; visibility: visible; transform: translate(-50%, 0); }
+  .dd.is-open .dd__btn svg { transform: rotate(180deg); }
+  @media (hover: hover) and (min-width: 1001px) { .dd:hover .dd__panel { opacity: 1; visibility: visible; transform: translate(-50%, 0); } .dd:hover .dd__btn svg { transform: rotate(180deg); } }
+  .dd__intro { display: grid; gap: 0.15rem; padding: 0.9rem 1rem; border-radius: 12px; background: var(--ink); color: #fff !important; text-decoration: none; }
+  .dd__intro span { font-size: 0.85rem; font-weight: 600; color: #ff8a8a; }
+  .dd__item { display: flex; gap: 0.8rem; align-items: center; padding: 0.65rem 0.8rem; border-radius: 12px; text-decoration: none; }
+  .dd__item:hover, .dd__item[aria-current='page'] { background: var(--paper); }
+  .dd__item strong { display: block; color: var(--ink); }
+  .dd__item small { display: block; font-size: 0.85rem; font-weight: 500; color: var(--muted); }
+  .dd__ic { display: grid; place-items: center; width: 2.5rem; height: 2.5rem; border-radius: 10px; background: var(--grad); flex: none; }
+  @media (max-width: 1000px) {
     .hdr__burger { display: inline-grid; place-items: center; width: 2.9rem; height: 2.9rem; border-radius: 8px; border: 2px solid var(--ink); background: #fff; color: var(--ink); cursor: pointer; }
     .hdr__nav { display: none; position: absolute; left: 0; right: 0; top: 100%; flex-direction: column; gap: 0; padding: 0.5rem var(--gutter) 1rem; background: #fff; border-bottom: 1px solid var(--line); box-shadow: 0 20px 40px rgba(11, 11, 13, 0.12); }
     .hdr__nav.is-open { display: flex; }
-    .hdr__nav a { padding: 0.85rem 0; border-bottom: 1px solid var(--line); font-size: 1.05rem; }
+    .hdr__nav { align-items: stretch; }
+    .hdr__nav > a { padding: 0.85rem 0; border-bottom: 1px solid var(--line); font-size: 1.05rem; }
     .hdr__only-m { display: block; }
+    .dd__btn { display: none; }
+    .dd__panel { position: static; width: auto; opacity: 1; visibility: visible; transform: none; box-shadow: none; border: 0; padding: 0.5rem 0; border-bottom: 1px solid var(--line); border-radius: 0; grid-template-columns: 1fr 1fr; }
+    .dd__intro { grid-column: 1 / -1; }
+    .dd__panel::before { display: none; }
   }
+  @media (max-width: 560px) { .dd__panel { grid-template-columns: 1fr; } .dd__item small { display: none; } }
   @media (max-width: 640px) { .hdr__tel { display: none; } .hdr__logo :global(img) { height: 42px; } }
 
   .ftr { background: var(--ink); color: #8e929c; font-size: 0.95rem; padding-top: 3rem; border-top: 4px solid; border-image: var(--grad) 1; }

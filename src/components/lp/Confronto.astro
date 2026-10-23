@@ -1,0 +1,46 @@
+---
+// Confronto "come fai oggi" contro "con il Noleggio Assistito G8A", riga per riga.
+import Icon from '../Icon.astro';
+interface Props { kicker?: string; oggi: string; rows: { t: string; oggi: string; g8a: string }[] }
+const { kicker = 'Fai il confronto', oggi, rows } = Astro.props;
+---
+<section class="section section--paper">
+  <div class="wrap">
+    <div class="b-head" data-reveal>
+      <span class="kicker">{kicker}</span>
+      <h2 class="h h2"><slot /></h2>
+    </div>
+    <div class="cmp" data-reveal>
+      <div class="cmp__hd"><span></span><span class="cmp__old">{oggi}</span><span class="cmp__new">Noleggio Assistito G8A</span></div>
+      {rows.map((r) => (
+        <div class="cmp__r">
+          <span class="cmp__t">{r.t}</span>
+          <span class="cmp__old"><i><Icon name="x" size={13} width={3.2} /></i>{r.oggi}</span>
+          <span class="cmp__new"><i><Icon name="check" size={13} width={3.2} /></i>{r.g8a}</span>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .cmp { margin-top: 2.5rem; border-radius: 22px; overflow: hidden; background: #fff; border: 1px solid var(--line); box-shadow: 0 20px 50px rgba(11, 11, 13, 0.08); }
+  .cmp__hd, .cmp__r { display: grid; grid-template-columns: 1fr 1.3fr 1.3fr; }
+  .cmp__hd span { padding: 1rem 1.3rem; font-stretch: 85%; font-variation-settings: 'wdth' 85; font-weight: 800; text-transform: uppercase; font-size: 1.05rem; }
+  .cmp__hd .cmp__old { color: var(--muted); }
+  .cmp__hd .cmp__new { background: var(--grad); color: #fff; }
+  .cmp__r { border-top: 1px solid var(--line); }
+  .cmp__r > span { display: flex; gap: 0.6rem; align-items: flex-start; padding: 1rem 1.3rem; }
+  .cmp__t { font-weight: 800; }
+  .cmp__r .cmp__old { color: var(--muted); }
+  .cmp__r .cmp__new { font-weight: 700; background: #fff6f6; }
+  .cmp i { display: grid; place-items: center; width: 1.35rem; height: 1.35rem; border-radius: 50%; flex: none; margin-top: 0.1rem; }
+  .cmp__old i { background: #eceef1; color: var(--muted); }
+  .cmp__new i { background: var(--live); color: #fff; }
+  @media (max-width: 700px) {
+    .cmp__hd { display: none; }
+    .cmp__r { grid-template-columns: 1fr 1fr; }
+    .cmp__t { grid-column: 1 / -1; padding-bottom: 0 !important; }
+    .cmp__r > span { padding: 0.7rem 0.9rem; font-size: 0.95rem; }
+  }
+</style>
