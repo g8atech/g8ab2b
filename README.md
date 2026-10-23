@@ -89,6 +89,6 @@ Ogni clic su telefono, WhatsApp o email invia a GTM l'evento `contatto` con `can
 - Elenco delle pagine del vecchio sito indicizzate (da Search Console) per i reindirizzamenti 301.
 
 - Foto robotiche originali in alta risoluzione.
-- Loghi delle altre testate (Borsa Italiana, Repubblica, La Stampa, ANSA, ItalWire, Finanza Flash, Il Secolo XIX).
+- Il Secolo XIX: articolo non trovato online, da aggiungere in src/data/stampa.ts se c'è il link.
 - Prezzo "da € al mese" del Noleggio Assistito, se si vuole mostrarlo.
 - Pagine settore, sedi e città previste nell'architettura.

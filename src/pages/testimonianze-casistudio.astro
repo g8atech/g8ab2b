@@ -1,5 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
+import Rassegna from '../components/blocks/Rassegna.astro';
 import GoogleReviews from '../components/blocks/GoogleReviews.astro';
 import Icon from '../components/Icon.astro';
 import Cases from '../components/blocks/Cases.astro';
@@ -24,6 +25,7 @@ const wa = 'Ciao, ho letto i vostri casi studio e vorrei parlare della mia azien
   <Cases lead="Con il nostro Protocollo analizziamo i rischi prima che si manifestino, agiamo con rapidità quando serve e verifichiamo dopo ogni intervento. Così risolviamo il problema oggi, e lo preveniamo domani.">Quando c'è un problema, <span class="red">noi ci siamo</span></Cases>
   <GoogleReviews paper />
   <Quotes ids={['milani', 'coriani', 'testa', 'vallerini', 'soaptec']} full more={false}>Le parole dei clienti <span class="red">sono la nostra garanzia</span></Quotes>
+  <Rassegna paper />
   <Cta lead="Raccontaci la tua azienda: ti diciamo come la proteggeremmo, prima che serva un caso studio." waText={wa}>Se sei una PMI che vuole cambiare, contattaci</Cta>
 </Base>
 

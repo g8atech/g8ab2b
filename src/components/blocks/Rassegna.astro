@@ -1,0 +1,40 @@
+---
+// Rassegna stampa: una scheda per testata, con titolo, data e link all'articolo.
+import { Image } from 'astro:assets';
+import { STAMPA } from '../../data/stampa';
+interface Props { paper?: boolean; id?: string }
+const { paper = false, id = 'stampa' } = Astro.props;
+---
+<section class:list={['section', { 'section--paper': paper }]} id={id}>
+  <div class="wrap">
+    <div class="b-head" data-reveal>
+      <span class="kicker">Rassegna stampa</span>
+      <h2 class="h h2"><slot>Ne parlano <span class="red">i giornali</span></slot></h2>
+      <p class="lead">Il Noleggio Assistito di G8A raccontato dalle testate economiche nazionali e locali. Clicca per leggere gli articoli.</p>
+    </div>
+    <ul class="rs">
+      {STAMPA.map((s, i) => (
+        <li data-reveal style={`--d:${(i % 4) * 0.06}s`}>
+          <a class="rs__c" href={s.url} target="_blank" rel="noopener">
+            <span class="rs__logo"><Image src={s.logo} alt={s.testata} height={Math.round(s.h * 1.25)} densities={[1, 2]} /></span>
+            <span class="rs__t">{s.titolo}</span>
+            <span class="rs__f"><span>{s.data}</span><span class="rs__go">Leggi →</span></span>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </div>
+</section>
+
+<style>
+  .rs { list-style: none; margin: 2.5rem 0 0; padding: 0; display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; }
+  .rs__c { display: flex; flex-direction: column; height: 100%; padding: 1.3rem; border-radius: 16px; background: #fff; border: 1px solid var(--line); text-decoration: none; color: inherit; transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s; }
+  .rs__c:hover { transform: translateY(-4px); box-shadow: 0 18px 40px rgba(11, 11, 13, 0.1); border-color: #f2b8bb; }
+  .rs__logo { display: flex; align-items: center; height: 2.6rem; }
+  .rs__logo :global(img) { width: auto; max-width: 100%; object-fit: contain; }
+  .rs__t { margin-top: 0.9rem; font-weight: 700; line-height: 1.35; display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
+  .rs__f { display: flex; justify-content: space-between; gap: 0.5rem; margin-top: auto; padding-top: 1rem; font-size: 0.85rem; color: var(--muted); }
+  .rs__go { font-weight: 800; color: var(--red); }
+  @media (max-width: 1000px) { .rs { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 560px) { .rs { grid-template-columns: 1fr; } }
+</style>

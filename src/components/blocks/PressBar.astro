@@ -1,0 +1,42 @@
+---
+// Striscia dei loghi delle testate che scorre in continuo; ogni logo porta all'articolo.
+import { Image } from 'astro:assets';
+import { STAMPA } from '../../data/stampa';
+interface Props { label?: string; dark?: boolean }
+const { label = 'Hanno parlato del Noleggio Assistito', dark = false } = Astro.props;
+---
+<div class:list={['pb', { 'pb--dark': dark }]}>
+  <p class="pb__l">{label}</p>
+  <div class="pb__vp">
+    <ul class="pb__track">
+      {[0, 1].map((k) => STAMPA.map((s) => (
+        <li aria-hidden={k === 1 ? 'true' : undefined}>
+          <a href={s.url} target="_blank" rel="noopener" tabindex={k === 1 ? -1 : undefined} title={`${s.testata}: ${s.titolo}`}>
+            <Image src={s.logo} alt={s.testata} height={s.h} densities={[1, 2]} loading="eager" />
+          </a>
+        </li>
+      )))}
+    </ul>
+  </div>
+</div>
+
+<style>
+  .pb { min-width: 0; max-width: 100%; contain: inline-size; }
+  .pb__l { font-size: 0.8rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+  .pb__vp { position: relative; margin-top: 0.7rem; overflow: hidden; -webkit-mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent); mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent); }
+  .pb__track { display: flex; align-items: center; gap: 2.4rem; width: max-content; margin: 0; padding: 0.3rem 0; list-style: none; animation: pb-run 45s linear infinite; }
+  .pb__vp:hover .pb__track, .pb__vp:focus-within .pb__track { animation-play-state: paused; }
+  .pb__track li { flex: none; }
+  .pb__track a { display: block; }
+  .pb__track :global(img) { display: block; width: auto; filter: grayscale(1); opacity: 0.7; transition: filter 0.2s, opacity 0.2s; }
+  .pb__track a:hover :global(img), .pb__track a:focus-visible :global(img) { filter: none; opacity: 1; }
+  .pb--dark .pb__l { color: #a6a9b1; }
+  .pb--dark .pb__track :global(img) { filter: grayscale(1) brightness(0) invert(1); opacity: 0.6; }
+  .pb--dark .pb__track a:hover :global(img) { filter: grayscale(1) brightness(0) invert(1); opacity: 1; }
+  @keyframes pb-run { to { transform: translateX(calc(-50% - 1.2rem)); } }
+  @media (prefers-reduced-motion: reduce) {
+    .pb__track { animation: none; flex-wrap: wrap; width: auto; gap: 1rem 1.8rem; }
+    .pb__track li[aria-hidden] { display: none; }
+    .pb__vp { -webkit-mask-image: none; mask-image: none; }
+  }
+</style>

@@ -11,17 +11,9 @@ import logoWhite from '../assets/logo-g8a-bianco.png';
 import fondatori from '../assets/fondatori.png';
 import milani from '../assets/milani.jpg';
 import testa from '../assets/testa.jpg';
-import cde from '../assets/press-corriere-economia.png';
-import vn from '../assets/press-varesenews.png';
-import fortune from '../assets/press-fortune-italia.png';
-import economy from '../assets/press-economy.png';
+import PressBar from '../components/blocks/PressBar.astro';
+import Rassegna from '../components/blocks/Rassegna.astro';
 
-const press = [
-  { src: vn, alt: 'VareseNews', h: 20 },
-  { src: cde, alt: "Corriere dell'Economia", h: 30 },
-  { src: economy, alt: 'Economy', h: 21 },
-  { src: fortune, alt: 'Fortune Italia', h: 18 },
-];
 
 const canone = ['Computer nuovi', 'Server e backup', 'Stampanti e toner', 'Assistenza tecnica', 'Monitoraggio continuo', 'Sostituzione guasti'];
 
@@ -88,10 +80,7 @@ const serviceLd = {
         </div>
         <p class="hero__links"><a href="#come-funziona">Come funziona</a><span aria-hidden="true">·</span><a href="#quanto-costa">Quanto costa</a><span aria-hidden="true">·</span><span>Ti risponde una persona, non un call center</span></p>
         <div class="hero__gb"><GoogleBadge href="#recensioni" /></div>
-        <div class="hero__press">
-          <p>Hanno parlato del Noleggio Assistito</p>
-          <ul>{press.map((l) => <li><Image src={l.src} alt={l.alt} height={l.h} densities={[1, 2]} loading="eager" /></li>)}</ul>
-        </div>
+        <div class="hero__press"><PressBar /></div>
       </div>
 
       <div class="hero__visual" data-tilt>
@@ -279,6 +268,7 @@ const serviceLd = {
   </section>
 
   <GoogleReviews paper />
+  <Rassegna />
 
   <!-- CHI SIAMO -->
   <section class="section section--ink" id="chi-siamo">
@@ -432,11 +422,6 @@ const serviceLd = {
   .hero__gb { margin-top: 1.2rem; }
   @media (max-width: 600px) { .hero__gb { display: none; } }
   .hero__press { margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--line); }
-  .hero__press p { font-size: 0.8rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
-  .hero__press ul { list-style: none; margin: 0.7rem 0 0; padding: 0; display: flex; flex-wrap: wrap; align-items: center; gap: 0.9rem 1.9rem; }
-  .hero__press :global(img) { width: auto; filter: grayscale(1); opacity: 0.75; transition: filter 0.2s, opacity 0.2s; }
-  .hero__press li:hover :global(img) { filter: none; opacity: 1; }
-  @media (max-width: 600px) { .hero__press ul { display: grid; grid-template-columns: 1fr 1fr; gap: 0.9rem 1.2rem; } }
 
   /* NASTRO */
   .tk { overflow: hidden; background: var(--grad); color: #fff; padding-block: 0.85rem; }
