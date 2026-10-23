@@ -41,11 +41,6 @@
       "permanent": true
     },
     {
-      "source": "/guidagratuitai7errori-3556",
-      "destination": "/",
-      "permanent": false
-    },
-    {
       "source": "/privacy",
       "destination": "/privacy-policy",
       "permanent": true
@@ -59,6 +54,847 @@
       "source": "/cookies",
       "destination": "/cookie-policy",
       "permanent": true
+    },
+    {
+      "source": "/guidagratuitai7errori-3556",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/notebookprog8a",
+      "destination": "/noleggio-computer",
+      "permanent": true
+    },
+    {
+      "source": "/noleggiocomputer-8493",
+      "destination": "/noleggio-computer",
+      "permanent": true
+    },
+    {
+      "source": "/offerta-aio27",
+      "destination": "/noleggio-computer",
+      "permanent": true
+    },
+    {
+      "source": "/offerta-aio",
+      "destination": "/noleggio-computer",
+      "permanent": true
+    },
+    {
+      "source": "/epson",
+      "destination": "/noleggio-stampanti",
+      "permanent": true
+    },
+    {
+      "source": "/epsona3colori-10k-miste",
+      "destination": "/noleggio-stampanti",
+      "permanent": true
+    },
+    {
+      "source": "/epsona4coloripromo3-1",
+      "destination": "/noleggio-stampanti",
+      "permanent": true
+    },
+    {
+      "source": "/offertaspeciale20k",
+      "destination": "/noleggio-stampanti",
+      "permanent": true
+    },
+    {
+      "source": "/post/antivirusai",
+      "destination": "/rmm",
+      "permanent": true
+    },
+    {
+      "source": "/blog",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/post/:slug*",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/rmm:rest*",
+      "destination": "https://www.g8a.it/rmm",
+      "permanent": true,
+      "has": [
+        {
+          "type": "host",
+          "value": "gallarate.g8a.it"
+        }
+      ]
+    },
+    {
+      "source": "/noleggiostampanti",
+      "destination": "https://www.g8a.it/noleggio-stampanti",
+      "permanent": true,
+      "has": [
+        {
+          "type": "host",
+          "value": "gallarate.g8a.it"
+        }
+      ]
+    },
+    {
+      "source": "/noleggio-stampanti:rest*",
+      "destination": "https://www.g8a.it/noleggio-stampanti",
+      "permanent": true,
+      "has": [
+        {
+          "type": "host",
+          "value": "gallarate.g8a.it"
+        }
+      ]
+    },
+    {
+      "source": "/noleggio-computer:rest*",
+      "destination": "https://www.g8a.it/noleggio-computer",
+      "permanent": true,
+      "has": [
+        {
+          "type": "host",
+          "value": "gallarate.g8a.it"
+        }
+      ]
+    },
+    {
+      "source": "/noleggio-backup:rest*",
+      "destination": "https://www.g8a.it/noleggio-backup",
+      "permanent": true,
+      "has": [
+        {
+          "type": "host",
+          "value": "gallarate.g8a.it"
+        }
+      ]
+    },
+    {
+      "source": "/assistenza-business:rest*",
+      "destination": "https://www.g8a.it/store-gallarate",
+      "permanent": true,
+      "has": [
+        {
+          "type": "host",
+          "value": "gallarate.g8a.it"
+        }
+      ]
+    },
+    {
+      "source": "/:path*",
+      "destination": "https://www.g8a.it/store-gallarate",
+      "permanent": true,
+      "has": [
+        {
+          "type": "host",
+          "value": "gallarate.g8a.it"
+        }
+      ]
+    },
+    {
+      "source": "/rmm:rest*",
+      "destination": "https://www.g8a.it/rmm",
+      "permanent": true,
+      "has": [
+        {
+          "type": "host",
+          "value": "www.gallarate.g8a.it"
+        }
+      ]
+    },
+    {
+      "source": "/noleggiostampanti",
+      "destination": "https://www.g8a.it/noleggio-stampanti",
+      "permanent": true,
+      "has": [
+        {
+          "type": "host",
+          "value": "www.gallarate.g8a.it"
+        }
+      ]
+    },
+    {
+      "source": "/noleggio-stampanti:rest*",
+      "destination": "https://www.g8a.it/noleggio-stampanti",
+      "permanent": true,
+      "has": [
+        {
+          "type": "host",
+          "value": "www.gallarate.g8a.it"
+        }
+      ]
+    },
+    {
+      "source": "/noleggio-computer:rest*",
+      "destination": "https://www.g8a.it/noleggio-computer",
+      "permanent": true,
+      "has": [
+        {
+          "type": "host",
+          "value": "www.gallarate.g8a.it"
+        }
+      ]
+    },
+    {
+      "source": "/noleggio-backup:rest*",
+      "destination": "https://www.g8a.it/noleggio-backup",
+      "permanent": true,
+      "has": [
+        {
+          "type": "host",
+          "value": "www.gallarate.g8a.it"
+        }
+      ]
+    },
+    {
+      "source": "/assistenza-business:rest*",
+      "destination": "https://www.g8a.it/store-gallarate",
+      "permanent": true,
+      "has": [
+        {
+          "type": "host",
+          "value": "www.gallarate.g8a.it"
+        }
+      ]
+    },
+    {
+      "source": "/:path*",
+      "destination": "https://www.g8a.it/store-gallarate",
+      "permanent": true,
+      "has": [
+        {
+          "type": "host",
+          "value": "www.gallarate.g8a.it"
+        }
+      ]
+    },
+    {
+      "source": "/rmm:rest*",
+      "destination": "https://www.g8a.it/rmm",
+      "permanent": true,
+      "has": [
+        {
+          "type": "host",
+          "value": "busto-arsizio.g8a.it"
+        }
+      ]
+    },
+    {
+      "source": "/noleggiostampanti",
+      "destination": "https://www.g8a.it/noleggio-stampanti",
+      "permanent": true,
+      "has": [
+        {
+          "type": "host",
+          "value": "busto-arsizio.g8a.it"
+        }
+      ]
+    },
+    {
+      "source": "/noleggio-stampanti:rest*",
+      "destination": "https://www.g8a.it/noleggio-stampanti",
+      "permanent": true,
+      "has": [
+        {
+          "type": "host",
+          "value": "busto-arsizio.g8a.it"
+        }
+      ]
+    },
+    {
+      "source": "/noleggio-computer:rest*",
+      "destination": "https://www.g8a.it/noleggio-computer",
+      "permanent": true,
+      "has": [
+        {
+          "type": "host",
+          "value": "busto-arsizio.g8a.it"
+        }
+      ]
+    },
+    {
+      "source": "/noleggio-backup:rest*",
+      "destination": "https://www.g8a.it/noleggio-backup",
+      "permanent": true,
+      "has": [
+        {
+          "type": "host",
+          "value": "busto-arsizio.g8a.it"
+        }
+      ]
+    },
+    {
+      "source": "/assistenza-business:rest*",
+      "destination": "https://www.g8a.it/store-busto-arsizio",
+      "permanent": true,
+      "has": [
+        {
+          "type": "host",
+          "value": "busto-arsizio.g8a.it"
+        }
+      ]
+    },
+    {
+      "source": "/:path*",
+      "destination": "https://www.g8a.it/store-busto-arsizio",
+      "permanent": true,
+      "has": [
+        {
+          "type": "host",
+          "value": "busto-arsizio.g8a.it"
+        }
+      ]
+    },
+    {
+      "source": "/rmm:rest*",
+      "destination": "https://www.g8a.it/rmm",
+      "permanent": true,
+      "has": [
+        {
+          "type": "host",
+          "value": "www.busto-arsizio.g8a.it"
+        }
+      ]
+    },
+    {
+      "source": "/noleggiostampanti",
+      "destination": "https://www.g8a.it/noleggio-stampanti",
+      "permanent": true,
+      "has": [
+        {
+          "type": "host",
+          "value": "www.busto-arsizio.g8a.it"
+        }
+      ]
+    },
+    {
+      "source": "/noleggio-stampanti:rest*",
+      "destination": "https://www.g8a.it/noleggio-stampanti",
+      "permanent": true,
+      "has": [
+        {
+          "type": "host",
+          "value": "www.busto-arsizio.g8a.it"
+        }
+      ]
+    },
+    {
+      "source": "/noleggio-computer:rest*",
+      "destination": "https://www.g8a.it/noleggio-computer",
+      "permanent": true,
+      "has": [
+        {
+          "type": "host",
+          "value": "www.busto-arsizio.g8a.it"
+        }
+      ]
+    },
+    {
+      "source": "/noleggio-backup:rest*",
+      "destination": "https://www.g8a.it/noleggio-backup",
+      "permanent": true,
+      "has": [
+        {
+          "type": "host",
+          "value": "www.busto-arsizio.g8a.it"
+        }
+      ]
+    },
+    {
+      "source": "/assistenza-business:rest*",
+      "destination": "https://www.g8a.it/store-busto-arsizio",
+      "permanent": true,
+      "has": [
+        {
+          "type": "host",
+          "value": "www.busto-arsizio.g8a.it"
+        }
+      ]
+    },
+    {
+      "source": "/:path*",
+      "destination": "https://www.g8a.it/store-busto-arsizio",
+      "permanent": true,
+      "has": [
+        {
+          "type": "host",
+          "value": "www.busto-arsizio.g8a.it"
+        }
+      ]
+    },
+    {
+      "source": "/rmm:rest*",
+      "destination": "https://www.g8a.it/rmm",
+      "permanent": true,
+      "has": [
+        {
+          "type": "host",
+          "value": "jerago.g8a.it"
+        }
+      ]
+    },
+    {
+      "source": "/noleggiostampanti",
+      "destination": "https://www.g8a.it/noleggio-stampanti",
+      "permanent": true,
+      "has": [
+        {
+          "type": "host",
+          "value": "jerago.g8a.it"
+        }
+      ]
+    },
+    {
+      "source": "/noleggio-stampanti:rest*",
+      "destination": "https://www.g8a.it/noleggio-stampanti",
+      "permanent": true,
+      "has": [
+        {
+          "type": "host",
+          "value": "jerago.g8a.it"
+        }
+      ]
+    },
+    {
+      "source": "/noleggio-computer:rest*",
+      "destination": "https://www.g8a.it/noleggio-computer",
+      "permanent": true,
+      "has": [
+        {
+          "type": "host",
+          "value": "jerago.g8a.it"
+        }
+      ]
+    },
+    {
+      "source": "/noleggio-backup:rest*",
+      "destination": "https://www.g8a.it/noleggio-backup",
+      "permanent": true,
+      "has": [
+        {
+          "type": "host",
+          "value": "jerago.g8a.it"
+        }
+      ]
+    },
+    {
+      "source": "/assistenza-business:rest*",
+      "destination": "https://www.g8a.it/store-jerago-con-orago",
+      "permanent": true,
+      "has": [
+        {
+          "type": "host",
+          "value": "jerago.g8a.it"
+        }
+      ]
+    },
+    {
+      "source": "/:path*",
+      "destination": "https://www.g8a.it/store-jerago-con-orago",
+      "permanent": true,
+      "has": [
+        {
+          "type": "host",
+          "value": "jerago.g8a.it"
+        }
+      ]
+    },
+    {
+      "source": "/rmm:rest*",
+      "destination": "https://www.g8a.it/rmm",
+      "permanent": true,
+      "has": [
+        {
+          "type": "host",
+          "value": "www.jerago.g8a.it"
+        }
+      ]
+    },
+    {
+      "source": "/noleggiostampanti",
+      "destination": "https://www.g8a.it/noleggio-stampanti",
+      "permanent": true,
+      "has": [
+        {
+          "type": "host",
+          "value": "www.jerago.g8a.it"
+        }
+      ]
+    },
+    {
+      "source": "/noleggio-stampanti:rest*",
+      "destination": "https://www.g8a.it/noleggio-stampanti",
+      "permanent": true,
+      "has": [
+        {
+          "type": "host",
+          "value": "www.jerago.g8a.it"
+        }
+      ]
+    },
+    {
+      "source": "/noleggio-computer:rest*",
+      "destination": "https://www.g8a.it/noleggio-computer",
+      "permanent": true,
+      "has": [
+        {
+          "type": "host",
+          "value": "www.jerago.g8a.it"
+        }
+      ]
+    },
+    {
+      "source": "/noleggio-backup:rest*",
+      "destination": "https://www.g8a.it/noleggio-backup",
+      "permanent": true,
+      "has": [
+        {
+          "type": "host",
+          "value": "www.jerago.g8a.it"
+        }
+      ]
+    },
+    {
+      "source": "/assistenza-business:rest*",
+      "destination": "https://www.g8a.it/store-jerago-con-orago",
+      "permanent": true,
+      "has": [
+        {
+          "type": "host",
+          "value": "www.jerago.g8a.it"
+        }
+      ]
+    },
+    {
+      "source": "/:path*",
+      "destination": "https://www.g8a.it/store-jerago-con-orago",
+      "permanent": true,
+      "has": [
+        {
+          "type": "host",
+          "value": "www.jerago.g8a.it"
+        }
+      ]
+    },
+    {
+      "source": "/rmm:rest*",
+      "destination": "https://www.g8a.it/rmm",
+      "permanent": true,
+      "has": [
+        {
+          "type": "host",
+          "value": "lecco.g8a.it"
+        }
+      ]
+    },
+    {
+      "source": "/noleggiostampanti",
+      "destination": "https://www.g8a.it/noleggio-stampanti",
+      "permanent": true,
+      "has": [
+        {
+          "type": "host",
+          "value": "lecco.g8a.it"
+        }
+      ]
+    },
+    {
+      "source": "/noleggio-stampanti:rest*",
+      "destination": "https://www.g8a.it/noleggio-stampanti",
+      "permanent": true,
+      "has": [
+        {
+          "type": "host",
+          "value": "lecco.g8a.it"
+        }
+      ]
+    },
+    {
+      "source": "/noleggio-computer:rest*",
+      "destination": "https://www.g8a.it/noleggio-computer",
+      "permanent": true,
+      "has": [
+        {
+          "type": "host",
+          "value": "lecco.g8a.it"
+        }
+      ]
+    },
+    {
+      "source": "/noleggio-backup:rest*",
+      "destination": "https://www.g8a.it/noleggio-backup",
+      "permanent": true,
+      "has": [
+        {
+          "type": "host",
+          "value": "lecco.g8a.it"
+        }
+      ]
+    },
+    {
+      "source": "/assistenza-business:rest*",
+      "destination": "https://www.g8a.it/store-lecco",
+      "permanent": true,
+      "has": [
+        {
+          "type": "host",
+          "value": "lecco.g8a.it"
+        }
+      ]
+    },
+    {
+      "source": "/:path*",
+      "destination": "https://www.g8a.it/store-lecco",
+      "permanent": true,
+      "has": [
+        {
+          "type": "host",
+          "value": "lecco.g8a.it"
+        }
+      ]
+    },
+    {
+      "source": "/rmm:rest*",
+      "destination": "https://www.g8a.it/rmm",
+      "permanent": true,
+      "has": [
+        {
+          "type": "host",
+          "value": "www.lecco.g8a.it"
+        }
+      ]
+    },
+    {
+      "source": "/noleggiostampanti",
+      "destination": "https://www.g8a.it/noleggio-stampanti",
+      "permanent": true,
+      "has": [
+        {
+          "type": "host",
+          "value": "www.lecco.g8a.it"
+        }
+      ]
+    },
+    {
+      "source": "/noleggio-stampanti:rest*",
+      "destination": "https://www.g8a.it/noleggio-stampanti",
+      "permanent": true,
+      "has": [
+        {
+          "type": "host",
+          "value": "www.lecco.g8a.it"
+        }
+      ]
+    },
+    {
+      "source": "/noleggio-computer:rest*",
+      "destination": "https://www.g8a.it/noleggio-computer",
+      "permanent": true,
+      "has": [
+        {
+          "type": "host",
+          "value": "www.lecco.g8a.it"
+        }
+      ]
+    },
+    {
+      "source": "/noleggio-backup:rest*",
+      "destination": "https://www.g8a.it/noleggio-backup",
+      "permanent": true,
+      "has": [
+        {
+          "type": "host",
+          "value": "www.lecco.g8a.it"
+        }
+      ]
+    },
+    {
+      "source": "/assistenza-business:rest*",
+      "destination": "https://www.g8a.it/store-lecco",
+      "permanent": true,
+      "has": [
+        {
+          "type": "host",
+          "value": "www.lecco.g8a.it"
+        }
+      ]
+    },
+    {
+      "source": "/:path*",
+      "destination": "https://www.g8a.it/store-lecco",
+      "permanent": true,
+      "has": [
+        {
+          "type": "host",
+          "value": "www.lecco.g8a.it"
+        }
+      ]
+    },
+    {
+      "source": "/rmm:rest*",
+      "destination": "https://www.g8a.it/rmm",
+      "permanent": true,
+      "has": [
+        {
+          "type": "host",
+          "value": "bollate.g8a.it"
+        }
+      ]
+    },
+    {
+      "source": "/noleggiostampanti",
+      "destination": "https://www.g8a.it/noleggio-stampanti",
+      "permanent": true,
+      "has": [
+        {
+          "type": "host",
+          "value": "bollate.g8a.it"
+        }
+      ]
+    },
+    {
+      "source": "/noleggio-stampanti:rest*",
+      "destination": "https://www.g8a.it/noleggio-stampanti",
+      "permanent": true,
+      "has": [
+        {
+          "type": "host",
+          "value": "bollate.g8a.it"
+        }
+      ]
+    },
+    {
+      "source": "/noleggio-computer:rest*",
+      "destination": "https://www.g8a.it/noleggio-computer",
+      "permanent": true,
+      "has": [
+        {
+          "type": "host",
+          "value": "bollate.g8a.it"
+        }
+      ]
+    },
+    {
+      "source": "/noleggio-backup:rest*",
+      "destination": "https://www.g8a.it/noleggio-backup",
+      "permanent": true,
+      "has": [
+        {
+          "type": "host",
+          "value": "bollate.g8a.it"
+        }
+      ]
+    },
+    {
+      "source": "/assistenza-business:rest*",
+      "destination": "https://www.g8a.it/assistenza-business",
+      "permanent": true,
+      "has": [
+        {
+          "type": "host",
+          "value": "bollate.g8a.it"
+        }
+      ]
+    },
+    {
+      "source": "/:path*",
+      "destination": "https://www.g8a.it/assistenza-business",
+      "permanent": true,
+      "has": [
+        {
+          "type": "host",
+          "value": "bollate.g8a.it"
+        }
+      ]
+    },
+    {
+      "source": "/rmm:rest*",
+      "destination": "https://www.g8a.it/rmm",
+      "permanent": true,
+      "has": [
+        {
+          "type": "host",
+          "value": "www.bollate.g8a.it"
+        }
+      ]
+    },
+    {
+      "source": "/noleggiostampanti",
+      "destination": "https://www.g8a.it/noleggio-stampanti",
+      "permanent": true,
+      "has": [
+        {
+          "type": "host",
+          "value": "www.bollate.g8a.it"
+        }
+      ]
+    },
+    {
+      "source": "/noleggio-stampanti:rest*",
+      "destination": "https://www.g8a.it/noleggio-stampanti",
+      "permanent": true,
+      "has": [
+        {
+          "type": "host",
+          "value": "www.bollate.g8a.it"
+        }
+      ]
+    },
+    {
+      "source": "/noleggio-computer:rest*",
+      "destination": "https://www.g8a.it/noleggio-computer",
+      "permanent": true,
+      "has": [
+        {
+          "type": "host",
+          "value": "www.bollate.g8a.it"
+        }
+      ]
+    },
+    {
+      "source": "/noleggio-backup:rest*",
+      "destination": "https://www.g8a.it/noleggio-backup",
+      "permanent": true,
+      "has": [
+        {
+          "type": "host",
+          "value": "www.bollate.g8a.it"
+        }
+      ]
+    },
+    {
+      "source": "/assistenza-business:rest*",
+      "destination": "https://www.g8a.it/assistenza-business",
+      "permanent": true,
+      "has": [
+        {
+          "type": "host",
+          "value": "www.bollate.g8a.it"
+        }
+      ]
+    },
+    {
+      "source": "/:path*",
+      "destination": "https://www.g8a.it/assistenza-business",
+      "permanent": true,
+      "has": [
+        {
+          "type": "host",
+          "value": "www.bollate.g8a.it"
+        }
+      ]
+    },
+    {
+      "source": "/:path*",
+      "destination": "https://www.g8a.it/:path*",
+      "permanent": true,
+      "has": [
+        {
+          "type": "host",
+          "value": "g8a.it"
+        }
+      ]
     }
   ]
 }

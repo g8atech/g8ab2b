@@ -40,11 +40,12 @@ const canali = [
       </div>
       <div class="sd">
         {SEDI.map((s, i) => (
-          <a class:list={['sd__card', 'glow', { 'sd__card--hq': s.operativa }]} href={maps(s)} data-reveal style={`--d:${(i % 3) * 0.08}s`}>
+          <a class:list={['sd__card', 'glow', { 'sd__card--hq': s.operativa }]} href={s.negozio ? `/${s.negozio.slug}` : maps(s)} data-reveal style={`--d:${(i % 3) * 0.08}s`}>
             <span class="sd__kind">{s.operativa ? 'Sede operativa e legale' : 'Punto vendita'}</span>
             <strong>{s.city}</strong>
             <span>{s.address}, {s.cap} {s.city} ({s.province})</span>
-            <em>Apri in Google Maps →</em>
+            {s.negozio && <span>Tel. {s.negozio.phone}</span>}
+            <em>{s.negozio ? 'Orari e servizi del negozio →' : 'Apri in Google Maps →'}</em>
           </a>
         ))}
       </div>

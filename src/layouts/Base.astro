@@ -10,8 +10,8 @@ import logoWhite from '../assets/logo-g8a-bianco.png';
 import logoColor from '../assets/logo-g8a.png';
 import { SITE, SEDI, GRUPPO, waLink, telLink } from '../data/site';
 
-interface Props { title: string; description: string; jsonLd?: object[] }
-const { title, description, jsonLd = [] } = Astro.props;
+interface Props { title: string; description: string; jsonLd?: object[]; mbar?: { tel: string; wa: string } }
+const { title, description, jsonLd = [], mbar } = Astro.props;
 // Il Noleggio Assistito raccoglie i servizi in un menu a tendina, per tenere la barra corta.
 const NOLEGGIO = [
   { href: '/noleggio-computer', t: 'Computer', d: 'PC, All in One e notebook G8A', icon: 'pc' },
@@ -45,7 +45,8 @@ const organization = {
   address: { '@type': 'PostalAddress', streetAddress: 'Via Caronno Varesino 33', postalCode: '21048', addressLocality: 'Solbiate Arno', addressRegion: 'VA', addressCountry: 'IT' },
   subOrganization: GRUPPO.map((g) => ({ '@type': 'Organization', name: g.name, url: g.url })),
 };
-const stores = SEDI.filter((s) => !s.operativa).map((s) => ({
+// I negozi con pagina propria hanno i loro dati strutturati nella pagina; qui le altre sedi.
+const stores = SEDI.filter((s) => !s.operativa && !s.negozio).map((s) => ({
   '@context': 'https://schema.org',
   '@type': 'LocalBusiness',
   name: `${SITE.name} ${s.city}`,
@@ -149,6 +150,8 @@ const bing = import.meta.env.PUBLIC_BING_VERIFICATION;
             <li><a href="/rmm">Monitoraggio RMM</a></li>
             <li><a href="/testimonianze-casistudio">Casi studio</a></li>
           </ul>
+          <p class="ftr__h" style="margin-top:1.2rem">Negozi</p>
+          <ul>{SEDI.filter((s) => s.negozio).map((s) => <li><a href={`/${s.negozio!.slug}`}>{s.city}</a></li>)}</ul>
         </div>
         <div>
           <p class="ftr__h">Il gruppo</p>
@@ -174,8 +177,8 @@ const bing = import.meta.env.PUBLIC_BING_VERIFICATION;
     <ConsentBanner />
 
     <nav class="mbar" aria-label="Contatti rapidi">
-      <a class="btn btn--red" href={telLink}><Icon name="phone" />Chiama</a>
-      <a class="btn btn--wa" href={waLink()}><Icon name="wa" />WhatsApp</a>
+      <a class="btn btn--red" href={mbar?.tel ?? telLink}><Icon name="phone" />Chiama</a>
+      <a class="btn btn--wa" href={mbar?.wa ?? waLink()}><Icon name="wa" />WhatsApp</a>
     </nav>
 
     <script>

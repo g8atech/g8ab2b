@@ -73,6 +73,12 @@ Ogni clic su telefono, WhatsApp o email invia a GTM l'evento `contatto` con `can
 3. **Microsoft Clarity**: creare il progetto per `www.g8a.it`, mettere l'ID in `PUBLIC_CLARITY_ID`, e in Clarity → Impostazioni collegare Google Analytics. Il mascheramento resta "Bilanciato".
 4. **GA4**: nella proprietà impostare la conservazione dei dati a 14 mesi e segnare l'evento `contatto` come evento chiave.
 
+### Vecchi indirizzi e negozi
+
+- Le pagine `/store-gallarate`, `/store-busto-arsizio`, `/store-jerago-con-orago`, `/store-lecco` restano allo stesso indirizzo: oggi portano circa il 70% dei clic da Google (Search Console, ultimi 3 mesi) e sono collegate alle schede Google dei negozi. Dati dei negozi in `src/data/site.ts` (`SEDI`).
+- Tutte le altre pagine del vecchio sito e i sottodomini delle città hanno un reindirizzamento 301 in `vercel.json`. Perché quelli dei sottodomini funzionino, i sottodomini (es. `gallarate.g8a.it`, `www.gallarate.g8a.it`) vanno aggiunti come domini dello stesso progetto su Vercel.
+- `ftp.g8a.it` ed `editor.g8a.it` non fanno parte di questo sito: se i loro record DNS non si toccano, continuano a funzionare come oggi.
+
 ### Il giorno del cambio
 
 1. Controllare l'anteprima su Vercel, pagina per pagina.
@@ -86,7 +92,6 @@ Ogni clic su telefono, WhatsApp o email invia a GTM l'evento `contatto` con `can
 ## Da completare
 
 - Revisione di privacy policy e cookie policy da parte del consulente privacy.
-- Elenco delle pagine del vecchio sito indicizzate (da Search Console) per i reindirizzamenti 301.
 
 - Foto robotiche originali in alta risoluzione.
 - Il Secolo XIX: articolo non trovato online, da aggiungere in src/data/stampa.ts se c'è il link.

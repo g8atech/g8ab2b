@@ -1,0 +1,216 @@
+---
+// Pagine dei negozi: /store-gallarate, /store-busto-arsizio, /store-jerago-con-orago, /store-lecco.
+// Stessi indirizzi del vecchio sito: sono le pagine che oggi portano più visite (anche dalle schede Google).
+import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
+import Faq from '../components/blocks/Faq.astro';
+import PressBar from '../components/blocks/PressBar.astro';
+import { SITE, SEDI, ORARI, ORARI_LD, faqLd, type Sede, type Negozio } from '../data/site';
+
+export function getStaticPaths() {
+  return SEDI.filter((s) => s.negozio).map((s) => ({ params: { store: s.negozio!.slug }, props: { sede: s } }));
+}
+const { sede } = Astro.props as { sede: Sede };
+const n = sede.negozio as Negozio;
+const city = sede.city;
+const titolo = city === 'Jerago con Orago' ? 'Jerago con Orago e Cavaria' : city;
+const indirizzo = `${sede.address}, ${sede.cap} ${city} (${sede.province})`;
+const wa = (t: string) => `https://wa.me/${n.whatsapp}?text=${encodeURIComponent(t)}`;
+const tel = `tel:${n.phoneIntl}`;
+const maps = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`G8A Technology ${sede.address} ${sede.cap} ${city}`)}`;
+const dir = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(`G8A Technology ${sede.address} ${sede.cap} ${city}`)}`;
+const waBase = `Ciao, vi scrivo dal sito per il negozio G8A di ${city}.`;
+const altri = SEDI.filter((s) => s.negozio && s.city !== city);
+const url = `${SITE.url}/${n.slug}`;
+
+const servizi = [
+  { icon: 'wrench', t: 'Riparazione PC e notebook', d: 'Guasti hardware e software, schermi, tastiere, batterie, PC lenti o che non si accendono. Preventivo chiaro prima di intervenire.', wa: `${waBase} Ho un PC da riparare.` },
+  { icon: 'pc', t: 'Vendita PC G8A su misura', d: 'Notebook, desktop, All in One e PC da gaming: ti aiutiamo a scegliere e lo configuriamo per quello che ci devi fare.', wa: `${waBase} Vorrei un consiglio per comprare un PC.` },
+  { icon: 'shield', t: 'Assistenza, antivirus e dati', d: 'Pulizia da virus, antivirus, recupero dati, backup, installazioni e configurazioni. Vieni in negozio anche senza appuntamento.', wa: `${waBase} Mi serve assistenza sul computer.` },
+  { icon: 'printer', t: 'Stampanti, toner e accessori', d: 'Stampanti, cartucce e toner, monitor, mouse, tastiere e tutto quello che serve per lavorare.', wa: `${waBase} Cerco toner o accessori.` },
+];
+const faq = [
+  { q: `Quali sono gli orari del negozio G8A di ${city}?`, a: `Dal lunedì al venerdì dalle 9:00 alle 13:00 e dalle 15:00 alle 19:00, il sabato dalle 9:00 alle 13:00. Il negozio è in ${indirizzo}.` },
+  { q: 'Devo prendere appuntamento?', a: 'Non serve: puoi passare in negozio negli orari di apertura. Se preferisci, chiamaci o scrivici su WhatsApp prima, così ti diciamo subito se possiamo aiutarti.' },
+  { q: 'Quanto costa riparare un computer?', a: 'Dipende dal guasto: prima di intervenire controlliamo il PC e ti diamo un preventivo chiaro. Decidi tu se procedere.' },
+  { q: 'Seguite anche le aziende?', a: `Sì. Per aziende, studi e professionisti di ${city} e dintorni c'è il Noleggio Assistito G8A: computer, stampanti, backup e assistenza in un unico canone mensile.` },
+];
+const desc = `Assistenza, riparazione e vendita computer a ${titolo}: negozio G8A Technology in ${sede.address}. PC su misura, riparazioni rapide e preventivi chiari. Chiama ${n.phone}.`;
+const ld = {
+  '@context': 'https://schema.org',
+  '@type': 'ComputerStore',
+  '@id': `${url}#negozio`,
+  name: `G8A Technology ${city}`,
+  url,
+  image: `${SITE.url}/og-g8a.jpg`,
+  telephone: '+39 ' + n.phone,
+  email: n.email,
+  priceRange: '€€',
+  address: { '@type': 'PostalAddress', streetAddress: sede.address, postalCode: sede.cap, addressLocality: city, addressRegion: sede.province, addressCountry: 'IT' },
+  openingHoursSpecification: ORARI_LD,
+  areaServed: n.zona.split(', ').map((z) => ({ '@type': 'City', name: z })),
+  parentOrganization: { '@id': `${SITE.url}/#organization` },
+  hasMap: maps,
+};
+---
+<Base title={`Assistenza e riparazione computer a ${titolo} | G8A Technology`} description={desc} jsonLd={[ld, faqLd(faq)]} mbar={{ tel, wa: wa(waBase) }}>
+  <section class="st">
+    <div class="wrap st__row">
+      <div class="st__copy">
+        <ol class="b-crumbs" aria-label="Percorso"><li><a href="/">Home</a></li><li><a href="/assistenza-business">Sedi</a></li><li aria-current="page">{city}</li></ol>
+        <span class="kicker">Negozio G8A Technology · {city}</span>
+        <h1 class="h st__h1">Assistenza e riparazione computer <span class="red">a {titolo}</span></h1>
+        <p class="lead st__lead">PC che non partono, lenti o con un virus? Portali da noi: li ripariamo con un preventivo chiaro. E se devi comprarne uno nuovo, ti aiutiamo a scegliere quello giusto.</p>
+        <div class="b-actions">
+          <a class="btn btn--red" href={tel}><Icon name="phone" />Chiama {n.phone}</a>
+          <a class="btn btn--wa" href={wa(waBase)}><Icon name="wa" />Scrivici su WhatsApp</a>
+        </div>
+        <p class="b-hero__note"><span><Icon name="check" size={16} width={3} />Anche senza appuntamento</span><span><Icon name="check" size={16} width={3} />Preventivo prima di intervenire</span><span><Icon name="check" size={16} width={3} />Garanzia G8A</span></p>
+      </div>
+
+      <aside class="card glow" aria-label={`Informazioni sul negozio di ${city}`}>
+        <p class="card__open" data-open><span class="live"></span><span data-open-t>Orari del negozio</span></p>
+        <dl class="card__dl">
+          <div><dt>Indirizzo</dt><dd><a href={maps}>{indirizzo}</a></dd></div>
+          <div><dt>Telefono e WhatsApp</dt><dd><a href={tel}>{n.phone}</a></dd></div>
+          <div><dt>Email</dt><dd><a href={`mailto:${n.email}`}>{n.email}</a></dd></div>
+          <div><dt>Orari</dt><dd><ul class="card__orari">{ORARI.map((o) => <li><span>{o.giorni}</span><span>{o.ore}</span></li>)}</ul></dd></div>
+        </dl>
+        <div class="card__btns">
+          <a class="btn btn--ink btn--sm" href={dir}>Indicazioni stradali</a>
+          <a class="btn btn--line btn--sm" href={maps}>Recensioni su Google</a>
+        </div>
+      </aside>
+
+      <div class="st__press"><PressBar row label="Ne hanno parlato" /></div>
+    </div>
+  </section>
+
+  <section class="section section--paper">
+    <div class="wrap">
+      <div class="b-head" data-reveal>
+        <span class="kicker">Cosa facciamo in negozio</span>
+        <h2 class="h h2">Tutto per il tuo computer, <span class="red">sotto casa</span></h2>
+      </div>
+      <div class="b-inc" style="--cols:4">
+        {servizi.map((x, i) => (
+          <a class="b-inc__card glow" href={wa(x.wa)} data-reveal style={`--d:${i * 0.08}s`}>
+            <span class="b-inc__ic"><Icon name={x.icon} size={26} stroke="#fff" width={1.9} /></span>
+            <h3>{x.t}</h3>
+            <p>{x.d}</p>
+            <span class="b-inc__go">Scrivici su WhatsApp →</span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap b-split">
+      <div data-reveal>
+        <span class="kicker">Perché sceglierci</span>
+        <h2 class="h h2" style="margin-top:.8rem">Un negozio vero, <span class="red">con tecnici veri</span></h2>
+        <ul class="b-list">
+          <li><span class="b-list__ok"><Icon name="check" size={14} width={3.2} /></span><span>Ti risponde una persona del negozio, non un call center</span></li>
+          <li><span class="b-list__ok"><Icon name="check" size={14} width={3.2} /></span><span>Preventivo chiaro prima di ogni riparazione</span></li>
+          <li><span class="b-list__ok"><Icon name="check" size={14} width={3.2} /></span><span>Soluzioni provate e testate, con assistenza dopo la vendita</span></li>
+          <li><span class="b-list__ok"><Icon name="check" size={14} width={3.2} /></span><span>Garanzia G8A sui nostri computer</span></li>
+        </ul>
+        <p class="st__zona"><strong>Zone servite:</strong> {n.zona}.</p>
+      </div>
+      <div class="biz b-dark" data-reveal style="--d:.1s">
+        <span class="kicker">Hai un'azienda?</span>
+        <h2 class="h biz__h">Per aziende e studi c'è il <span class="red">Noleggio Assistito</span></h2>
+        <p>Computer, stampanti, backup e assistenza in un unico canone mensile, senza investimento iniziale e senza vincolo. Quando qualcosa si ferma, interveniamo noi.</p>
+        <div class="biz__links">
+          <a href="/noleggio-computer">Noleggio computer →</a>
+          <a href="/noleggio-stampanti">Noleggio stampanti →</a>
+          <a href="/noleggio-backup">Backup e NAS →</a>
+          <a href="/rmm">Monitoraggio RMM →</a>
+        </div>
+        <a class="btn btn--red" href={`tel:${SITE.phoneIntl}`}><Icon name="phone" />Ufficio aziende {SITE.phone}</a>
+      </div>
+    </div>
+  </section>
+
+  <Faq items={faq}>Negozio di {city}: <span class="red">le risposte</span></Faq>
+
+  <section class="section">
+    <div class="wrap">
+      <div class="b-head" data-reveal>
+        <span class="kicker">Gli altri negozi G8A</span>
+        <h2 class="h h2">Siamo anche <span class="red">vicino a te</span></h2>
+      </div>
+      <div class="altri">
+        {altri.map((s) => (
+          <a class="altri__c glow" href={`/${s.negozio!.slug}`}>
+            <strong>{s.city}</strong>
+            <span>{s.address}, {s.cap} {s.city}</span>
+            <span class="altri__t">{s.negozio!.phone}</span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="b-cta">
+    <div class="wrap b-cta__row">
+      <h2 class="h b-cta__h">Portaci il tuo PC <span style="color:#ff6b6b">a {city}</span></h2>
+      <p class="b-cta__lead">{indirizzo} · {ORARI[0].giorni} {ORARI[0].ore} · {ORARI[1].giorni} {ORARI[1].ore}</p>
+      <div class="b-actions">
+        <a class="btn btn--white" href={tel}><Icon name="phone" />Chiama {n.phone}</a>
+        <a class="btn btn--wa" href={wa(waBase)}><Icon name="wa" />Scrivici su WhatsApp</a>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<script>
+  // "Aperto ora" calcolato sull'ora italiana.
+  const el = document.querySelector('[data-open]') as HTMLElement | null;
+  if (el) {
+    const parts = new Intl.DateTimeFormat('it-IT', { timeZone: 'Europe/Rome', weekday: 'short', hour: '2-digit', minute: '2-digit', hour12: false }).formatToParts(new Date());
+    const g = (t: string) => parts.find((p) => p.type === t)?.value ?? '';
+    const day = g('weekday').toLowerCase(); const m = Number(g('hour')) * 60 + Number(g('minute'));
+    const feriale = ['lun', 'mar', 'mer', 'gio', 'ven'].some((d) => day.startsWith(d));
+    const sab = day.startsWith('sab');
+    const open = (feriale && ((m >= 540 && m < 780) || (m >= 900 && m < 1140))) || (sab && m >= 540 && m < 780);
+    el.classList.add(open ? 'is-open' : 'is-closed');
+    (el.querySelector('[data-open-t]') as HTMLElement).textContent = open ? 'Aperto ora' : 'Chiuso ora · scrivici su WhatsApp';
+  }
+</script>
+
+<style>
+  .st { position: relative; overflow: hidden; background: radial-gradient(60% 70% at 85% 30%, rgba(255, 26, 26, 0.1), transparent 70%), #fff; padding-block: clamp(1rem, 2.5vw, 2rem) clamp(1rem, 2vw, 1.5rem); border-bottom: 1px solid var(--line); }
+  .st__row { display: grid; grid-template-columns: 1.15fr 1fr; gap: clamp(1.5rem, 4vw, 3.5rem); align-items: center; }
+  .st__h1 { margin-top: 0.8rem; font-size: clamp(2.1rem, 3.6vw, 3.3rem); }
+  .st__lead { margin-top: 1rem; }
+  .st__press { grid-column: 1 / -1; padding-top: 1rem; border-top: 1px solid var(--line); }
+  .card { position: relative; padding: 1.5rem; border-radius: 22px; background: #fff; border: 1px solid var(--line); box-shadow: 0 30px 70px rgba(11, 11, 13, 0.12); }
+  .card__open { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.35rem 0.8rem; border-radius: 999px; background: var(--paper); font-weight: 800; font-size: 0.9rem; }
+  .card__open.is-closed .live { background: #b5b8c0; box-shadow: none; }
+  .card__open.is-closed .live::after { display: none; }
+  .card__dl { margin: 1rem 0 0; display: grid; gap: 0.8rem; }
+  .card__dl dt { font-size: 0.75rem; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
+  .card__dl dd { margin: 0.15rem 0 0; font-weight: 700; }
+  .card__dl a { color: var(--ink); text-decoration: none; }
+  .card__dl a:hover { color: var(--red); }
+  .card__orari { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.2rem; }
+  .card__orari li { display: flex; justify-content: space-between; gap: 1rem; font-weight: 600; }
+  .card__orari li span:first-child { color: var(--muted); }
+  .card__btns { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1.2rem; }
+  .st__zona { margin-top: 1.2rem; color: var(--muted); }
+  .biz { padding: clamp(1.5rem, 3vw, 2.2rem); border-radius: 22px; }
+  .biz__h { margin-top: 0.7rem; font-size: clamp(1.6rem, 2.6vw, 2.2rem); }
+  .biz p { margin-top: 0.8rem; color: #c3c6cd; }
+  .biz__links { display: grid; grid-template-columns: 1fr 1fr; gap: 0.4rem 1rem; margin: 1rem 0 1.3rem; }
+  .biz__links a { color: #fff; font-weight: 700; text-decoration: none; }
+  .biz__links a:hover { color: #ff6b6b; }
+  .altri { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-top: 2rem; }
+  .altri__c { position: relative; display: grid; gap: 0.2rem; padding: 1.3rem; border-radius: 16px; background: var(--paper); border: 1px solid var(--line); text-decoration: none; color: inherit; }
+  .altri__c strong { font-size: 1.2rem; }
+  .altri__c span { color: var(--muted); }
+  .altri__c .altri__t { color: var(--red); font-weight: 800; }
+  @media (max-width: 900px) { .st__row { grid-template-columns: 1fr; } .st__copy { order: 1; } .st__press { order: 2; } .card { order: 3; } .altri { grid-template-columns: 1fr; } }
+  @media (max-width: 600px) { .st .b-actions { display: none; } }
+</style>

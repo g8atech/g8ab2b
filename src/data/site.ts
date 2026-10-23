@@ -18,14 +18,28 @@ export const SITE = {
   rmmLogin: 'https://g8a.rmmservice.eu/auth/#/login',
 };
 
-export type Sede = { city: string; address: string; cap: string; province: string; operativa?: boolean };
+// Negozi con pagina propria (/store-...): telefono, email e orari presi dalle pagine del vecchio sito.
+export type Negozio = { slug: string; phone: string; phoneIntl: string; whatsapp: string; email: string; zona: string };
+export type Sede = { city: string; address: string; cap: string; province: string; operativa?: boolean; negozio?: Negozio };
+
+export const ORARI = [
+  { giorni: 'Lunedì – Venerdì', ore: '9:00 – 13:00 · 15:00 – 19:00' },
+  { giorni: 'Sabato', ore: '9:00 – 13:00' },
+  { giorni: 'Domenica', ore: 'Chiuso' },
+];
+// Formato schema.org per i dati strutturati.
+export const ORARI_LD = [
+  { '@type': 'OpeningHoursSpecification', dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'], opens: '09:00', closes: '13:00' },
+  { '@type': 'OpeningHoursSpecification', dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'], opens: '15:00', closes: '19:00' },
+  { '@type': 'OpeningHoursSpecification', dayOfWeek: 'Saturday', opens: '09:00', closes: '13:00' },
+];
 
 export const SEDI: Sede[] = [
-  { city: 'Gallarate', address: 'Viale Milano 1', cap: '21013', province: 'VA' },
-  { city: 'Busto Arsizio', address: 'Via Q. Sella 27', cap: '21052', province: 'VA' },
+  { city: 'Gallarate', address: 'Viale Milano 1', cap: '21013', province: 'VA', negozio: { slug: 'store-gallarate', phone: '0331 24 88 59', phoneIntl: '+390331248859', whatsapp: '390331248859', email: 'gallarate@g8a.it', zona: 'Gallarate, Cardano al Campo, Samarate, Cassano Magnago' } },
+  { city: 'Busto Arsizio', address: 'Via Q. Sella 27', cap: '21052', province: 'VA', negozio: { slug: 'store-busto-arsizio', phone: '0331 98 45 55', phoneIntl: '+390331984555', whatsapp: '390331984555', email: 'bustoarsizio@g8a.it', zona: 'Busto Arsizio, Castellanza, Olgiate Olona, Fagnano Olona' } },
   { city: 'Bollate', address: 'Piazza Indipendenza 8', cap: '20021', province: 'MI' },
-  { city: 'Jerago con Orago', address: 'Via Varesina 3', cap: '21040', province: 'VA' },
-  { city: 'Lecco', address: 'Viale Dante Alighieri 22', cap: '23900', province: 'LC' },
+  { city: 'Jerago con Orago', address: 'Via Varesina 3', cap: '21040', province: 'VA', negozio: { slug: 'store-jerago-con-orago', phone: '0331 02 00 08', phoneIntl: '+390331020008', whatsapp: '390331020008', email: 'jerago@g8a.it', zona: 'Jerago con Orago, Cavaria, Besnate, Albizzate, Solbiate Arno' } },
+  { city: 'Lecco', address: 'Viale Dante Alighieri 22', cap: '23900', province: 'LC', negozio: { slug: 'store-lecco', phone: '0341 36 77 54', phoneIntl: '+390341367754', whatsapp: '390341367754', email: 'lecco@g8a.it', zona: 'Lecco e provincia' } },
   { city: 'Solbiate Arno', address: 'Via Caronno Varesino 33', cap: '21048', province: 'VA', operativa: true },
 ];
 
