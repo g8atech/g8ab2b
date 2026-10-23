@@ -15,7 +15,7 @@ import Confronto from '../components/lp/Confronto.astro';
 import CtaBand from '../components/lp/CtaBand.astro';
 import Passi from '../components/lp/Passi.astro';
 import { Image } from 'astro:assets';
-import nas from '../assets/nas-synology.png';
+import nas from '../assets/nas-backup.png';
 import { FAQ_BASE, faqLd, serviceLd } from '../data/site';
 
 const wa = 'Ciao, vorrei informazioni sul noleggio NAS e backup per la mia azienda.';
@@ -71,7 +71,7 @@ const desc = 'Noleggio NAS professionale per il backup aziendale: dischi in RAID
 
   <section class="section">
     <div class="wrap b-split">
-      <div class="nasfoto" data-reveal><Image src={nas} alt="NAS professionale a due dischi per il backup aziendale" widths={[400, 700]} sizes="(max-width: 900px) 80vw, 460px" /></div>
+      <div class="nasfoto" data-reveal><Image src={nas} alt="NAS che salva computer, server, macchine virtuali e copia su cloud" widths={[400, 615]} sizes="(max-width: 900px) 90vw, 560px" /></div>
       <div data-reveal style="--d:.1s">
         <span class="kicker">Il NAS G8A</span>
         <h2 class="h h2" style="margin-top:.8rem">Lo colleghi. <span class="red">Al resto pensiamo noi.</span></h2>
@@ -144,8 +144,8 @@ const desc = 'Noleggio NAS professionale per il backup aziendale: dischi in RAID
   .nas__bar > i { grid-column: 1 / -1; height: 6px; border-radius: 6px; background: #2a2a30; overflow: hidden; }
   .nas__bar > i > i { display: block; width: 58%; height: 100%; background: var(--grad); animation: fill 2s cubic-bezier(0.2, 0.7, 0.2, 1) both; }
   @keyframes fill { from { width: 0; } }
-  .nasfoto { position: relative; display: grid; place-items: center; padding: 2rem; border-radius: 24px; background: radial-gradient(60% 60% at 50% 55%, rgba(255, 26, 26, 0.16), transparent 70%), var(--paper); }
-  .nasfoto :global(img) { width: min(100%, 420px); height: auto; filter: drop-shadow(0 26px 30px rgba(11, 11, 13, 0.25)); animation: b-float 7s ease-in-out infinite; }
+  .nasfoto { position: relative; display: grid; place-items: center; padding: 1rem; border-radius: 24px; background: #fff; border: 1px solid var(--line); box-shadow: 0 30px 70px rgba(11, 11, 13, 0.12); }
+  .nasfoto :global(img) { width: 100%; height: auto; }
   .rule321 strong { font-stretch: 78%; font-variation-settings: 'wdth' 78; font-weight: 800; font-size: 4.2rem; line-height: 1; background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent; }
   .rule321 h3 { margin-top: 0.3rem; text-transform: uppercase; font-stretch: 85%; font-variation-settings: 'wdth' 85; font-size: 1.3rem; }
 </style>
