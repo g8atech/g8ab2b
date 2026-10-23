@@ -39,6 +39,11 @@
       "source": "/index",
       "destination": "/",
       "permanent": true
+    },
+    {
+      "source": "/guidagratuitai7errori-3556",
+      "destination": "/",
+      "permanent": false
     }
   ]
 }

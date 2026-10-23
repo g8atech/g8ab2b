@@ -34,7 +34,7 @@ Le pagine hanno **gli stessi indirizzi del vecchio sito**, così Google non perd
 | `/rmm` | Monitoraggio RMM | `src/pages/rmm.astro` |
 | `/testimonianze-casistudio` | Casi studio e testimonianze | `src/pages/testimonianze-casistudio.astro` |
 | `/assistenza-business` | Contatti | `src/pages/assistenza-business.astro` |
-| `/guidagratuitai7errori-3556` | Guida gratuita | `src/pages/guidagratuitai7errori-3556.astro` |
+| `/guidagratuitai7errori-3556` | reindirizza a `/` (guida sospesa) | `vercel.json` |
 | `/homepage` | reindirizza a `/` | `vercel.json` |
 
 Testimonianze e casi studio stanno in `src/data/clienti.ts`; i blocchi comuni delle pagine in `src/components/blocks/`.
@@ -62,7 +62,6 @@ Ogni clic su telefono, WhatsApp o email invia a GTM l'evento `contatto` con `can
 
 ## Da completare
 
-- PDF della guida "I 7 errori informatici": oggi la pagina la fa richiedere su WhatsApp o via email.
 - Foto robotiche originali in alta risoluzione.
 - Loghi delle altre testate (Borsa Italiana, Repubblica, La Stampa, ANSA, ItalWire, Finanza Flash, Il Secolo XIX).
 - Prezzo "da € al mese" del Noleggio Assistito, se si vuole mostrarlo.

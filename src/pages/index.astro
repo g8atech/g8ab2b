@@ -21,14 +21,14 @@ const press = [
   { src: fortune, alt: 'Fortune Italia', h: 18 },
 ];
 
-const canone = ['Computer nuovi', 'Server e backup', 'Stampanti e toner', 'Assistenza tecnica', 'Monitoraggio 24/7', 'Sostituzione guasti'];
+const canone = ['Computer nuovi', 'Server e backup', 'Stampanti e toner', 'Assistenza tecnica', 'Monitoraggio continuo', 'Sostituzione guasti'];
 
 const include = [
   { icon: 'pc', t: 'Computer nuovi, su misura', d: 'Configurati per il tuo lavoro, con i tuoi programmi e i tuoi dati già pronti.', href: '/noleggio-computer' },
   { icon: 'server', t: 'Server e backup automatici', d: 'I dati aziendali al sicuro, con copie controllate ogni giorno.', href: '/noleggio-backup' },
   { icon: 'printer', t: 'Stampanti con toner inclusi', d: 'Multifunzione per l\'ufficio, manutenzione e consumabili compresi.', href: '/noleggio-stampanti' },
   { icon: 'wrench', t: 'Assistenza da remoto e in sede', d: 'Un solo numero, su telefono e WhatsApp. Nessun costo a chiamata.' },
-  { icon: 'activity', t: 'Monitoraggio 24 ore su 24', d: 'Vediamo un disco che cede o un backup saltato prima che diventi un blocco.', href: '/rmm' },
+  { icon: 'activity', t: 'Monitoraggio continuo', d: 'Vediamo un disco che cede o un backup saltato prima che diventi un blocco.', href: '/rmm' },
   { icon: 'refresh', t: 'Sostituzione e aggiornamento', d: 'Se una macchina si guasta o invecchia, la cambiamo noi.' },
 ];
 
@@ -104,7 +104,7 @@ const serviceLd = {
           <div class="robots__fx"><Image class="robots__img" src={robotHero} alt="Giuseppe e Antonio Arrigo, fondatori di G8A, in armatura robotica" widths={[640, 1152]} sizes="(max-width: 900px) 100vw, 620px" loading="eager" fetchpriority="high" /></div>
           <span class="robots__shine" aria-hidden="true" style={`--src:url(${robotHero.src})`}></span>
         </div>
-        <span class="chip-float chip-float--a" aria-hidden="true"><span class="live"></span>Monitoraggio 24/7</span>
+        <span class="chip-float chip-float--a" aria-hidden="true"><span class="live"></span>Monitoraggio continuo</span>
         <span class="chip-float chip-float--b" aria-hidden="true"><Icon name="check" size={14} width={3.2} />Sostituzione inclusa</span>
         <span class="chip-float chip-float--c" aria-hidden="true"><strong>1 canone</strong> · 0 pensieri</span>
       </div>
@@ -214,7 +214,7 @@ const serviceLd = {
               <ul class="sect__kit">
                 {x.kit.map(([ic, txt], k) => <li style={`--k:${k}`}><span class="sect__kic"><Icon name={ic} size={20} stroke="#e30613" width={1.9} /></span>{txt}</li>)}
               </ul>
-              <p class="sect__plus"><Icon name="check" size={16} width={3} />Sempre inclusi: assistenza, monitoraggio 24/7 e sostituzione dei guasti</p>
+              <p class="sect__plus"><Icon name="check" size={16} width={3} />Sempre inclusi: assistenza, monitoraggio continuo e sostituzione dei guasti</p>
               <a class="btn btn--red" href={waLink(`Ciao, ho un'attività nel settore "${x.t}" e vorrei sapere come funziona il Noleggio Assistito.`)}><Icon name="wa" />Chiedi il canone per {x.t.toLowerCase()}</a>
             </div>
           ))}
