@@ -12,6 +12,8 @@ import milani from '../assets/milani.jpg';
 import testa from '../assets/testa.jpg';
 import PressBar from '../components/blocks/PressBar.astro';
 import Rassegna from '../components/blocks/Rassegna.astro';
+import InTv from '../components/blocks/InTv.astro';
+import { TV } from '../data/tv';
 
 
 const canone = ['Computer nuovi', 'Server e backup', 'Stampanti e toner', 'Assistenza tecnica', 'Monitoraggio continuo', 'Sostituzione guasti'];
@@ -77,6 +79,7 @@ const serviceLd = {
           <a class="btn btn--red" href={telLink}><Icon name="phone" />Chiama {SITE.phone}</a>
           <a class="btn btn--wa" href={waLink('Ciao, vorrei sapere come funziona il Noleggio Assistito per la mia azienda.')}><Icon name="wa" />Scrivici su WhatsApp</a>
         </div>
+        <a class="hero__tv" href="#tv"><span class="hero__tv-on"><span class="live"></span>Visto in TV</span><span class="hero__tv-t"><strong>{TV.programma}</strong> · Sky {TV.sky}<span class="hero__tv-x"> · DTT {TV.dtt}</span></span><span class="hero__tv-go">Guarda ▶</span></a>
         <p class="hero__links"><a href="#come-funziona">Come funziona</a><span aria-hidden="true">·</span><a href="#quanto-costa">Quanto costa</a><span aria-hidden="true">·</span><span>Ti risponde una persona, non un call center</span></p>
       </div>
       <div class="hero__press"><PressBar row label="Ne hanno parlato" /></div>
@@ -237,6 +240,8 @@ const serviceLd = {
     </div>
   </section>
 
+  <InTv />
+
   <!-- CLIENTI -->
   <section class="section">
     <div class="wrap">
@@ -372,6 +377,15 @@ const serviceLd = {
   .hero__links a { font-weight: 700; color: var(--ink); }
   .hero__links a:hover { color: var(--red); }
   .hero__g span { color: #fbbc05; }
+  .hero__tv { display: inline-flex; align-items: center; gap: 0.7rem; max-width: 100%; margin-top: 1rem; padding: 0.35rem 0.9rem 0.35rem 0.35rem; border-radius: 999px; background: var(--ink); color: #fff; text-decoration: none; font-size: 0.9rem; box-shadow: 0 10px 26px rgba(11, 11, 13, 0.18); transition: transform 0.15s, box-shadow 0.15s; }
+  .hero__tv:hover { transform: translateY(-2px); box-shadow: 0 14px 30px rgba(227, 6, 19, 0.3); }
+  .hero__tv-on { display: inline-flex; align-items: center; gap: 0.45rem; flex: none; padding: 0.3rem 0.7rem 0.3rem 0.55rem; border-radius: 999px; background: var(--grad); font-weight: 800; font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase; }
+  .hero__tv-on .live { background: #fff; }
+  .hero__tv-t { min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: #d6d8dd; }
+  .hero__tv-t strong { color: #fff; }
+  .hero__tv-go { flex: none; font-weight: 800; color: #ff4d4d; }
+  .hero__copy { min-width: 0; }
+  @media (max-width: 600px) { .hero__tv { display: flex; width: 100%; font-size: 0.85rem; gap: 0.55rem; } .hero__tv-t { flex: 1; } .hero__tv-x { display: none; } }
 
   .hero__visual { position: relative; padding-block: 1.2rem 0.5rem; margin-right: -3%; perspective: 1200px; }
   .stage { position: absolute; inset: -6% -8% 8% -8%; pointer-events: none; }

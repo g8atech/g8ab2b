@@ -1,0 +1,139 @@
+---
+// "Visto in TV": l'intervista a PMI Stories con video, canali e capitoli cliccabili.
+import { TV, mmss } from '../../data/tv';
+import { SITE } from '../../data/site';
+interface Props { id?: string }
+const { id = 'tv' } = Astro.props;
+const yt = TV.youtubeId;
+const videoLd = {
+  '@context': 'https://schema.org',
+  '@type': 'VideoObject',
+  name: `${TV.titolo} | ${TV.programma}`,
+  description: TV.descrizione,
+  thumbnailUrl: new URL(TV.poster, Astro.site ?? 'https://www.g8a.it').href,
+  uploadDate: TV.dataIso,
+  duration: TV.durata,
+  ...(yt ? { embedUrl: `https://www.youtube.com/embed/${yt}` } : { contentUrl: new URL(TV.video, Astro.site ?? 'https://www.g8a.it').href }),
+  publisher: { '@type': 'Organization', name: SITE?.name ?? 'G8A Technology' },
+  hasPart: TV.capitoli.map((c, i) => ({ '@type': 'Clip', name: c.l, startOffset: c.t, endOffset: TV.capitoli[i + 1]?.t ?? 296 })),
+};
+---
+<section class="section section--ink tv" id={id}>
+  <div class="tv__glow" aria-hidden="true"></div>
+  <div class="wrap tv__row">
+    <div class="tv__copy" data-reveal>
+      <span class="kicker">Visto in TV</span>
+      <h2 class="h h2">Il Noleggio Assistito <span class="red">in televisione</span></h2>
+      <p class="lead">{TV.ospite}, {TV.ruolo}, ospite di <strong>{TV.programma}</strong> su {TV.canale}: in cinque minuti spiega perché alle PMI non serve un altro fornitore, ma un reparto IT che le conosce.</p>
+      <ul class="tv__ch" aria-label="Dove è andato in onda">
+        <li><span class="tv__onair"><span class="live"></span>In onda</span>{TV.data}</li>
+        <li><strong>Sky</strong> canale {TV.sky}</li>
+        <li><strong>Digitale terrestre</strong> canale {TV.dtt}</li>
+      </ul>
+      <ol class="tv__caps">
+        {TV.capitoli.map((c) => (
+          <li><button type="button" data-seek={c.t}><span>{mmss(c.t)}</span>{c.l}</button></li>
+        ))}
+      </ol>
+    </div>
+
+    <div class="tv__screen" data-reveal style="--d:.12s">
+      <div class="tv__frame">
+        {yt ? (
+          <button class="tv__yt" type="button" data-yt={yt} aria-label="Guarda l'intervista">
+            <img src={TV.poster} alt={`${TV.ospite} a ${TV.programma}`} loading="lazy" width="1280" height="720" />
+            <span class="tv__play" aria-hidden="true"></span>
+          </button>
+        ) : (
+          <video class="tv__v" preload="none" playsinline poster={TV.poster} width="1280" height="720">
+            <source src={TV.video} type="video/mp4" />
+          </video>
+        )}
+        <button class="tv__cover" type="button" aria-label="Guarda l'intervista" hidden={!!yt}>
+          <span class="tv__play" aria-hidden="true"></span>
+          <span class="tv__cl">Guarda l'intervista · 5 min</span>
+        </button>
+      </div>
+      <p class="tv__cap">{TV.programma} · {TV.canale} · Sky {TV.sky} · DTT {TV.dtt}</p>
+    </div>
+  </div>
+  <script type="application/ld+json" set:html={JSON.stringify(videoLd)} />
+</section>
+
+<script>
+  document.querySelectorAll<HTMLElement>('.tv').forEach((root) => {
+    const v = root.querySelector<HTMLVideoElement>('.tv__v');
+    const cover = root.querySelector<HTMLButtonElement>('.tv__cover');
+    const ytBtn = root.querySelector<HTMLButtonElement>('.tv__yt');
+    let iframe: HTMLIFrameElement | null = null;
+    const play = (t = 0) => {
+      if (v) {
+        cover?.setAttribute('hidden', '');
+        v.controls = true;
+        if (t) v.currentTime = t;
+        v.play().catch(() => {});
+      } else if (ytBtn) {
+        const id = ytBtn.dataset.yt;
+        if (!iframe) {
+          iframe = document.createElement('iframe');
+          iframe.allow = 'autoplay; encrypted-media; picture-in-picture; fullscreen';
+          iframe.title = "Intervista G8A a PMI Stories";
+          ytBtn.replaceWith(iframe);
+        }
+        iframe.src = `https://www.youtube-nocookie.com/embed/${id}?autoplay=1&rel=0&start=${t}`;
+      }
+      window.dispatchEvent(new CustomEvent('g8a:video', { detail: { t } }));
+    };
+    cover?.addEventListener('click', () => play());
+    ytBtn?.addEventListener('click', () => play());
+    v?.addEventListener('play', () => cover?.setAttribute('hidden', ''));
+    root.querySelectorAll<HTMLButtonElement>('[data-seek]').forEach((b) =>
+      b.addEventListener('click', () => {
+        play(Number(b.dataset.seek));
+        if (window.matchMedia('(max-width: 900px)').matches) root.querySelector('.tv__screen')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }),
+    );
+  });
+</script>
+
+<style>
+  .tv { position: relative; overflow: hidden; }
+  .tv__glow { position: absolute; right: -10%; top: 10%; width: 60%; aspect-ratio: 1; border-radius: 50%; background: radial-gradient(circle, rgba(227, 6, 19, 0.28), transparent 65%); filter: blur(30px); pointer-events: none; }
+  .tv__row { position: relative; display: grid; grid-template-columns: 0.9fr 1.1fr; gap: clamp(2rem, 5vw, 4rem); align-items: center; }
+  .tv__copy .h2 { margin-top: 0.8rem; }
+  .tv__copy .lead { margin-top: 1.2rem; }
+  .tv__copy .lead strong { color: #fff; }
+  .tv__ch { list-style: none; margin: 1.6rem 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 0.6rem; }
+  .tv__ch li { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.5rem 0.9rem; border-radius: 999px; background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.14); font-size: 0.92rem; color: #dfe1e6; }
+  .tv__ch strong { color: #fff; }
+  .tv__onair { display: inline-flex; align-items: center; gap: 0.45rem; font-weight: 800; font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase; color: #fff; background: var(--grad); padding: 0.2rem 0.6rem 0.2rem 0.45rem; border-radius: 999px; margin: -0.2rem 0.1rem -0.2rem -0.5rem; }
+  .tv__onair .live { background: #fff; animation: none; }
+  .tv__caps { list-style: none; margin: 1.8rem 0 0; padding: 0; border-top: 1px solid rgba(255, 255, 255, 0.12); }
+  .tv__caps li { border-bottom: 1px solid rgba(255, 255, 255, 0.12); }
+  .tv__caps button { display: flex; align-items: baseline; gap: 1rem; width: 100%; padding: 0.75rem 0.2rem; background: none; border: 0; color: #e7e8ec; font: inherit; font-weight: 600; text-align: left; cursor: pointer; transition: color 0.15s, padding 0.15s; }
+  .tv__caps button span { flex: none; width: 2.6rem; font-variant-numeric: tabular-nums; font-weight: 800; color: #ff4d4d; }
+  .tv__caps button:hover { color: #fff; padding-left: 0.6rem; }
+
+  .tv__screen { min-width: 0; }
+  .tv__frame { position: relative; aspect-ratio: 16 / 9; border-radius: 18px; overflow: hidden; background: #000; box-shadow: 0 30px 70px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(255, 255, 255, 0.1), 0 0 60px rgba(227, 6, 19, 0.25); }
+  .tv__frame::before { content: ''; position: absolute; inset: 0; z-index: 3; pointer-events: none; border-radius: inherit; box-shadow: inset 0 0 0 3px rgba(227, 6, 19, 0.55); }
+  .tv__v, .tv__frame :global(iframe), .tv__yt, .tv__yt img { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; object-fit: cover; }
+  .tv__yt { padding: 0; cursor: pointer; background: #000; }
+  .tv__cover { position: absolute; inset: 0; z-index: 2; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1rem; border: 0; cursor: pointer; background: linear-gradient(180deg, rgba(11, 11, 13, 0) 40%, rgba(11, 11, 13, 0.75)); color: #fff; font: inherit; }
+  .tv__cover[hidden] { display: none; }
+  .tv__play { width: 5.2rem; height: 5.2rem; border-radius: 50%; background: var(--grad); box-shadow: 0 0 0 10px rgba(227, 6, 19, 0.25), 0 14px 36px rgba(227, 6, 19, 0.55); position: relative; transition: transform 0.2s; }
+  .tv__yt .tv__play { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); }
+  .tv__play::after { content: ''; position: absolute; left: 54%; top: 50%; transform: translate(-50%, -50%); border-style: solid; border-width: 0.95rem 0 0.95rem 1.55rem; border-color: transparent transparent transparent #fff; }
+  .tv__cover:hover .tv__play { transform: scale(1.08); }
+  .tv__cl { position: absolute; bottom: 1.1rem; left: 1.2rem; font-weight: 800; font-size: 0.95rem; letter-spacing: 0.04em; text-transform: uppercase; }
+  .tv__cap { margin-top: 0.9rem; font-size: 0.85rem; color: #a6a9b1; text-align: right; }
+  @media (prefers-reduced-motion: no-preference) {
+    .tv__play { animation: tvpulse 2.4s ease-in-out infinite; }
+    @keyframes tvpulse { 50% { box-shadow: 0 0 0 18px rgba(227, 6, 19, 0.08), 0 14px 36px rgba(227, 6, 19, 0.55); } }
+  }
+  @media (max-width: 900px) {
+    .tv__row { grid-template-columns: 1fr; }
+    .tv__screen { order: -1; }
+    .tv__cap { text-align: left; }
+  }
+</style>
