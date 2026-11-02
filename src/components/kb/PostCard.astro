@@ -1,0 +1,22 @@
+---
+import { dataIt } from '../../data/kb';
+interface Props { href: string; kicker: string; title: string; description: string; date?: Date; meta?: string; badge?: { t: string; c: string } }
+const { href, kicker, title, description, date, meta, badge } = Astro.props;
+---
+<a class="pc glow" href={href} data-reveal>
+  <span class="pc__k">{kicker}{badge && <b class={`pc__b pc__b--${badge.c}`}>{badge.t}</b>}</span>
+  <h3 class="pc__t">{title}</h3>
+  <p class="pc__d">{description}</p>
+  <span class="pc__m">{date && <time datetime={date.toISOString()}>{dataIt(date)}</time>}{meta && <span>{meta}</span>}<span class="pc__go">Leggi →</span></span>
+</a>
+
+<style>
+  .pc { display: flex; flex-direction: column; gap: 0.55rem; padding: 1.6rem; border-radius: 18px; background: #fff; border: 1px solid var(--line); text-decoration: none; color: inherit; }
+  .pc__k { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; font-size: 0.75rem; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; color: var(--red); }
+  .pc__b { padding: 0.15rem 0.55rem; border-radius: 999px; font-size: 0.7rem; letter-spacing: 0.04em; }
+  .pc__b--ok { background: #e6f8ef; color: #0b7a47; } .pc__b--mid { background: #fff4e0; color: #9a5b00; } .pc__b--hi { background: #fdecee; color: var(--red); }
+  .pc__t { font-size: 1.22rem; line-height: 1.25; }
+  .pc__d { color: var(--muted); font-size: 0.98rem; }
+  .pc__m { margin-top: auto; padding-top: 0.6rem; display: flex; flex-wrap: wrap; gap: 0.4rem 1rem; align-items: center; font-size: 0.85rem; color: var(--muted); }
+  .pc__go { margin-left: auto; font-weight: 800; color: var(--red); font-size: 0.95rem; }
+</style>

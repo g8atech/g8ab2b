@@ -1,0 +1,13 @@
+---
+interface Props { crumb: string; kicker: string; lead: string }
+const { crumb, kicker, lead } = Astro.props;
+---
+<section class="b-hero">
+  <div class="wrap">
+    <ol class="b-crumbs" aria-label="Percorso"><li><a href="/">Home</a></li><li aria-current="page">{crumb}</li></ol>
+    <span class="kicker">{kicker}</span>
+    <h1 class="h b-hero__h1" style="max-width:52rem"><slot /></h1>
+    <p class="lead b-hero__lead">{lead}</p>
+    <slot name="after" />
+  </div>
+</section>

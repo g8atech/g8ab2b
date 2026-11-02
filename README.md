@@ -20,6 +20,9 @@ npm run build    # genera il sito in dist/
 | Colori, pulsanti, animazioni comuni | `src/styles/global.css` |
 | Intestazione, piè di pagina, barra mobile Chiama/WhatsApp | `src/layouts/Base.astro` |
 | Immagini (logo, robot, foto, loghi stampa) | `src/assets/` |
+| Articoli del blog | `src/content/blog/*.md` |
+| Schede dei problemi noti | `src/content/problemi/*.md` |
+| Pagine "assistenza informatica + città" | `src/content/citta/*.md` |
 
 ## Pagine
 
@@ -38,6 +41,16 @@ Le pagine hanno **gli stessi indirizzi del vecchio sito**, così Google non perd
 | `/homepage` | reindirizza a `/` | `vercel.json` |
 
 Testimonianze e casi studio stanno in `src/data/clienti.ts`; i blocchi comuni delle pagine in `src/components/blocks/`.
+
+## Blog, problemi noti, pagine città
+
+Ogni file `.md` in `src/content/<cartella>/` diventa una pagina: il nome del file è l'indirizzo (es. `src/content/blog/backup-regola-3-2-1.md` → `/blog/backup-regola-3-2-1`). I campi in cima al file (titolo, descrizione, FAQ, ecc.) sono descritti in `src/content.config.ts`: se ne manca uno obbligatorio la build si ferma e dice quale.
+
+- **Blog** (`/blog`): `inBreve` è la risposta breve in apertura, quella che citano Google e i motori AI. `servizio` decide la chiamata finale. `draft: true` nasconde l'articolo.
+- **Problemi noti** (`/problemi-noti`): `passi` sono le cose che chiunque può provare senza rischi; `urgenza: alta` mostra subito "chiamaci" (phishing, ransomware).
+- **Città** (`/assistenza-informatica/<città>`): ogni pagina deve avere testi suoi (zona, settori, comuni, FAQ). Mai copiare una città nell'altra cambiando solo il nome: Google le tratta come pagine doppie. `sede` deve corrispondere a una città di `SEDI` in `src/data/site.ts`.
+
+Sitemap, dati strutturati (BlogPosting, HowTo, Service, FAQ, breadcrumb) e link nel footer si aggiornano da soli.
 
 ## Pubblicazione
 
@@ -98,4 +111,5 @@ Ogni clic su telefono, WhatsApp o email invia a GTM l'evento `contatto` con `can
 - Foto robotiche originali in alta risoluzione.
 - Il Secolo XIX: articolo non trovato online, da aggiungere in src/data/stampa.ts se c'è il link.
 - Prezzo "da € al mese" del Noleggio Assistito, se si vuole mostrarlo.
-- Pagine settore, sedi e città previste nell'architettura.
+- Pagine settore previste nell'architettura.
+- Nuovi articoli del blog (2 al mese) e nuove pagine città dove ci sono clienti veri.

@@ -1,0 +1,126 @@
+---
+import { getCollection, render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import Icon from '../../components/Icon.astro';
+import SideCta from '../../components/kb/SideCta.astro';
+import PostCard from '../../components/kb/PostCard.astro';
+import Faq from '../../components/blocks/Faq.astro';
+import Cta from '../../components/blocks/Cta.astro';
+import { SITE, faqLd, waLink, telLink } from '../../data/site';
+import { dataIt, crumbsLd, URGENZA, SERVIZI } from '../../data/kb';
+import '../../styles/prose.css';
+
+export async function getStaticPaths() {
+  const items = await getCollection('problemi');
+  return items.map((item) => ({ params: { slug: item.id }, props: { item, items } }));
+}
+const { item, items } = Astro.props;
+const { Content } = await render(item);
+const d = item.data;
+const path = `/problemi-noti/${item.id}`;
+const u = URGENZA[d.urgenza];
+const wa = `Ciao, ho questo problema: "${d.title}". Potete aiutarmi?`;
+const simili = items.filter((p) => p.id !== item.id).sort((a, b) => Number(b.data.area === d.area) - Number(a.data.area === d.area)).slice(0, 3);
+const ld: object[] = [
+  {
+    '@context': 'https://schema.org', '@type': 'HowTo', name: d.title, description: d.description, inLanguage: 'it-IT',
+    totalTime: undefined, dateModified: d.updated.toISOString(),
+    step: d.passi.map((p, i) => ({ '@type': 'HowToStep', position: i + 1, name: p.t, text: p.d, url: `${SITE.url}${path}#passo-${i + 1}` })),
+    publisher: { '@id': `${SITE.url}/#organization` },
+  },
+  crumbsLd([{ name: 'Home', path: '' }, { name: 'Problemi noti', path: '/problemi-noti' }, { name: d.title, path }]),
+];
+if (d.faq.length) ld.push(faqLd(d.faq));
+---
+<Base title={d.seoTitle ?? `${d.title}: cosa fare | G8A Technology`} description={d.description} jsonLd={ld} ogType="article">
+  <article>
+    <header class="b-hero pb">
+      <div class="wrap">
+        <ol class="b-crumbs" aria-label="Percorso"><li><a href="/">Home</a></li><li><a href="/problemi-noti">Problemi noti</a></li><li aria-current="page">{d.area}</li></ol>
+        <span class="kicker">{d.area}</span>
+        <h1 class="h b-hero__h1 pb__h1">{d.title}</h1>
+        <p class="lead b-hero__lead">{d.description}</p>
+        <p class="pb__meta"><span class={`tag tag--${u.c}`}>{u.t}</span><span>Da provare: <strong>{d.tempo}</strong></span><span>Aggiornato il <time datetime={d.updated.toISOString()}>{dataIt(d.updated)}</time></span></p>
+      </div>
+    </header>
+
+    <div class="section pb__sec">
+      <div class="wrap pb__grid">
+        <div class="pb__main">
+          {d.urgenza === 'alta' && (
+            <div class="stop">
+              <p><strong>Prima di tutto: non provare a sistemarlo da solo.</strong> In questi casi ogni minuto e ogni tentativo possono peggiorare le cose. Segui solo i primi passi qui sotto e chiamaci.</p>
+              <span><a class="btn btn--red btn--sm" href={telLink}><Icon name="phone" />Chiama {SITE.phone}</a><a class="btn btn--wa btn--sm" href={waLink(wa)}><Icon name="wa" />WhatsApp</a></span>
+            </div>
+          )}
+
+          <section class="box">
+            <h2 class="box__h">Ti succede questo?</h2>
+            <ul class="sint">{d.sintomi.map((s) => <li><Icon name="check" size={15} width={3} />{s}</li>)}</ul>
+          </section>
+
+          <section>
+            <h2 class="h pb__h2">Cosa provare <span class="red">subito</span></h2>
+            <ol class="steps">
+              {d.passi.map((p, i) => <li id={`passo-${i + 1}`}><span class="steps__n">{i + 1}</span><div><h3>{p.t}</h3><p>{p.d}</p></div></li>)}
+            </ol>
+          </section>
+
+          <section class="when">
+            <h2 class="box__h"><Icon name="alert" size={20} width={2.2} />Quando è il momento di chiamarci</h2>
+            <ul>{d.quandoChiamare.map((s) => <li>{s}</li>)}</ul>
+            <span class="when__btns"><a class="btn btn--red btn--sm" href={telLink}><Icon name="phone" />Chiama {SITE.phone}</a><a class="btn btn--wa btn--sm" href={waLink(wa)}><Icon name="wa" />Scrivici su WhatsApp</a></span>
+          </section>
+
+          <div class="prose pb__prose"><Content /></div>
+        </div>
+        <aside class="pb__side"><SideCta servizio={d.servizio} waText={wa} titolo="Non vuoi più pensarci?" /></aside>
+      </div>
+    </div>
+  </article>
+
+  {d.faq.length > 0 && <Faq items={d.faq}>Domande <span class="red">frequenti</span></Faq>}
+
+  <section class="section">
+    <div class="wrap">
+      <div class="b-head"><span class="kicker">Problemi simili</span><h2 class="h h2">Potrebbe servirti <span class="red">anche questo</span></h2></div>
+      <div class="rel">{simili.map((p) => <PostCard href={`/problemi-noti/${p.id}`} kicker={p.data.area} badge={URGENZA[p.data.urgenza]} title={p.data.title} description={p.data.description} />)}</div>
+      <a class="b-more" href="/problemi-noti">Tutti i problemi noti →</a>
+    </div>
+  </section>
+
+  <Cta lead={`${SERVIZI[d.servizio].frase} Così questo problema non devi più risolverlo tu.`} waText={wa}>Il problema è risolto? <span style="color:#ff6b6b">Evitiamo che torni.</span></Cta>
+</Base>
+
+<style>
+  .pb { padding-block: clamp(1.5rem, 3vw, 2.5rem); }
+  .pb__h1 { max-width: 52rem; font-size: clamp(2rem, 4vw, 3.2rem); }
+  .pb__meta { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem 1.2rem; margin-top: 1.2rem; color: var(--muted); font-size: 0.95rem; }
+  .pb__meta strong { color: var(--ink); }
+  .tag { padding: 0.3rem 0.75rem; border-radius: 999px; font-weight: 800; font-size: 0.85rem; }
+  .tag--ok { background: #e6f8ef; color: #0b7a47; } .tag--mid { background: #fff4e0; color: #9a5b00; } .tag--hi { background: #fdecee; color: var(--red); }
+  .pb__sec { padding-top: clamp(2rem, 4vw, 3rem); }
+  .pb__grid { display: grid; grid-template-columns: minmax(0, 1fr) 20rem; gap: clamp(2rem, 5vw, 4.5rem); align-items: start; }
+  .pb__main { display: grid; gap: 2.2rem; max-width: 46rem; }
+  .pb__side { position: sticky; top: 6.5rem; }
+  .pb__h2 { font-size: clamp(1.6rem, 3vw, 2.2rem); }
+  .stop { display: grid; gap: 0.9rem; padding: 1.2rem 1.4rem; border-radius: 16px; background: var(--ink); color: #fff; border-left: 6px solid var(--red); }
+  .stop span, .when__btns { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+  .box { padding: 1.4rem 1.5rem; border-radius: 18px; background: var(--paper); border: 1px solid var(--line); }
+  .box__h { display: flex; align-items: center; gap: 0.5rem; font-size: 1.15rem; }
+  .sint { list-style: none; margin: 0.8rem 0 0; padding: 0; display: grid; gap: 0.5rem; }
+  .sint li { display: flex; gap: 0.6rem; align-items: flex-start; font-weight: 600; }
+  .sint :global(svg) { flex: none; margin-top: 0.3rem; color: #fff; background: var(--grad); border-radius: 50%; padding: 2px; width: 19px; height: 19px; }
+  .steps { list-style: none; margin: 1.2rem 0 0; padding: 0; display: grid; gap: 0.8rem; counter-reset: s; }
+  .steps li { display: flex; gap: 1rem; padding: 1.1rem 1.2rem; border-radius: 16px; border: 1px solid var(--line); background: #fff; scroll-margin-top: 6rem; }
+  .steps__n { display: grid; place-items: center; width: 2.4rem; height: 2.4rem; border-radius: 50%; background: var(--grad); color: #fff; font-weight: 800; flex: none; box-shadow: 0 8px 18px rgba(227, 6, 19, 0.3); }
+  .steps h3 { font-size: 1.1rem; }
+  .steps p { margin-top: 0.25rem; color: var(--muted); }
+  .when { padding: 1.4rem 1.5rem; border-radius: 18px; background: #fff5f5; border: 1px solid #ffd4d4; }
+  .when .box__h :global(svg) { color: var(--red); }
+  .when ul { margin: 0.8rem 0 1.1rem; padding-left: 1.2rem; display: grid; gap: 0.4rem; font-weight: 600; }
+  .when li::marker { color: var(--red); }
+  .pb__prose:empty { display: none; }
+  .rel { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-top: 2rem; }
+  @media (max-width: 1000px) { .pb__grid { grid-template-columns: 1fr; } .pb__side { position: static; } .rel { grid-template-columns: 1fr; } }
+</style>

@@ -1,0 +1,54 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import IndexHero from '../../components/kb/IndexHero.astro';
+import Icon from '../../components/Icon.astro';
+import Cta from '../../components/blocks/Cta.astro';
+import GoogleReviews from '../../components/blocks/GoogleReviews.astro';
+import { SEDI } from '../../data/site';
+import { crumbsLd } from '../../data/kb';
+
+const all = (await getCollection('citta')).sort((a, b) => a.data.ordine - b.data.ordine);
+const ld = [crumbsLd([{ name: 'Home', path: '' }, { name: 'Assistenza informatica', path: '/assistenza-informatica' }])];
+---
+<Base title="Assistenza informatica aziende: Varese, Milano, Lecco | G8A" description="Assistenza informatica per aziende e studi nelle province di Varese, Milano e Lecco: sedi a Gallarate, Busto Arsizio, Bollate, Jerago con Orago, Lecco e Solbiate Arno." jsonLd={ld}>
+  <IndexHero crumb="Assistenza informatica" kicker="Dove lavoriamo" lead={`Sei sedi tra le province di Varese, Milano e Lecco. Scegli la tua zona: ti diciamo chi ti segue e quanto siamo vicini.`}>
+    Assistenza informatica <span class="red">vicino alla tua azienda</span>
+  </IndexHero>
+  <section class="section">
+    <div class="wrap zone">
+      {all.map((c) => (
+        <a class="zone__c glow" href={`/assistenza-informatica/${c.id}`} data-reveal>
+          <span class="zone__k"><Icon name="pin" size={16} width={2.4} />{c.data.provincia}</span>
+          <h2 class="zone__t">{c.data.city}</h2>
+          <p>{c.data.presenza}</p>
+          <p class="zone__n">Anche {c.data.comuni.slice(0, 4).join(', ')}</p>
+          <span class="zone__go">Assistenza a {c.data.city} →</span>
+        </a>
+      ))}
+    </div>
+    <div class="wrap sedi">
+      <p class="sedi__h">Le nostre sedi</p>
+      <ul>{SEDI.map((s) => <li><strong>{s.city}</strong>{s.address}, {s.cap} ({s.province}){s.operativa && ' · sede tecnica'}</li>)}</ul>
+    </div>
+  </section>
+  <GoogleReviews paper show={3} />
+  <Cta lead="Non trovi il tuo comune? Da remoto seguiamo aziende in tutta Italia, e in Lombardia arriviamo anche in ufficio. Chiedici." waText="Ciao, vorrei sapere se seguite aziende nella mia zona.">La tua zona non c'è? <span style="color:#ff6b6b">Chiedici.</span></Cta>
+</Base>
+
+<style>
+  .zone { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+  .zone__c { display: flex; flex-direction: column; gap: 0.5rem; padding: 1.6rem; border-radius: 18px; background: #fff; border: 1px solid var(--line); text-decoration: none; color: inherit; }
+  .zone__k { display: flex; align-items: center; gap: 0.4rem; font-size: 0.75rem; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; color: var(--red); }
+  .zone__t { font-stretch: 85%; font-variation-settings: 'wdth' 85; text-transform: uppercase; font-weight: 800; font-size: 1.8rem; line-height: 1; }
+  .zone__c p { color: var(--muted); }
+  .zone__n { font-size: 0.9rem; }
+  .zone__go { margin-top: auto; padding-top: 0.5rem; font-weight: 800; color: var(--red); }
+  .sedi { margin-top: 2.5rem; padding: 1.5rem; border-radius: 18px; background: var(--paper); }
+  .sedi__h { font-weight: 800; font-size: 0.78rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
+  .sedi ul { list-style: none; margin: 0.8rem 0 0; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.8rem 1.5rem; }
+  .sedi li { display: grid; font-size: 0.95rem; color: var(--muted); }
+  .sedi strong { color: var(--ink); }
+  @media (max-width: 900px) { .zone, .sedi ul { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 600px) { .zone, .sedi ul { grid-template-columns: 1fr; } }
+</style>

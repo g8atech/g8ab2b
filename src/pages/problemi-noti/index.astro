@@ -1,0 +1,88 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import IndexHero from '../../components/kb/IndexHero.astro';
+import PostCard from '../../components/kb/PostCard.astro';
+import Cta from '../../components/blocks/Cta.astro';
+import Icon from '../../components/Icon.astro';
+import { URGENZA, crumbsLd } from '../../data/kb';
+import { SITE, waLink, telLink } from '../../data/site';
+
+const items = (await getCollection('problemi')).sort((a, b) => a.data.title.localeCompare(b.data.title, 'it'));
+const aree = [...new Set(items.map((p) => p.data.area))];
+const desc = 'PC lento, stampante offline, email che non arrivano, internet che va e viene: per ogni problema cosa provare da soli in pochi minuti e quando chiamare un tecnico.';
+const ld = [
+  crumbsLd([{ name: 'Home', path: '' }, { name: 'Problemi noti', path: '/problemi-noti' }]),
+  { '@context': 'https://schema.org', '@type': 'CollectionPage', name: 'Problemi informatici noti e soluzioni', url: `${SITE.url}/problemi-noti`,
+    hasPart: items.map((p) => ({ '@type': 'TechArticle', headline: p.data.title, url: `${SITE.url}/problemi-noti/${p.id}` })) },
+];
+---
+<Base title="Problemi informatici comuni: cosa fare subito | G8A Technology" description={desc} jsonLd={ld}>
+  <IndexHero crumb="Problemi noti" kicker="Problemi noti e soluzioni" lead="I problemi che vediamo ogni giorno negli uffici, spiegati in modo semplice: cosa provare da soli in pochi minuti, e quando è il momento di chiamarci.">
+    Qualcosa non va? <span class="red">Partiamo da qui.</span>
+    <div slot="after" class="srch">
+      <label class="srch__f"><Icon name="search" size={20} width={2.4} /><span class="visually-hidden">Cerca un problema</span><input type="search" placeholder="Scrivi il problema, es. stampante, lento, email…" data-q autocomplete="off" /></label>
+      <div class="flt" role="group" aria-label="Filtra per area">
+        <button type="button" aria-pressed="true" data-f="">Tutti</button>
+        {aree.map((a) => <button type="button" aria-pressed="false" data-f={a}>{a}</button>)}
+      </div>
+    </div>
+  </IndexHero>
+
+  <section class="section">
+    <div class="wrap">
+      <div class="urg" data-reveal>
+        <span class="urg__ic"><Icon name="alert" size={22} width={2.2} /></span>
+        <p><strong>Pensi di aver subito un attacco, o i file hanno nomi strani e non si aprono?</strong> Non provare da solo: scollega il PC dalla rete e chiamaci subito.</p>
+        <span class="urg__btns"><a class="btn btn--red btn--sm" href={telLink}><Icon name="phone" />{SITE.phone}</a><a class="btn btn--wa btn--sm" href={waLink('Urgente: penso che un nostro computer sia stato attaccato.')}><Icon name="wa" />WhatsApp</a></span>
+      </div>
+      <div class="grid" data-list>
+        {items.map((p) => (
+          <div data-cat={p.data.area} data-txt={`${p.data.title} ${p.data.description} ${p.data.sintomi.join(' ')}`.toLowerCase()}>
+            <PostCard href={`/problemi-noti/${p.id}`} kicker={p.data.area} badge={URGENZA[p.data.urgenza]} title={p.data.title} description={p.data.description} meta={`Da provare: ${p.data.tempo}`} />
+          </div>
+        ))}
+      </div>
+      <p class="none" hidden data-none>Nessun problema trovato con queste parole. <a href={waLink('Ciao, ho un problema che non trovo sul sito:')}>Scrivici su WhatsApp</a> e te lo diciamo noi.</p>
+    </div>
+  </section>
+
+  <Cta lead="Con il Noleggio Assistito e il monitoraggio RMM molti di questi problemi li vediamo noi prima di te, e li risolviamo da remoto." waText="Ciao, ho un problema al computer in ufficio e vorrei parlare con un tecnico.">Stanco di fare il tecnico? <span style="color:#ff6b6b">Lascia fare a noi.</span></Cta>
+</Base>
+
+<script>
+  const q = document.querySelector<HTMLInputElement>('[data-q]')!;
+  const btns = [...document.querySelectorAll<HTMLButtonElement>('.flt button')];
+  const rows = [...document.querySelectorAll<HTMLElement>('[data-list] > [data-cat]')];
+  const none = document.querySelector<HTMLElement>('[data-none]')!;
+  let area = '';
+  const upd = () => {
+    const words = q.value.toLowerCase().trim().split(/\s+/).filter(Boolean);
+    let n = 0;
+    rows.forEach((r) => { const ok = (!area || r.dataset.cat === area) && words.every((w) => r.dataset.txt!.includes(w)); r.hidden = !ok; if (ok) n++; });
+    none.hidden = n > 0;
+  };
+  q.addEventListener('input', upd);
+  btns.forEach((b) => b.addEventListener('click', () => { area = b.dataset.f!; btns.forEach((x) => x.setAttribute('aria-pressed', String(x === b))); upd(); }));
+</script>
+
+<style>
+  .srch { margin-top: 1.6rem; display: grid; gap: 1rem; max-width: 46rem; }
+  .srch__f { display: flex; align-items: center; gap: 0.7rem; padding: 0 1.1rem; min-height: 3.6rem; border-radius: 14px; background: #fff; border: 2px solid var(--ink); box-shadow: 0 14px 30px rgba(11, 11, 13, 0.08); }
+  .srch__f :global(svg) { color: var(--red); flex: none; }
+  .srch__f input { flex: 1; min-width: 0; border: 0; outline: 0; background: none; font: inherit; font-size: 1.08rem; }
+  .flt { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+  .flt button { padding: 0.55rem 1rem; border-radius: 999px; border: 1px solid var(--line); background: #fff; font: inherit; font-weight: 700; font-size: 0.92rem; color: var(--ink); cursor: pointer; }
+  .flt button:hover { border-color: var(--red); color: var(--red); }
+  .flt button[aria-pressed='true'] { background: var(--ink); border-color: var(--ink); color: #fff; }
+  .urg { display: flex; flex-wrap: wrap; align-items: center; gap: 0.8rem 1.2rem; margin-bottom: 1.6rem; padding: 1.1rem 1.3rem; border-radius: 16px; background: #fff5f5; border: 1px solid #ffd4d4; }
+  .urg p { flex: 1 1 22rem; }
+  .urg__ic { display: grid; place-items: center; width: 2.6rem; height: 2.6rem; border-radius: 50%; background: var(--grad); color: #fff; flex: none; }
+  .urg__btns { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+  .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+  .grid > div { display: grid; }
+  .none { margin-top: 1rem; padding: 1.2rem; border-radius: 14px; background: var(--paper); }
+  .none a { color: var(--red); font-weight: 800; }
+  @media (max-width: 900px) { .grid { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 600px) { .grid { grid-template-columns: 1fr; } }
+</style>

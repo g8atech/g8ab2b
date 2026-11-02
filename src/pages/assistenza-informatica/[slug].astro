@@ -1,0 +1,145 @@
+---
+import { getCollection, render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import Icon from '../../components/Icon.astro';
+import Includes from '../../components/blocks/Includes.astro';
+import Cases from '../../components/blocks/Cases.astro';
+import Quotes from '../../components/blocks/Quotes.astro';
+import GoogleReviews from '../../components/blocks/GoogleReviews.astro';
+import Guarantee from '../../components/blocks/Guarantee.astro';
+import PressBar from '../../components/blocks/PressBar.astro';
+import Faq from '../../components/blocks/Faq.astro';
+import Cta from '../../components/blocks/Cta.astro';
+import { SITE, SEDI, FAQ_BASE, faqLd, waLink, telLink } from '../../data/site';
+import { crumbsLd } from '../../data/kb';
+import '../../styles/prose.css';
+
+export async function getStaticPaths() {
+  const all = (await getCollection('citta')).sort((a, b) => a.data.ordine - b.data.ordine);
+  return all.map((c) => ({ params: { slug: c.id }, props: { c, all } }));
+}
+const { c, all } = Astro.props;
+const { Content } = await render(c);
+const d = c.data;
+const sede = SEDI.find((s) => s.city === d.sede)!;
+const path = `/assistenza-informatica/${c.id}`;
+const wa = `Ciao, vi scrivo dal sito: ho un'azienda a ${d.city} e vorrei informazioni sull'assistenza informatica.`;
+const mappa = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`G8A ${sede.address} ${sede.cap} ${sede.city}`)}`;
+const faq = [...d.faq, ...FAQ_BASE.slice(0, 2)];
+const guide = [
+  { href: '/blog/msp-cos-e-perche-conviene-pmi', t: "MSP: cos'è e perché conviene a una PMI" },
+  { href: '/blog/backup-regola-3-2-1', t: 'Backup aziendale: la regola 3-2-1' },
+  { href: '/blog/quanto-costa-un-fermo-informatico', t: 'Quanto costa un fermo informatico' },
+  { href: '/problemi-noti/pc-lento', t: 'Il computer è lento: cosa fare' },
+  { href: '/problemi-noti/stampante-offline', t: 'La stampante risulta offline' },
+  { href: '/problemi-noti/email-sospetta-phishing', t: "Ho cliccato su un'email sospetta" },
+];
+const ld: object[] = [
+  {
+    '@context': 'https://schema.org', '@type': 'Service', serviceType: 'Assistenza informatica per aziende',
+    name: `Assistenza informatica per aziende a ${d.city}`, url: `${SITE.url}${path}`, description: d.lead,
+    provider: { '@id': `${SITE.url}/#organization` },
+    areaServed: [{ '@type': 'City', name: d.city }, ...d.comuni.map((n) => ({ '@type': 'City', name: n }))],
+  },
+  crumbsLd([{ name: 'Home', path: '' }, { name: 'Assistenza informatica', path: '/assistenza-informatica' }, { name: d.city, path }]),
+  faqLd(faq),
+];
+---
+<Base title={`Assistenza informatica aziende a ${d.city} | G8A Technology`} description={`Assistenza informatica per aziende e studi a ${d.city}: computer, stampanti, backup e sicurezza in un canone, con tecnici in zona e nessun vincolo.`} jsonLd={ld}>
+  <section class="b-hero ch">
+    <div class="wrap b-hero__row">
+      <div class="b-hero__copy">
+        <ol class="b-crumbs" aria-label="Percorso"><li><a href="/">Home</a></li><li><a href="/assistenza-informatica">Assistenza informatica</a></li><li aria-current="page">{d.city}</li></ol>
+        <span class="kicker">{d.city} e dintorni</span>
+        <h1 class="h b-hero__h1">Assistenza informatica per aziende <span class="red">a {d.city}</span></h1>
+        <p class="lead b-hero__lead">{d.lead}</p>
+        <div class="b-actions">
+          <a class="btn btn--red" href={telLink}><Icon name="phone" />Chiama {SITE.phone}</a>
+          <a class="btn btn--wa" href={waLink(wa)}><Icon name="wa" />Scrivici su WhatsApp</a>
+        </div>
+        <p class="b-hero__note"><span><Icon name="check" size={16} width={3} />Tecnici in zona</span><span><Icon name="check" size={16} width={3} />Nessun vincolo</span><span><Icon name="check" size={16} width={3} />Garanzia 30 giorni</span></p>
+      </div>
+      <div class="sede glow" data-reveal>
+        <p class="sede__k"><Icon name="pin" size={16} width={2.4} />La sede più vicina</p>
+        <p class="sede__t">G8A {sede.city}{sede.operativa ? ', sede tecnica' : ''}</p>
+        <p class="sede__a">{sede.address}, {sede.cap} {sede.city} ({sede.province})</p>
+        <p class="sede__p">{d.presenza}</p>
+        <a class="sede__map" href={mappa} rel="noopener">Apri su Google Maps →</a>
+        <p class="sede__k sede__k--2">Seguiamo aziende anche a</p>
+        <ul class="sede__c">{d.comuni.map((n) => <li>{n}</li>)}</ul>
+      </div>
+      <div class="b-hero__press"><PressBar row label="Ne hanno parlato" /></div>
+    </div>
+  </section>
+
+  <Includes kicker={`Cosa facciamo a ${d.city}`} lead="Tutto in un canone mensile con il Noleggio Assistito, oppure servizio per servizio." cols={3} items={[
+    { icon: 'pc', t: 'Computer e assistenza', d: 'PC configurati da noi, controllati da remoto e sostituiti in caso di guasto.', href: '/noleggio-computer' },
+    { icon: 'printer', t: 'Stampanti e multifunzione', d: 'Con toner e assistenza inclusi: se si ferma, interveniamo noi.', href: '/noleggio-stampanti' },
+    { icon: 'server', t: 'Backup e NAS', d: 'Backup automatici anche fuori sede, controllati ogni giorno.', href: '/noleggio-backup' },
+    { icon: 'activity', t: 'Monitoraggio RMM', d: 'Vediamo i problemi dei tuoi PC prima che fermino il lavoro.', href: '/rmm' },
+    { icon: 'shieldok', t: 'Sicurezza informatica', d: 'Antivirus gestito, aggiornamenti, firewall e protezione dai ransomware.', href: '/rmm', go: 'Come ti proteggiamo' },
+    { icon: 'wifi', t: 'Fibra e centralino', d: 'Con FibraHero G8A è il tuo operatore: linea, telefono e assistenza.', href: 'https://www.fibrahero.it', go: 'fibrahero.it' },
+  ]}>L'informatica della tua azienda, <span class="red">gestita da noi</span></Includes>
+
+  <section class="section section--paper">
+    <div class="wrap loc">
+      <div class="prose" data-reveal><Content /></div>
+      <div class="loc__side" data-reveal style="--d:.1s">
+        <p class="loc__h">Per chi lavoriamo</p>
+        <ul class="loc__s">{d.settori.map((s) => <li><strong>{s.t}</strong><span>{s.d}</span></li>)}</ul>
+      </div>
+    </div>
+  </section>
+
+  <Cases lead="Quando un'azienda si ferma, il tempo di risposta fa la differenza. Ecco tre interventi reali in Lombardia.">Quando c'è un problema, <span class="red">noi ci siamo</span></Cases>
+  <Quotes ids={d.quotes}>Le aziende che seguiamo <span class="red">lo raccontano così</span></Quotes>
+  <GoogleReviews paper show={3} />
+  <Guarantee />
+
+  <section class="section">
+    <div class="wrap two">
+      <div>
+        <span class="kicker">Guide utili</span>
+        <h2 class="h h2" style="margin-top:.8rem">Prima di <span class="red">chiamarci</span></h2>
+        <ul class="lnk">{guide.map((g) => <li><a href={g.href}>{g.t}<span>→</span></a></li>)}</ul>
+      </div>
+      <div>
+        <span class="kicker">Altre zone</span>
+        <h2 class="h h2" style="margin-top:.8rem">Siamo anche <span class="red">qui</span></h2>
+        <ul class="lnk">{all.filter((x) => x.id !== c.id).map((x) => <li><a href={`/assistenza-informatica/${x.id}`}>Assistenza informatica a {x.data.city}<span>→</span></a></li>)}</ul>
+      </div>
+    </div>
+  </section>
+
+  <Faq items={faq}>Assistenza informatica a {d.city}: <span class="red">le risposte</span></Faq>
+  <Cta lead={`Raccontaci com'è il tuo ufficio a ${d.city}: in una telefonata capiamo cosa serve, senza impegno. Se dopo 30 giorni non sei soddisfatto, ti rimborsiamo.`} waText={wa}>Smetti di fare il tecnico. <span style="color:#ff6b6b">Chiamaci.</span></Cta>
+</Base>
+
+<style>
+  .ch .b-hero__row { padding-block: 0.5rem 0; }
+  .sede { display: grid; gap: 0.35rem; padding: 1.6rem; border-radius: 22px; background: var(--ink); color: #fff; box-shadow: 0 30px 70px rgba(11, 11, 13, 0.25); }
+  .sede__k { display: flex; align-items: center; gap: 0.45rem; font-size: 0.78rem; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; color: #ff8a8a; }
+  .sede__k--2 { margin-top: 1rem; color: #a6a9b1; }
+  .sede__t { font-stretch: 85%; font-variation-settings: 'wdth' 85; text-transform: uppercase; font-weight: 800; font-size: 1.6rem; line-height: 1.05; }
+  .sede__a { color: #fff; font-weight: 600; }
+  .sede__p { color: #c3c6cd; font-size: 0.95rem; }
+  .sede__map { color: #ff8a8a; font-weight: 800; text-decoration: none; }
+  .sede__map:hover { color: #fff; }
+  .sede__c { list-style: none; margin: 0.2rem 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 0.4rem; }
+  .sede__c li { padding: 0.3rem 0.7rem; border-radius: 999px; background: #222228; border: 1px solid rgba(255, 255, 255, 0.1); font-size: 0.85rem; }
+  .loc { display: grid; grid-template-columns: minmax(0, 1fr) 22rem; gap: clamp(2rem, 5vw, 4rem); align-items: start; }
+  .loc .prose h2:first-child { margin-top: 0; }
+  .loc__side { position: sticky; top: 6.5rem; padding: 1.5rem; border-radius: 20px; background: #fff; border: 1px solid var(--line); }
+  .loc__h { font-weight: 800; font-size: 0.78rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--red); }
+  .loc__s { list-style: none; margin: 0.8rem 0 0; padding: 0; display: grid; gap: 0.9rem; }
+  .loc__s li { display: grid; gap: 0.15rem; padding-top: 0.9rem; border-top: 1px solid var(--line); }
+  .loc__s li:first-child { padding-top: 0; border-top: 0; }
+  .loc__s span { color: var(--muted); font-size: 0.95rem; }
+  .two { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(2rem, 5vw, 4rem); }
+  .lnk { list-style: none; margin: 1.4rem 0 0; padding: 0; }
+  .lnk a { display: flex; justify-content: space-between; gap: 1rem; padding: 0.95rem 0; border-bottom: 1px solid var(--line); font-weight: 700; text-decoration: none; color: var(--ink); }
+  .lnk a span { color: var(--red); }
+  .lnk a:hover { color: var(--red); }
+  @media (max-width: 900px) { .ch .sede { order: 2; } .ch .b-hero__press { order: 3; } }
+  @media (max-width: 900px) { .loc, .two { grid-template-columns: 1fr; } .loc__side { position: static; } }
+</style>

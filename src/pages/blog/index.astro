@@ -1,0 +1,63 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import IndexHero from '../../components/kb/IndexHero.astro';
+import PostCard from '../../components/kb/PostCard.astro';
+import Cta from '../../components/blocks/Cta.astro';
+import { minuti, crumbsLd } from '../../data/kb';
+import { SITE } from '../../data/site';
+
+const posts = (await getCollection('blog', ({ data }) => !data.draft)).sort((a, b) => +b.data.date - +a.data.date);
+const cats = [...new Set(posts.map((p) => p.data.categoria))];
+const desc = "Guide pratiche per titolari di PMI e studi: backup, sicurezza, noleggio computer, costi dell'informatica. Scritte dai tecnici G8A, senza gergo.";
+const ld = [
+  crumbsLd([{ name: 'Home', path: '' }, { name: 'Blog', path: '/blog' }]),
+  { '@context': 'https://schema.org', '@type': 'Blog', name: 'Blog di G8A Technology', url: `${SITE.url}/blog`, publisher: { '@id': `${SITE.url}/#organization` },
+    blogPost: posts.map((p) => ({ '@type': 'BlogPosting', headline: p.data.title, url: `${SITE.url}/blog/${p.id}`, datePublished: p.data.date.toISOString() })) },
+];
+---
+<Base title="Blog: guide IT per PMI e studi | G8A Technology" description={desc} jsonLd={ld}>
+  <IndexHero crumb="Blog" kicker="Il blog di G8A" lead="Spiegazioni chiare per chi guida un'azienda e non vuole fare il tecnico: cosa conviene, cosa rischi, cosa fare.">
+    Informatica per chi ha <span class="red">un'azienda da mandare avanti</span>
+    <div slot="after" class="flt" role="group" aria-label="Filtra per argomento">
+      <button type="button" aria-pressed="true" data-f="">Tutti</button>
+      {cats.map((c) => <button type="button" aria-pressed="false" data-f={c}>{c}</button>)}
+    </div>
+  </IndexHero>
+
+  <section class="section">
+    <div class="wrap grid" data-list>
+      {posts.map((p) => (
+        <div data-cat={p.data.categoria}>
+          <PostCard href={`/blog/${p.id}`} kicker={p.data.categoria} title={p.data.title} description={p.data.description} date={p.data.date} meta={`${minuti(p.body)} min di lettura`} />
+        </div>
+      ))}
+    </div>
+    <div class="wrap kbl">
+      <p><strong>Hai un problema adesso?</strong> Nei <a href="/problemi-noti">problemi noti</a> trovi cosa provare subito e quando conviene chiamarci.</p>
+    </div>
+  </section>
+
+  <Cta lead="Se preferisci parlarne con una persona, ti rispondiamo noi. Ti diciamo cosa serve davvero alla tua azienda, senza impegno." waText="Ciao, ho letto il vostro blog e vorrei un consiglio per la mia azienda.">Hai una domanda? <span style="color:#ff6b6b">Chiedila a un tecnico.</span></Cta>
+</Base>
+
+<script>
+  const btns = [...document.querySelectorAll<HTMLButtonElement>('.flt button')];
+  btns.forEach((b) => b.addEventListener('click', () => {
+    btns.forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+    document.querySelectorAll<HTMLElement>('[data-list] > [data-cat]').forEach((el) => { el.hidden = !!b.dataset.f && el.dataset.cat !== b.dataset.f; });
+  }));
+</script>
+
+<style>
+  .flt { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1.6rem; }
+  .flt button { padding: 0.55rem 1rem; border-radius: 999px; border: 1px solid var(--line); background: #fff; font: inherit; font-weight: 700; font-size: 0.92rem; color: var(--ink); cursor: pointer; }
+  .flt button:hover { border-color: var(--red); color: var(--red); }
+  .flt button[aria-pressed='true'] { background: var(--ink); border-color: var(--ink); color: #fff; }
+  .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+  .grid > div { display: grid; }
+  .kbl { margin-top: 2rem; padding: 1.1rem 1.3rem; border-radius: 14px; background: var(--paper); border: 1px solid var(--line); }
+  .kbl a { color: var(--red); font-weight: 800; }
+  @media (max-width: 900px) { .grid { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 600px) { .grid { grid-template-columns: 1fr; } }
+</style>

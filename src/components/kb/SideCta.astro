@@ -1,0 +1,27 @@
+---
+// Riquadro laterale fisso negli articoli: chiamata e WhatsApp, con il servizio collegato.
+import Icon from '../Icon.astro';
+import { SITE, waLink, telLink } from '../../data/site';
+import { SERVIZI } from '../../data/kb';
+interface Props { servizio: string; waText: string; titolo?: string }
+const { servizio, waText, titolo = 'Preferisci che ci pensiamo noi?' } = Astro.props;
+const s = SERVIZI[servizio];
+---
+<div class="scta">
+  <p class="scta__k"><span class="live"></span>Tecnici G8A disponibili</p>
+  <p class="scta__t">{titolo}</p>
+  <p class="scta__d">{s.frase}</p>
+  <a class="btn btn--red btn--sm" href={telLink}><Icon name="phone" />Chiama {SITE.phone}</a>
+  <a class="btn btn--wa btn--sm" href={waLink(waText)}><Icon name="wa" />Scrivici su WhatsApp</a>
+  <a class="scta__more" href={servizio === '/' ? '/#include' : servizio}>Scopri {s.nome} →</a>
+</div>
+
+<style>
+  .scta { display: grid; gap: 0.6rem; padding: 1.4rem; border-radius: 20px; background: var(--ink); color: #fff; box-shadow: 0 24px 50px rgba(11, 11, 13, 0.2); }
+  .scta__k { display: flex; align-items: center; gap: 0.5rem; font-size: 0.78rem; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; color: #9be3bf; }
+  .scta__t { font-stretch: 85%; font-variation-settings: 'wdth' 85; text-transform: uppercase; font-weight: 800; font-size: 1.35rem; line-height: 1.05; }
+  .scta__d { color: #c3c6cd; font-size: 0.95rem; margin-bottom: 0.3rem; }
+  .scta .btn { width: 100%; }
+  .scta__more { margin-top: 0.2rem; color: #ff8a8a; font-weight: 800; text-decoration: none; font-size: 0.95rem; }
+  .scta__more:hover { color: #fff; }
+</style>

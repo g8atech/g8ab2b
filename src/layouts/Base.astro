@@ -9,9 +9,11 @@ import ConsentBanner from '../components/ConsentBanner.astro';
 import logoWhite from '../assets/logo-g8a-bianco.png';
 import logoColor from '../assets/logo-g8a.png';
 import { SITE, SEDI, GRUPPO, waLink, telLink } from '../data/site';
+import { getCollection } from 'astro:content';
+const ZONE = (await getCollection('citta')).sort((a, b) => a.data.ordine - b.data.ordine);
 
-interface Props { title: string; description: string; jsonLd?: object[]; mbar?: { tel: string; wa: string } }
-const { title, description, jsonLd = [], mbar } = Astro.props;
+interface Props { title: string; description: string; jsonLd?: object[]; mbar?: { tel: string; wa: string }; ogType?: 'website' | 'article' }
+const { title, description, jsonLd = [], mbar, ogType = 'website' } = Astro.props;
 // Il Noleggio Assistito raccoglie i servizi in un menu a tendina, per tenere la barra corta.
 const NOLEGGIO = [
   { href: '/noleggio-computer', t: 'Computer', d: 'PC, All in One e notebook G8A', icon: 'pc' },
@@ -19,13 +21,19 @@ const NOLEGGIO = [
   { href: '/noleggio-backup', t: 'Backup e NAS', d: 'I dati al sicuro, anche fuori sede', icon: 'server' },
   { href: '/rmm', t: 'Monitoraggio RMM', d: 'Controlliamo i tuoi PC di continuo', icon: 'activity' },
 ];
+// Guide e contenuti: il secondo menu a tendina.
+const RISORSE = [
+  { href: '/problemi-noti', t: 'Problemi noti', d: 'Cosa fare subito, e quando chiamarci', icon: 'alert' },
+  { href: '/blog', t: 'Blog', d: "Guide per chi guida un'azienda", icon: 'book' },
+  { href: '/testimonianze-casistudio', t: 'Casi studio', d: 'Interventi reali e testimonianze', icon: 'shieldok' },
+];
 const NAV = [
-  { href: '/testimonianze-casistudio', t: 'Casi studio' },
   { href: '/store', t: 'Negozi' },
   { href: '/assistenza-business', t: 'Contatti' },
 ];
 const here = Astro.url.pathname.replace(/(\.html|\/)$/, '');
 const inNoleggio = NOLEGGIO.some((n) => n.href === here);
+const inRisorse = RISORSE.some((n) => here === n.href || here.startsWith(n.href + '/'));
 const cleanPath = Astro.url.pathname.replace(/(index)?\.html$/, '').replace(/\/$/, '') || '/';
 const canonical = new URL(cleanPath, SITE.url).href;
 const fullTitle = title.includes(SITE.name) ? title : `${title} | ${SITE.name}`;
@@ -80,7 +88,7 @@ const bing = import.meta.env.PUBLIC_BING_VERIFICATION;
     {gtm && <script is:inline define:vars={{ gtm }}>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer',gtm);</script>}
     <link rel="icon" href="/logo-icon.png" type="image/png" />
     <link rel="apple-touch-icon" href="/logo-icon.png" />
-    <meta property="og:type" content="website" />
+    <meta property="og:type" content={ogType} />
     <meta property="og:locale" content="it_IT" />
     <meta property="og:site_name" content={SITE.name} />
     <meta property="og:title" content={fullTitle} />
@@ -120,6 +128,17 @@ const bing = import.meta.env.PUBLIC_BING_VERIFICATION;
               ))}
             </div>
           </div>
+          <div class="dd" data-dd>
+            <button class="dd__btn" type="button" aria-expanded="false" aria-controls="dd-risorse" data-current={inRisorse ? '' : undefined}>Guide<svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4l4 4 4-4" fill="none" stroke="currentColor" stroke-width="2" /></svg></button>
+            <div class="dd__panel dd__panel--sm" id="dd-risorse">
+              {RISORSE.map((n) => (
+                <a class="dd__item" href={n.href} aria-current={here === n.href ? 'page' : undefined}>
+                  <span class="dd__ic"><Icon name={n.icon} size={20} stroke="#fff" width={2} /></span>
+                  <span><strong>{n.t}</strong><small>{n.d}</small></span>
+                </a>
+              ))}
+            </div>
+          </div>
           {NAV.map((n) => <a href={n.href} aria-current={here === n.href ? 'page' : undefined}>{n.t}</a>)}
           <a class="hdr__only-m" href={SITE.rmmLogin}>Login G8A RMM</a>
           <a class="hdr__only-m" href={SITE.ticket}>Apri un ticket</a>
@@ -151,11 +170,18 @@ const bing = import.meta.env.PUBLIC_BING_VERIFICATION;
             <li><a href="/rmm">Monitoraggio RMM</a></li>
             <li><a href="/testimonianze-casistudio">Casi studio</a></li>
           </ul>
+          <p class="ftr__h" style="margin-top:1.2rem">Guide</p>
+          <ul>
+            <li><a href="/problemi-noti">Problemi noti</a></li>
+            <li><a href="/blog">Blog</a></li>
+          </ul>
           <p class="ftr__h" style="margin-top:1.2rem">Negozi</p>
           <ul>{SEDI.filter((s) => s.negozio).map((s) => <li><a href={`/store/${s.negozio!.slug}`}>{s.city}</a></li>)}</ul>
         </div>
         <div>
-          <p class="ftr__h">Il gruppo</p>
+          <p class="ftr__h">Assistenza informatica</p>
+          <ul>{ZONE.map((z) => <li><a href={`/assistenza-informatica/${z.id}`}>{z.data.city}</a></li>)}</ul>
+          <p class="ftr__h" style="margin-top:1.2rem">Il gruppo</p>
           <ul>{GRUPPO.map((g) => <li><a href={g.url}>{g.name}</a></li>)}</ul>
         </div>
         <div>
@@ -285,6 +311,7 @@ const bing = import.meta.env.PUBLIC_BING_VERIFICATION;
   .dd__btn svg { transition: transform 0.2s; }
   .dd__btn:hover { color: var(--red); }
   .dd__panel { position: absolute; top: calc(100% + 0.9rem); left: 50%; width: 25rem; display: grid; gap: 0.25rem; padding: 0.6rem; border-radius: 18px; background: #fff; border: 1px solid var(--line); box-shadow: 0 30px 60px rgba(11, 11, 13, 0.18); opacity: 0; visibility: hidden; transform: translate(-50%, 8px); transition: opacity 0.18s, transform 0.18s, visibility 0.18s; }
+  .dd__panel--sm { width: 21rem; }
   .dd__panel::before { content: ''; position: absolute; left: 0; right: 0; top: -1rem; height: 1rem; }
   .dd.is-open .dd__panel { opacity: 1; visibility: visible; transform: translate(-50%, 0); }
   .dd.is-open .dd__btn svg { transform: rotate(180deg); }
