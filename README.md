@@ -73,13 +73,13 @@ Ogni clic su telefono, WhatsApp o email invia a GTM l'evento `contatto` con `can
 3. **Microsoft Clarity**: creare il progetto per `www.g8a.it`, mettere l'ID in `PUBLIC_CLARITY_ID`, e in Clarity → Impostazioni collegare Google Analytics. Il mascheramento resta "Bilanciato".
 4. **GA4**: nella proprietà impostare la conservazione dei dati a 14 mesi e segnare l'evento `contatto` come evento chiave.
 
-### Negozi (g8astore dentro g8a.it)
+### Negozi (sito separato: www.g8astore.it)
 
-- Le pagine dei negozi sono il progetto **g8atech/g8astore**, pubblicato su Vercel come `g8astore.vercel.app` e servito su **www.g8a.it/store** con una rewrite in `vercel.json` (nessun dominio g8astore.it).
-- I vecchi indirizzi `/store-gallarate`, `/store-busto-arsizio`, `/store-jerago-con-orago`, `/store-lecco` (circa il 70% dei clic da Google) vanno con 301 su `/store/<città>`.
-- Sottodomini delle città: la home va al negozio su `/store/<città>`, le pagine dei servizi al servizio su g8a.it. Vanno aggiunti come domini dello stesso progetto su Vercel (con e senza www).
-- `ftp.g8a.it` ed `editor.g8a.it` vanno dismessi: invece di cancellare i record DNS, puntarli a Vercel e aggiungerli al progetto, così le loro pagine finiscono con un 301 sul sito nuovo.
-- Se l'indirizzo Vercel di g8astore cambia, aggiornarlo nelle due rewrite di `vercel.json`.
+- I negozi sono il progetto **g8atech/g8astore**, pubblicato su **www.g8astore.it**. g8a.it resta solo B2B e linka i negozi con `storeUrl()` in `src/data/site.ts`.
+- I vecchi indirizzi negozio di g8a.it (`/store-gallarate`, `/store-busto-arsizio`, `/store-jerago-con-orago`, `/store-lecco`, `/store-bollate`, circa il 70% dei clic da Google) vanno con 301 su `https://www.g8astore.it/<città>/`. Anche `/negozio`, `/negozi`, `/store` e `/store/*` vanno su g8astore.it.
+- Sottodomini delle città di g8a.it (con e senza www): le pagine di noleggio e RMM vanno al servizio su g8a.it, tutto il resto al negozio su g8astore.it. Vanno aggiunti come domini di questo progetto su Vercel.
+- `ftp.g8a.it` ed `editor.g8a.it` vanno dismessi: invece di cancellare i record DNS, puntarli a Vercel e aggiungerli a questo progetto, così le loro pagine finiscono con un 301 sul sito nuovo.
+- Le regole per dominio stanno in cima a `vercel.json`, prima di quelle generiche: così ogni vecchio indirizzo arriva a destinazione con un solo redirect.
 
 ### Il giorno del cambio
 
@@ -87,7 +87,7 @@ Ogni clic su telefono, WhatsApp o email invia a GTM l'evento `contatto` con `can
 2. Su Vercel → Settings → Domains aggiungere `www.g8a.it` (principale) e `g8a.it` (reindirizza a www).
 3. Dal registrar del dominio cambiare i DNS indicati da Vercel al posto di quelli di GoHighLevel. Le email non cambiano: non toccare i record MX.
 4. Impostare `PUBLIC_SITE_LIVE=true`, `PUBLIC_GTM_ID` e `PUBLIC_CLARITY_ID`, poi Redeploy. In GTM eliminare i tag del vecchio sito che non servono più.
-5. Sottodomini per città (es. `gallarate.g8a.it`): aggiungerli su Vercel con reindirizzamento 301 a `www.g8a.it` finché non nascono le pagine città.
+5. Sottodomini per città (es. `gallarate.g8a.it`, con e senza www) e `ftp`/`editor`: aggiungerli a questo progetto su Vercel; i 301 sono già in `vercel.json`.
 6. Google Search Console: inviare `https://www.g8a.it/sitemap-index.xml` e controllare le pagine indicizzate nei giorni seguenti.
 7. In GTM verificare che le conversioni di Google Ads arrivino dal nuovo evento `contatto`.
 

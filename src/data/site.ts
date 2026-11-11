@@ -18,7 +18,7 @@ export const SITE = {
   rmmLogin: 'https://g8a.rmmservice.eu/auth/#/login',
 };
 
-// Negozi G8A Store: le pagine sono nel progetto g8astore, servite su www.g8a.it/store/<slug>.
+// Negozi G8A Store: sito a parte (progetto g8astore) su www.g8astore.it/<slug>/.
 export type Negozio = { slug: string; phone: string; phoneIntl: string; whatsapp: string; email: string; zona: string };
 export type Sede = { city: string; address: string; cap: string; province: string; operativa?: boolean; negozio?: Negozio };
 
@@ -51,7 +51,9 @@ export const FAQ = [
 
 export const waLink = (text: string = SITE.whatsappText) =>
   `https://wa.me/${SITE.whatsapp}?text=${encodeURIComponent(text)}`;
-export const storeUrl = (slug?: string) => (slug ? `/store/${slug}` : '/store');
+// I negozi sono un sito a parte: www.g8astore.it
+export const STORE_SITE = 'https://www.g8astore.it';
+export const storeUrl = (slug?: string) => (slug ? `${STORE_SITE}/${slug}/` : `${STORE_SITE}/`);
 export const telLink = `tel:${SITE.phoneIntl}`;
 
 // Domande comuni a tutte le pagine del Noleggio Assistito (dal sito storico).

@@ -2,7 +2,7 @@
 import Base from '../layouts/Base.astro';
 import GoogleReviews from '../components/blocks/GoogleReviews.astro';
 import Icon from '../components/Icon.astro';
-import { SITE, SEDI, waLink, telLink } from '../data/site';
+import { SITE, SEDI, waLink, telLink, storeUrl } from '../data/site';
 const maps = (s: { address: string; cap: string; city: string }) => `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${s.address}, ${s.cap} ${s.city}`)}`;
 const canali = [
   { icon: 'wa', t: 'WhatsApp', d: 'Il modo più rapido: ti risponde una persona del team.', cta: 'Scrivici', href: waLink('Ciao, vi contatto dal sito g8a.it.'), cls: 'btn--wa' },
@@ -40,7 +40,7 @@ const canali = [
       </div>
       <div class="sd">
         {SEDI.map((s, i) => (
-          <a class:list={['sd__card', 'glow', { 'sd__card--hq': s.operativa }]} href={s.negozio ? `/store/${s.negozio.slug}` : maps(s)} data-reveal style={`--d:${(i % 3) * 0.08}s`}>
+          <a class:list={['sd__card', 'glow', { 'sd__card--hq': s.operativa }]} href={s.negozio ? storeUrl(s.negozio.slug) : maps(s)} data-reveal style={`--d:${(i % 3) * 0.08}s`}>
             <span class="sd__kind">{s.operativa ? 'Sede operativa e legale' : 'Punto vendita'}</span>
             <strong>{s.city}</strong>
             <span>{s.address}, {s.cap} {s.city} ({s.province})</span>
