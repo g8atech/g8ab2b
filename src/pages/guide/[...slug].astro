@@ -1,0 +1,123 @@
+---
+// Guide per le aziende scritte con Nina in Brain e firmate dalla direzione (Marketing → Guide).
+// I dati arrivano in src/data/guideNina.ts dal workflow "Guide di Nina" (ogni ora, solo guide firmate).
+// Senza guide non si genera nessuna pagina: niente /guide vuota su Google.
+import Base from '../../layouts/Base.astro';
+import PageHero from '../../components/blocks/PageHero.astro';
+import Faq from '../../components/blocks/Faq.astro';
+import Cta from '../../components/blocks/Cta.astro';
+import { GUIDE_NINA } from '../../data/guideNina';
+import { faqLd } from '../../data/site';
+
+type Sezione = { titolo: string; paragrafi?: string[]; punti?: string[] };
+type Guida = {
+  slug: string; titolo: string; h1: string; descrizione: string; intro: string; in_breve: string[];
+  sezioni: Sezione[]; faq: { d: string; r: string }[]; link: { testo: string; url: string }[];
+  firmato_da: string | null; pubblicata_il: string; aggiornata_il: string;
+};
+
+export function getStaticPaths() {
+  const guide = (GUIDE_NINA as Guida[]).filter((g) => g.slug && g.firmato_da);
+  if (!guide.length) return [];
+  return [{ params: { slug: undefined }, props: { guida: null, guide } }, ...guide.map((g) => ({ params: { slug: g.slug }, props: { guida: g, guide } }))];
+}
+
+const { guida, guide } = Astro.props as { guida: Guida | null; guide: Guida[] };
+const BASE = 'https://www.g8a.it';
+const RUOLI: Record<string, string> = { 'Giuseppe Arrigo': 'co-fondatore di G8A Technology', 'Antonio Arrigo': 'co-fondatore di G8A Technology' };
+const data = (iso: string) => new Intl.DateTimeFormat('it-IT', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'Europe/Rome' }).format(new Date(`${iso}T12:00:00Z`));
+const path = guida ? `/guide/${guida.slug}` : '/guide';
+const wa = guida ? `Ciao, ho letto la guida "${guida.h1}" su g8a.it e vorrei un consiglio per la mia azienda.` : 'Ciao, vi scrivo dal sito g8a.it: vorrei un consiglio per la mia azienda.';
+const crumbsLd = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: `${BASE}/` },
+    { '@type': 'ListItem', position: 2, name: 'Guide', item: `${BASE}/guide` },
+    ...(guida ? [{ '@type': 'ListItem', position: 3, name: guida.h1, item: `${BASE}${path}` }] : []),
+  ],
+};
+const jsonLd = guida
+  ? [
+      {
+        '@context': 'https://schema.org', '@type': 'Article', headline: guida.h1, description: guida.descrizione, inLanguage: 'it-IT',
+        datePublished: guida.pubblicata_il, dateModified: guida.aggiornata_il, mainEntityOfPage: `${BASE}${path}`,
+        author: { '@id': `${BASE}/#organization` }, publisher: { '@id': `${BASE}/#organization` },
+      },
+      {
+        '@context': 'https://schema.org', '@type': 'WebPage', url: `${BASE}${path}`, name: guida.titolo, lastReviewed: guida.aggiornata_il,
+        ...(guida.firmato_da ? { reviewedBy: { '@type': 'Person', name: guida.firmato_da, ...(RUOLI[guida.firmato_da] ? { jobTitle: RUOLI[guida.firmato_da] } : {}) } } : {}),
+      },
+      crumbsLd,
+      ...(guida.faq.length ? [faqLd(guida.faq.map((f) => ({ q: f.d, a: f.r })))] : []),
+    ]
+  : [{ '@context': 'https://schema.org', '@type': 'CollectionPage', name: 'Guide G8A per le aziende', url: `${BASE}/guide`, hasPart: guide.map((g) => ({ '@type': 'Article', headline: g.h1, url: `${BASE}/guide/${g.slug}` })) }, crumbsLd];
+const altre = guida ? guide.filter((g) => g.slug !== guida.slug).slice(0, 4) : guide;
+---
+<Base title={guida ? `${guida.titolo} | G8A Technology` : 'Guide di informatica per le aziende | G8A Technology'}
+  description={guida ? guida.descrizione : 'Guide pratiche di G8A Technology per piccole e medie imprese: backup, sicurezza, reti, PC e stampanti spiegati in modo semplice, con cosa fare in pratica.'}
+  jsonLd={jsonLd}>
+  {guida ? (
+    <PageHero kicker="Guida per le aziende" crumb="Guide" waText={wa} lead={guida.intro} note={["Tecnici interni", "Da remoto e in sede"]}>
+      <Fragment slot="title">{guida.h1}</Fragment>
+    </PageHero>
+  ) : (
+    <PageHero kicker="Guide per le aziende" crumb="Guide" waText={wa} note={["Tecnici interni", "Da remoto e in sede"]} lead="Backup, sicurezza, reti, PC e stampanti spiegati in modo semplice: cosa conviene fare in pratica in un piccolo ufficio o in una PMI.">
+      <Fragment slot="title">Guide di informatica <span class="red">per le aziende</span></Fragment>
+    </PageHero>
+  )}
+
+  {guida && (
+    <section class="section">
+      <div class="wrap guida">
+        <p class="byline">Guida di G8A Technology{guida.firmato_da ? <> · verificata da <b>{guida.firmato_da}</b>{RUOLI[guida.firmato_da] ? `, ${RUOLI[guida.firmato_da]}` : ''}</> : null} · aggiornata il {data(guida.aggiornata_il)}</p>
+        {guida.in_breve.length > 0 && (
+          <aside class="breve" aria-label="In breve"><b>In breve</b><ul>{guida.in_breve.map((b) => <li>{b}</li>)}</ul></aside>
+        )}
+        {guida.sezioni.map((s) => (
+          <section>
+            <h2>{s.titolo}</h2>
+            {(s.paragrafi ?? []).map((p) => <p>{p}</p>)}
+            {(s.punti ?? []).length > 0 && <ul class="punti">{s.punti!.map((p) => <li>{p}</li>)}</ul>}
+          </section>
+        ))}
+        {guida.link.length > 0 && (
+          <nav class="approf" aria-label="Per approfondire"><h2>Per approfondire</h2><ul>{guida.link.map((l) => <li><a href={l.url}>{l.testo}</a></li>)}</ul></nav>
+        )}
+      </div>
+    </section>
+  )}
+
+  {guida && guida.faq.length > 0 && <Faq items={guida.faq.map((f) => ({ q: f.d, a: f.r }))}>Domande <span class="red">frequenti</span></Faq>}
+
+  {altre.length > 0 && (
+    <section class="section">
+      <div class="wrap">
+        {guida && <h2 class="h h2" style="margin-bottom:1.4rem">Leggi <span class="red">anche</span></h2>}
+        <ul class="glist">{altre.map((g) => <li><a href={`/guide/${g.slug}`}><b>{g.h1}</b><span>{g.descrizione}</span></a></li>)}</ul>
+      </div>
+    </section>
+  )}
+
+  <Cta lead="Ti diciamo cosa serve davvero alla tua azienda, senza impegno: una telefonata o un messaggio su WhatsApp." waText={wa} />
+</Base>
+
+<style>
+  .guida { max-width: 780px; }
+  .guida .byline { font-size: .92rem; color: var(--muted); margin: 0 0 1.4rem; }
+  .guida section + section, .guida .breve + section { margin-top: 2rem; }
+  .guida h2 { font-size: clamp(1.4rem, 2.6vw, 1.8rem); font-weight: 800; letter-spacing: -.02em; line-height: 1.15; margin: 0 0 .8rem; }
+  .guida p { margin: 0 0 .8rem; line-height: 1.65; color: var(--ink-2); }
+  .guida .punti { padding-left: 1.3rem; margin: 0; }
+  .guida .punti li { margin-bottom: .4rem; line-height: 1.6; }
+  .breve { border-left: 4px solid var(--red); background: var(--paper); border-radius: 14px; padding: 1rem 1.2rem; }
+  .breve b { display: block; margin-bottom: .4rem; }
+  .breve ul { padding-left: 1.2rem; margin: 0; }
+  .approf { margin-top: 2rem; }
+  .approf ul { padding-left: 1.3rem; }
+  .approf a { color: var(--red); text-decoration: underline; }
+  .glist { list-style: none; padding: 0; margin: 0; display: grid; gap: 1rem; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); }
+  .glist a { display: flex; flex-direction: column; gap: .4rem; height: 100%; padding: 1.2rem; border: 1px solid var(--line); border-top: 4px solid var(--red); border-radius: 18px; background: #fff; color: inherit; text-decoration: none; }
+  .glist a:hover { border-color: var(--red); }
+  .glist span { font-size: .93rem; color: var(--muted); }
+</style>

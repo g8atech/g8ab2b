@@ -1,6 +1,7 @@
 ---
 import { SITE_LIVE } from '../data/live';
 import { CITTA } from '../data/citta';
+import { GUIDE_NINA } from '../data/guideNina';
 import '../styles/global.css';
 import '../styles/blocks.css';
 import { Image } from 'astro:assets';
@@ -157,6 +158,7 @@ const bing = import.meta.env.PUBLIC_BING_VERIFICATION;
             <li><a href="/noleggio-backup">Backup e NAS</a></li>
             <li><a href="/rmm">Monitoraggio RMM</a></li>
             <li><a href="/testimonianze-casistudio">Casi studio</a></li>
+            {GUIDE_NINA.length > 0 && <li><a href="/guide">Guide per le aziende</a></li>}
           </ul>
           <p class="ftr__h" style="margin-top:1.2rem"><a href="/assistenza-informatica">Assistenza informatica</a> a</p>
           <ul>{CITTA.map((c) => <li><a href={`/assistenza-informatica/${c.slug}`}>{c.nome}</a></li>)}</ul>
