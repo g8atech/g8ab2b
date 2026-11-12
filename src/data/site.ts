@@ -14,7 +14,10 @@ export const SITE = {
   legalAddress: 'Via Caronno Varesino 33, 21048 Solbiate Arno (VA)',
   rea: 'VA-393252',
   capital: '€ 10.000,00',
-  ticket: 'https://g8a.rmmservice.eu/connect/',
+  // Assistenza remota: link NinjaOne per far collegare il tecnico al PC del cliente.
+  assistenza: 'https://g8a.rmmservice.eu/connect/#/8175714087',
+  // I ticket li aprono i clienti dall'area clienti di Brain.
+  ticket: 'https://g8a-brain.vercel.app/area-clienti',
   rmmLogin: 'https://g8a.rmmservice.eu/auth/#/login',
 };
 
