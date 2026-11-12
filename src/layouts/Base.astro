@@ -158,7 +158,7 @@ const bing = import.meta.env.PUBLIC_BING_VERIFICATION;
             <li><a href="/rmm">Monitoraggio RMM</a></li>
             <li><a href="/testimonianze-casistudio">Casi studio</a></li>
           </ul>
-          <p class="ftr__h" style="margin-top:1.2rem">Assistenza informatica a</p>
+          <p class="ftr__h" style="margin-top:1.2rem"><a href="/assistenza-informatica">Assistenza informatica</a> a</p>
           <ul>{CITTA.map((c) => <li><a href={`/assistenza-informatica/${c.slug}`}>{c.nome}</a></li>)}</ul>
           <p class="ftr__h" style="margin-top:1.2rem">Negozi</p>
           <ul>{SEDI.filter((s) => s.negozio).map((s) => <li><a href={storeUrl(s.negozio!.slug)}>{s.city}</a></li>)}</ul>
