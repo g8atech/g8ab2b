@@ -1,9 +1,10 @@
 // robots.txt generato in base all'ambiente.
-// Finché PUBLIC_SITE_LIVE non è "true" (anteprima su vercel.app), Google non indicizza nulla.
+// Sulle anteprime Vercel Google non indicizza nulla; in produzione (www.g8a.it) sì. Vedi src/data/live.ts.
+import { SITE_LIVE } from '../data/live';
 export const prerender = true;
 
 export function GET() {
-  const live = import.meta.env.PUBLIC_SITE_LIVE === 'true';
+  const live = SITE_LIVE;
   const body = live
     ? `User-agent: *
 Allow: /

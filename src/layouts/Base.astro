@@ -1,4 +1,5 @@
 ---
+import { SITE_LIVE } from '../data/live';
 import '../styles/global.css';
 import '../styles/blocks.css';
 import { Image } from 'astro:assets';
@@ -58,7 +59,7 @@ const stores = SEDI.filter((s) => !s.operativa && !s.negozio).map((s) => ({
 const schemas = [organization, ...stores, ...jsonLd];
 // Google Tag Manager: si attiva solo se su Vercel è impostata PUBLIC_GTM_ID (es. GTM-M5FDVQDW).
 const gtm = import.meta.env.PUBLIC_GTM_ID;
-const live = import.meta.env.PUBLIC_SITE_LIVE === 'true';
+const live = SITE_LIVE;
 // Verifica proprietà: Google Search Console e Bing Webmaster Tools (solo il codice "content" del meta tag).
 const gsc = import.meta.env.PUBLIC_GSC_VERIFICATION;
 const bing = import.meta.env.PUBLIC_BING_VERIFICATION;
