@@ -14,7 +14,16 @@ import logoColor from '../assets/logo-g8a.png';
 import { SITE, SEDI, GRUPPO, waLink, telLink, storeUrl } from '../data/site';
 
 interface Props { title: string; description: string; jsonLd?: object[]; mbar?: { tel: string; wa: string } }
-const { title, description, jsonLd = [], mbar } = Astro.props;
+const { title, description: rawDescription, jsonLd = [], mbar } = Astro.props;
+// Description per Google: max ~158 caratteri, tagliata a fine frase o a fine parola (mai a metà parola).
+const description = (() => {
+  const d = rawDescription.replace(/\s+/g, ' ').trim();
+  if (d.length <= 158) return d;
+  const cut = d.slice(0, 158);
+  const frase = cut.lastIndexOf('. ');
+  if (frase >= 110) return cut.slice(0, frase + 1);
+  return cut.slice(0, cut.lastIndexOf(' ')).replace(/[,:;\-–]+$/, '') + '…';
+})();
 // Il Noleggio Assistito raccoglie i servizi in un menu a tendina, per tenere la barra corta.
 const NOLEGGIO = [
   { href: '/noleggio-computer', t: 'Computer', d: 'PC, All in One e notebook G8A', icon: 'pc' },
@@ -31,7 +40,9 @@ const here = Astro.url.pathname.replace(/(\.html|\/)$/, '');
 const inNoleggio = NOLEGGIO.some((n) => n.href === here);
 const cleanPath = Astro.url.pathname.replace(/(index)?\.html$/, '').replace(/\/$/, '') || '/';
 const canonical = new URL(cleanPath, SITE.url).href;
-const fullTitle = title.includes(SITE.name) ? title : `${title} | ${SITE.name}`;
+// Title per Google: con " | G8A Technology" solo se resta entro 65 caratteri.
+const withBrand = title.includes(SITE.name) ? title : `${title} | ${SITE.name}`;
+const fullTitle = withBrand.length > 65 ? withBrand.replace(` | ${SITE.name}`, '') : withBrand;
 
 const organization = {
   '@context': 'https://schema.org',
@@ -61,6 +72,8 @@ const stores = SEDI.filter((s) => !s.operativa && !s.negozio).map((s) => ({
 const schemas = [organization, ...stores, ...jsonLd];
 // Google Tag Manager: si attiva solo se su Vercel è impostata PUBLIC_GTM_ID (es. GTM-M5FDVQDW).
 const gtm = import.meta.env.PUBLIC_GTM_ID;
+// In alternativa a GTM: Google Analytics 4 diretto (PUBLIC_GA4_ID, es. G-XXXXXXX), sempre dopo il Consent Mode.
+const ga4 = gtm ? undefined : import.meta.env.PUBLIC_GA4_ID;
 const live = SITE_LIVE;
 // Verifica proprietà: Google Search Console e Bing Webmaster Tools (solo il codice "content" del meta tag).
 const gsc = import.meta.env.PUBLIC_GSC_VERIFICATION;
@@ -80,6 +93,18 @@ const bing = import.meta.env.PUBLIC_BING_VERIFICATION;
     {gsc && <meta name="google-site-verification" content={gsc} />}
     {bing && <meta name="msvalidate.01" content={bing} />}
     <ConsentHead />
+    {ga4 && <script is:inline define:vars={{ ga4 }}>
+      // GA4 diretto si carica solo dopo il consenso alle statistiche (subito se già dato, altrimenti al clic su "Accetta").
+      window.__g8aGa4Load = function () {
+        if (window.__g8aGa4) return;
+        window.__g8aGa4 = true;
+        var s = document.createElement('script'); s.async = true; s.src = 'https://www.googletagmanager.com/gtag/js?id=' + ga4;
+        document.head.appendChild(s);
+        window.gtag('js', new Date()); window.gtag('config', ga4);
+      };
+      var c = window.g8aConsent && window.g8aConsent.read();
+      if (c && c.a) window.__g8aGa4Load();
+    </script>}
     {gtm && <script is:inline define:vars={{ gtm }}>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer',gtm);</script>}
     <link rel="icon" href="/logo-icon.png" type="image/png" />
     <link rel="apple-touch-icon" href="/logo-icon.png" />
@@ -210,6 +235,8 @@ const bing = import.meta.env.PUBLIC_BING_VERIFICATION;
         if (!canale) return;
         const w = window as unknown as { dataLayer?: object[] };
         (w.dataLayer = w.dataLayer || []).push({ event: 'contatto', canale, pagina: location.pathname, testo: a.textContent?.trim() });
+        const g = window as unknown as { __g8aGa4?: boolean; gtag?: (...a: unknown[]) => void };
+        if (g.__g8aGa4 && g.gtag) g.gtag('event', 'contatto', { canale, pagina: location.pathname });
       });
 
       // Menu a tendina su schermi stretti.

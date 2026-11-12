@@ -24,7 +24,7 @@ Contatti: telefono e WhatsApp 0331 139 0950 · info@g8a.it · Via Caronno Varesi
 
 ## Negozi G8A Store
 
-- [G8A Store](https://www.g8a.it/store): riparazione e vendita di computer, notebook e Mac per privati e partite IVA nei negozi di Gallarate, Busto Arsizio, Jerago con Orago, Bollate e Lecco.
+- [G8A Store](https://www.g8astore.it/): riparazione e vendita di computer, notebook e Mac per privati e partite IVA nei negozi di Gallarate, Busto Arsizio, Jerago con Orago, Bollate e Lecco.
 
 ## Rassegna stampa
 
