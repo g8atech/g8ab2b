@@ -17,7 +17,7 @@ export const SITE = {
   // Assistenza remota: link NinjaOne per far collegare il tecnico al PC del cliente.
   assistenza: 'https://g8a.rmmservice.eu/connect/#/8175714087',
   // I ticket li aprono i clienti dall'area clienti di Brain.
-  ticket: 'https://g8a-brain.vercel.app/area-clienti',
+  ticket: 'https://parts-plan.vercel.app/area-clienti',
   rmmLogin: 'https://g8a.rmmservice.eu/auth/#/login',
 };
 
