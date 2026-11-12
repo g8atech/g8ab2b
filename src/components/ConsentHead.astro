@@ -2,7 +2,8 @@
 // Consenso cookie, parte in <head>: va PRIMA di Google Tag Manager.
 // Imposta Google Consent Mode v2 su "negato" e, se il visitatore ha già scelto, applica la sua scelta.
 // Microsoft Clarity si carica solo con il consenso ai cookie statistici (variabile PUBLIC_CLARITY_ID).
-const clarity = import.meta.env.PUBLIC_CLARITY_ID ?? '';
+// ID del progetto Clarity di g8a.it (PUBLIC_CLARITY_ID su Vercel lo sostituisce).
+const clarity = import.meta.env.PUBLIC_CLARITY_ID || 'x1sap2gjhy';
 ---
 <script is:inline define:vars={{ clarity }}>
   window.dataLayer = window.dataLayer || [];
