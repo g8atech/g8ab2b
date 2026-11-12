@@ -5,6 +5,9 @@ import Icon from '../components/Icon.astro';
 import { SITE, SEDI, FAQ, GOOGLE, waLink, telLink, storeUrl } from '../data/site';
 import GoogleReviews from '../components/blocks/GoogleReviews.astro';
 import robotHero from '../assets/robot-hero.png';
+import { getImage } from 'astro:assets';
+// Maschera del riflesso: WebP leggero invece del PNG originale (quasi 1 MB).
+const shineMask = await getImage({ src: robotHero, format: 'webp', width: 800 });
 import mark from '../assets/g8a-mark.png';
 import logoWhite from '../assets/logo-g8a-bianco.png';
 import fondatori from '../assets/fondatori.png';
@@ -94,8 +97,8 @@ const serviceLd = {
           {Array.from({ length: 14 }, (_, i) => <i class="spark" style={`--x:${(i * 37) % 100}%;--t:${3 + (i % 5) * 0.7}s;--dl:${(i * 0.43) % 4}s;--s:${3 + (i % 3) * 2}px`}></i>)}
         </div>
         <div class="robots">
-          <div class="robots__fx"><Image class="robots__img" src={robotHero} alt="Giuseppe e Antonio Arrigo, fondatori di G8A, in armatura robotica" widths={[640, 1152]} sizes="(max-width: 900px) 100vw, 620px" loading="eager" fetchpriority="high" /></div>
-          <span class="robots__shine" aria-hidden="true" style={`--src:url(${robotHero.src})`}></span>
+          <div class="robots__fx"><Image class="robots__img" src={robotHero} alt="Giuseppe e Antonio Arrigo, fondatori di G8A, in armatura robotica" widths={[480, 800, 1152]} sizes="(max-width: 900px) 100vw, 620px" loading="eager" fetchpriority="high" /></div>
+          <span class="robots__shine" aria-hidden="true" style={`--src:url(${shineMask.src})`}></span>
         </div>
         <span class="chip-float chip-float--a" aria-hidden="true"><span class="live"></span>Monitoraggio continuo</span>
         <span class="chip-float chip-float--b" aria-hidden="true"><Icon name="check" size={14} width={3.2} />Sostituzione inclusa</span>
@@ -409,7 +412,7 @@ const serviceLd = {
   @media (prefers-reduced-motion: no-preference) {
     .js .robots :global(.robots__img) { animation: arrive 1.1s cubic-bezier(0.2, 0.8, 0.2, 1) both; }
   }
-  @keyframes arrive { from { opacity: 0; transform: translateY(40px) scale(0.92); } }
+  @keyframes arrive { from { transform: translateY(40px) scale(0.92); } }
 
   @keyframes float { 0%, to { transform: translateY(0) rotate(0); } 50% { transform: translateY(-14px) rotate(-1.5deg); } }
   .chip-float { position: absolute; z-index: 2; display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.45rem 0.85rem; border-radius: 999px; background: rgba(255, 255, 255, 0.92); border: 1px solid var(--line); box-shadow: 0 12px 28px rgba(11, 11, 13, 0.14); backdrop-filter: blur(6px); font-weight: 800; font-size: 0.85rem; white-space: nowrap; animation: float 6s ease-in-out infinite; }
