@@ -40,6 +40,7 @@ export const GRUPPO = [
   { name: 'TonerHero', what: 'Toner e cartucce', url: 'https://www.tonerhero.it' },
   { name: 'RiparoHero', what: 'Riparazioni', url: 'https://www.riparohero.it' },
   { name: 'G8A Store', what: 'PC e negozi', url: 'https://www.g8astore.it' },
+  { name: 'SuperPMI', what: 'Intelligenza artificiale', url: 'https://www.superpmi.it' },
 ];
 
 export const FAQ = [

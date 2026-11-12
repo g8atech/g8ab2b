@@ -40,3 +40,4 @@ Contatti: telefono e WhatsApp 0331 139 0950 · info@g8a.it · Via Caronno Varesi
 - [TonerHero](https://www.tonerhero.it): toner e cartucce.
 - [RiparoHero](https://www.riparohero.it): riparazioni.
 - [G8A Store](https://www.g8astore.it): PC e negozi.
+- [SuperPMI](https://www.superpmi.it): intelligenza artificiale per le PMI (formazione, chatbot e centralini AI, software).
