@@ -78,7 +78,7 @@ Ogni clic su telefono, WhatsApp o email invia a GTM l'evento `contatto` con `can
 - I negozi sono il progetto **g8atech/g8astore**, pubblicato su **www.g8astore.it**. g8a.it resta solo B2B e linka i negozi con `storeUrl()` in `src/data/site.ts`.
 - I vecchi indirizzi negozio di g8a.it (`/store-gallarate`, `/store-busto-arsizio`, `/store-jerago-con-orago`, `/store-lecco`, `/store-bollate`, circa il 70% dei clic da Google) vanno con 301 su `https://www.g8astore.it/<città>/`. Anche `/negozio`, `/negozi`, `/store` e `/store/*` vanno su g8astore.it.
 - Sottodomini delle città di g8a.it (con e senza www): le pagine di noleggio e RMM vanno al servizio su g8a.it, tutto il resto al negozio su g8astore.it. Vanno aggiunti come domini di questo progetto su Vercel.
-- `ftp.g8a.it` ed `editor.g8a.it` vanno dismessi: invece di cancellare i record DNS, puntarli a Vercel e aggiungerli a questo progetto, così le loro pagine finiscono con un 301 sul sito nuovo.
+- `ftp.g8a.it` ed `editor.g8a.it` sono dismessi (nov 2026): record DNS da cancellare, nessun redirect.
 - Le regole per dominio stanno in cima a `vercel.json`, prima di quelle generiche: così ogni vecchio indirizzo arriva a destinazione con un solo redirect.
 
 ### Il giorno del cambio
@@ -87,7 +87,7 @@ Ogni clic su telefono, WhatsApp o email invia a GTM l'evento `contatto` con `can
 2. Su Vercel → Settings → Domains aggiungere `www.g8a.it` (principale) e `g8a.it` (reindirizza a www).
 3. Dal registrar del dominio cambiare i DNS indicati da Vercel al posto di quelli di GoHighLevel. Le email non cambiano: non toccare i record MX.
 4. Impostare `PUBLIC_SITE_LIVE=true`, `PUBLIC_GTM_ID` e `PUBLIC_CLARITY_ID`, poi Redeploy. In GTM eliminare i tag del vecchio sito che non servono più.
-5. Sottodomini per città (es. `gallarate.g8a.it`, con e senza www) e `ftp`/`editor`: aggiungerli a questo progetto su Vercel; i 301 sono già in `vercel.json`.
+5. Sottodomini per città (es. `gallarate.g8a.it`, con e senza www) : aggiungerli a questo progetto su Vercel; i 301 sono già in `vercel.json`.
 6. Google Search Console: inviare `https://www.g8a.it/sitemap-index.xml` e controllare le pagine indicizzate nei giorni seguenti.
 7. In GTM verificare che le conversioni di Google Ads arrivino dal nuovo evento `contatto`.
 
