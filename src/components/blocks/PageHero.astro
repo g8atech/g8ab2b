@@ -10,8 +10,7 @@ const { kicker, crumb, lead, waText, image, imageAlt = '', chips = [], note = ['
   <div class="wrap b-hero__row">
     <div class="b-hero__copy">
       <ol class="b-crumbs" aria-label="Percorso"><li><a href="/">Home</a></li><li aria-current="page">{crumb}</li></ol>
-      <span class="kicker">{kicker}</span>
-      <h1 class="h b-hero__h1"><slot name="title" /></h1>
+      <h1 class="h b-hero__h1"><span class="kicker b-hero__kicker">{kicker}</span> <slot name="title" /></h1>
       <p class="lead b-hero__lead">{lead}</p>
       <div class="b-actions">
         <a class="btn btn--red" href={telLink}><Icon name="phone" />Chiama {SITE.phone}</a>

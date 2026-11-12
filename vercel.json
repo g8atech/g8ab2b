@@ -259,6 +259,61 @@
       "source": "/DESKMINI:rest*",
       "destination": "https://www.g8astore.it/configuratore/mini-pc/",
       "permanent": true
+    },
+    {
+      "source": "/Contatti",
+      "destination": "/assistenza-business",
+      "permanent": true
+    },
+    {
+      "source": "/Contatti.html",
+      "destination": "/assistenza-business",
+      "permanent": true
+    },
+    {
+      "source": "/contatti.html",
+      "destination": "/assistenza-business",
+      "permanent": true
+    },
+    {
+      "source": "/ASSISTENZA-BUSINESS",
+      "destination": "/assistenza-business",
+      "permanent": true
+    },
+    {
+      "source": "/RMM",
+      "destination": "/rmm",
+      "permanent": true
+    },
+    {
+      "source": "/chi-siamo",
+      "destination": "/#chi-siamo",
+      "permanent": true
+    },
+    {
+      "source": "/iron-safe",
+      "destination": "/noleggio-backup",
+      "permanent": true
+    },
+    {
+      "source": "/servizi",
+      "destination": "/assistenza-informatica",
+      "permanent": true
+    },
+    {
+      "source": "/toner-hero",
+      "destination": "https://www.tonerhero.it/",
+      "permanent": true
+    },
+    {
+      "source": "/wtb_g8a_it_:n",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/chi(.*)siamo(.*)",
+      "destination": "/#chi-siamo",
+      "permanent": true
     }
   ]
 }

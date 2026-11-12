@@ -11,6 +11,7 @@
 .b-crumbs a { color: var(--muted); text-decoration: none; }
 .b-crumbs a:hover { color: var(--red); }
 .b-hero__h1 { margin-top: 0.8rem; font-size: clamp(2.1rem, 3.6vw, 3.3rem); }
+.b-hero__h1 .b-hero__kicker { display: flex; margin-bottom: 0.8rem; font-size: 0.85rem; font-stretch: 100%; font-variation-settings: normal; line-height: 1.4; letter-spacing: 0.14em; }
 .b-hero__lead { margin-top: 1rem; }
 .b-actions { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 1.5rem; }
 .b-hero__note { display: flex; flex-wrap: wrap; gap: 0.4rem 1.2rem; margin-top: 1rem; font-size: 0.95rem; color: var(--muted); }
