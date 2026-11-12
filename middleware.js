@@ -1,4 +1,5 @@
 // Redirect dei vecchi domini e sottodomini (Vercel Routing Middleware).
+// I vecchi siti per città (es. gallarate.g8a.it) portano alle pagine B2B /assistenza-informatica/<città>.
 // Le regole per dominio stanno qui e non in vercel.json: lì, con i domini collegati
 // al progetto, Vercel non le applicava e i sottodomini mostravano la home del sito.
 // Per ogni dominio la prima regola che corrisponde al percorso vince (301).
@@ -6,7 +7,7 @@ const RULES = {
   "gallarate.g8a.it": [
     [
       "^/assistenza\\-business(.*)$",
-      "https://www.g8a.it/assistenza-business"
+      "https://www.g8a.it/assistenza-informatica/gallarate"
     ],
     [
       "^/rmm(.*)$",
@@ -34,13 +35,13 @@ const RULES = {
     ],
     [
       "^/(.*)$",
-      "https://www.g8astore.it/gallarate/"
+      "https://www.g8a.it/assistenza-informatica/gallarate"
     ]
   ],
   "www.gallarate.g8a.it": [
     [
       "^/assistenza\\-business(.*)$",
-      "https://www.g8a.it/assistenza-business"
+      "https://www.g8a.it/assistenza-informatica/gallarate"
     ],
     [
       "^/rmm(.*)$",
@@ -68,13 +69,13 @@ const RULES = {
     ],
     [
       "^/(.*)$",
-      "https://www.g8astore.it/gallarate/"
+      "https://www.g8a.it/assistenza-informatica/gallarate"
     ]
   ],
   "busto-arsizio.g8a.it": [
     [
       "^/assistenza\\-business(.*)$",
-      "https://www.g8a.it/assistenza-business"
+      "https://www.g8a.it/assistenza-informatica/busto-arsizio"
     ],
     [
       "^/rmm(.*)$",
@@ -102,13 +103,13 @@ const RULES = {
     ],
     [
       "^/(.*)$",
-      "https://www.g8astore.it/busto-arsizio/"
+      "https://www.g8a.it/assistenza-informatica/busto-arsizio"
     ]
   ],
   "www.busto-arsizio.g8a.it": [
     [
       "^/assistenza\\-business(.*)$",
-      "https://www.g8a.it/assistenza-business"
+      "https://www.g8a.it/assistenza-informatica/busto-arsizio"
     ],
     [
       "^/rmm(.*)$",
@@ -136,13 +137,13 @@ const RULES = {
     ],
     [
       "^/(.*)$",
-      "https://www.g8astore.it/busto-arsizio/"
+      "https://www.g8a.it/assistenza-informatica/busto-arsizio"
     ]
   ],
   "jerago.g8a.it": [
     [
       "^/assistenza\\-business(.*)$",
-      "https://www.g8a.it/assistenza-business"
+      "https://www.g8a.it/assistenza-informatica/jerago-con-orago"
     ],
     [
       "^/rmm(.*)$",
@@ -170,13 +171,13 @@ const RULES = {
     ],
     [
       "^/(.*)$",
-      "https://www.g8astore.it/jerago-con-orago/"
+      "https://www.g8a.it/assistenza-informatica/jerago-con-orago"
     ]
   ],
   "www.jerago.g8a.it": [
     [
       "^/assistenza\\-business(.*)$",
-      "https://www.g8a.it/assistenza-business"
+      "https://www.g8a.it/assistenza-informatica/jerago-con-orago"
     ],
     [
       "^/rmm(.*)$",
@@ -204,13 +205,13 @@ const RULES = {
     ],
     [
       "^/(.*)$",
-      "https://www.g8astore.it/jerago-con-orago/"
+      "https://www.g8a.it/assistenza-informatica/jerago-con-orago"
     ]
   ],
   "lecco.g8a.it": [
     [
       "^/assistenza\\-business(.*)$",
-      "https://www.g8a.it/assistenza-business"
+      "https://www.g8a.it/assistenza-informatica/lecco"
     ],
     [
       "^/rmm(.*)$",
@@ -238,13 +239,13 @@ const RULES = {
     ],
     [
       "^/(.*)$",
-      "https://www.g8astore.it/lecco/"
+      "https://www.g8a.it/assistenza-informatica/lecco"
     ]
   ],
   "www.lecco.g8a.it": [
     [
       "^/assistenza\\-business(.*)$",
-      "https://www.g8a.it/assistenza-business"
+      "https://www.g8a.it/assistenza-informatica/lecco"
     ],
     [
       "^/rmm(.*)$",
@@ -272,13 +273,13 @@ const RULES = {
     ],
     [
       "^/(.*)$",
-      "https://www.g8astore.it/lecco/"
+      "https://www.g8a.it/assistenza-informatica/lecco"
     ]
   ],
   "bollate.g8a.it": [
     [
       "^/assistenza\\-business(.*)$",
-      "https://www.g8a.it/assistenza-business"
+      "https://www.g8a.it/assistenza-informatica/bollate"
     ],
     [
       "^/rmm(.*)$",
@@ -306,13 +307,13 @@ const RULES = {
     ],
     [
       "^/(.*)$",
-      "https://www.g8astore.it/bollate/"
+      "https://www.g8a.it/assistenza-informatica/bollate"
     ]
   ],
   "www.bollate.g8a.it": [
     [
       "^/assistenza\\-business(.*)$",
-      "https://www.g8a.it/assistenza-business"
+      "https://www.g8a.it/assistenza-informatica/bollate"
     ],
     [
       "^/rmm(.*)$",
@@ -340,7 +341,7 @@ const RULES = {
     ],
     [
       "^/(.*)$",
-      "https://www.g8astore.it/bollate/"
+      "https://www.g8a.it/assistenza-informatica/bollate"
     ]
   ],
   "g8a.it": [

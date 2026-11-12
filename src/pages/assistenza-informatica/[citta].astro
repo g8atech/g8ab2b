@@ -1,0 +1,144 @@
+---
+// Assistenza informatica per aziende a <città>: una pagina per ogni sede, con contenuti propri.
+// Qui portano anche i vecchi siti per città (es. gallarate.g8a.it), vedi middleware.js.
+import Base from '../../layouts/Base.astro';
+import Icon from '../../components/Icon.astro';
+import PageHero from '../../components/blocks/PageHero.astro';
+import Cases from '../../components/blocks/Cases.astro';
+import Quotes from '../../components/blocks/Quotes.astro';
+import Faq from '../../components/blocks/Faq.astro';
+import Cta from '../../components/blocks/Cta.astro';
+import { CITTA, type Citta } from '../../data/citta';
+import { SEDI, faqLd, storeUrl } from '../../data/site';
+
+export function getStaticPaths() {
+  return CITTA.map((c) => ({ params: { citta: c.slug }, props: { c } }));
+}
+const { c } = Astro.props as { c: Citta };
+const path = `/assistenza-informatica/${c.slug}`;
+const sede = SEDI.find((s) => s.negozio?.slug === c.slug);
+const wa = `Ciao, vi scrivo dal sito g8a.it: vorrei informazioni sull'assistenza informatica per la mia azienda a ${c.nome}.`;
+const altre = CITTA.filter((x) => x.slug !== c.slug);
+const faq = c.faq;
+const maps = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`G8A ${c.sede}`)}`;
+const serviceLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Service',
+  name: `Assistenza informatica per aziende a ${c.nome}`,
+  serviceType: 'Assistenza informatica e noleggio computer per aziende',
+  description: c.descrizione,
+  url: `https://www.g8a.it${path}`,
+  provider: { '@id': 'https://www.g8a.it/#organization' },
+  areaServed: c.comuni.map((n) => ({ '@type': 'City', name: n })),
+};
+const crumbsLd = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://www.g8a.it/' },
+    { '@type': 'ListItem', position: 2, name: 'Assistenza informatica', item: 'https://www.g8a.it/assistenza-informatica' },
+    { '@type': 'ListItem', position: 3, name: c.nome, item: `https://www.g8a.it${path}` },
+  ],
+};
+---
+<Base title={c.titolo} description={c.descrizione} jsonLd={[serviceLd, crumbsLd, faqLd(faq)]}>
+  <PageHero kicker={`Assistenza informatica · ${c.nome}`} crumb={`Assistenza informatica a ${c.nome}`} waText={wa} lead={c.lead}
+    chips={['Assistenza in sede e da remoto', 'Un canone, tutto incluso', `Punto G8A a ${c.nome}`]}>
+    <Fragment slot="title">Assistenza informatica per aziende <span class="red">a {c.nome}</span></Fragment>
+    <div slot="visual" class="ct" aria-hidden="true">
+      <div class="ct__box">
+        <p class="ct__h"><Icon name="building" size={16} />G8A · {c.nome}</p>
+        <p class="ct__addr">{c.sede}</p>
+        <ul class="ct__list">{c.comuni.slice(0, 6).map((n) => <li><Icon name="check" size={14} width={3.2} />{n}</li>)}</ul>
+        <p class="ct__more">e comuni vicini</p>
+      </div>
+    </div>
+  </PageHero>
+
+  <section class="section">
+    <div class="wrap b-split ct-ctx">
+      <div data-reveal>
+        <span class="kicker">Le aziende di {c.nome}</span>
+        <h2 class="h h2" style="margin-top:.8rem">{c.contesto.titolo}</h2>
+        {c.contesto.testo.map((p) => <p class="lead" style="margin-top:1rem">{p}</p>)}
+      </div>
+      <div class="ct-need" data-reveal style="--d:.1s">
+        {c.bisogni.map((b) => (
+          <div class="ct-need__i"><span class="b-list__ok"><Icon name="check" size={14} width={3.2} /></span><div><strong>{b.t}</strong><p>{b.d}</p></div></div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--paper">
+    <div class="wrap">
+      <div class="b-head" data-reveal>
+        <span class="kicker">Noleggio Assistito</span>
+        <h2 class="h h2">Cosa gestiamo <span class="red">per te a {c.nome}</span></h2>
+      </div>
+      <ul class="ct-svc" data-reveal>
+        <li><a href="/noleggio-computer"><Icon name="pc" size={18} />Computer e postazioni</a></li>
+        <li><a href="/noleggio-backup"><Icon name="server" size={18} />Server, NAS e backup</a></li>
+        <li><a href="/noleggio-stampanti"><Icon name="printer" size={18} />Stampanti e multifunzione</a></li>
+        <li><a href="/rmm"><Icon name="activity" size={18} />Monitoraggio e sicurezza</a></li>
+        <li><a href="/assistenza-business"><Icon name="wrench" size={18} />Assistenza in sede e da remoto</a></li>
+      </ul>
+    </div>
+  </section>
+
+  {c.casi && <Cases ids={c.casi} more lead="Quando qualcosa si ferma, conta quanto in fretta si riparte.">Interventi <span class="red">vicino a {c.nome}</span></Cases>}
+  {c.recensioni && <Quotes ids={c.recensioni}>Chi lavora già <span class="red">con noi</span></Quotes>}
+
+  <section class="section section--paper">
+    <div class="wrap b-split">
+      <div data-reveal>
+        <span class="kicker">Dove siamo</span>
+        <h2 class="h h2" style="margin-top:.8rem">Il punto G8A <span class="red">a {c.nome}</span></h2>
+        <p class="lead" style="margin-top:1rem">{c.sede}. {sede?.negozio ? `Telefono ${sede.negozio.phone}.` : ''} I tecnici che vengono in azienda partono dalla sede operativa di Solbiate Arno.</p>
+        <div class="b-actions" style="margin-top:1.4rem">
+          <a class="btn btn--line btn--sm" href={maps} target="_blank" rel="noopener"><Icon name="building" />Indicazioni</a>
+          {sede?.negozio && <a class="btn btn--line btn--sm" href={storeUrl(sede.negozio.slug)}>Sei un privato? G8A Store {c.nome}</a>}
+        </div>
+      </div>
+      <div data-reveal style="--d:.1s">
+        <p class="ct-zone__h">Interveniamo a</p>
+        <ul class="ct-zone">{c.comuni.map((n) => <li>{n}</li>)}</ul>
+        <p class="ct-zone__note">e in tutta la provincia{c.provincia === 'MI' ? ' di Milano' : c.provincia === 'LC' ? ' di Lecco' : ' di Varese'}. Da remoto seguiamo aziende in tutta Italia.</p>
+      </div>
+    </div>
+  </section>
+
+  <Faq items={faq}>Assistenza informatica a {c.nome}: <span class="red">domande frequenti</span></Faq>
+
+  <section class="section">
+    <div class="wrap">
+      <p class="ct-other" data-reveal>Assistenza informatica per aziende anche a {altre.map((x, i) => <><a href={`/assistenza-informatica/${x.slug}`}>{x.nome}</a>{i < altre.length - 2 ? ', ' : i === altre.length - 2 ? ' e ' : '.'}</>)}</p>
+    </div>
+  </section>
+
+  <Cta lead={`Ci racconti quanti computer avete e come lavorate: ti diciamo cosa serve, senza impegno.`} waText={wa}>La tua azienda a {c.nome}, <span class="red">senza pensieri IT</span></Cta>
+</Base>
+
+<style>
+  .ct { position: relative; z-index: 1; width: min(100%, 24rem); margin: auto; }
+  .ct__box { padding: 1.4rem 1.5rem; border-radius: 20px; background: rgba(11, 11, 13, 0.92); color: #fff; box-shadow: 0 30px 60px -20px rgba(11, 11, 13, 0.6); border: 1px solid rgba(255, 255, 255, 0.12); }
+  .ct__h { display: flex; align-items: center; gap: 0.5rem; font-weight: 800; letter-spacing: 0.02em; }
+  .ct__addr { margin-top: 0.4rem; color: #c9c9d0; font-size: 0.9rem; }
+  .ct__list { display: grid; gap: 0.45rem; margin-top: 1rem; }
+  .ct__list li { display: flex; align-items: center; gap: 0.55rem; font-size: 0.95rem; }
+  .ct__list :global(svg) { color: #ff1a1a; }
+  .ct__more { margin-top: 0.6rem; color: #9a9aa5; font-size: 0.85rem; }
+  .ct-need { display: grid; gap: 1rem; align-content: start; }
+  .ct-need__i { display: flex; gap: 0.8rem; padding: 1.1rem 1.2rem; border-radius: 16px; background: var(--paper); }
+  .ct-need__i p { margin-top: 0.25rem; color: var(--muted); }
+  .ct-zone__h { font-weight: 800; }
+  .ct-zone { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.8rem; }
+  .ct-zone li { padding: 0.45rem 0.85rem; border-radius: 999px; background: #fff; border: 1px solid var(--line); font-size: 0.92rem; font-weight: 600; }
+  .ct-zone__note { margin-top: 0.9rem; color: var(--muted); font-size: 0.92rem; }
+  .ct-svc, .ct-zone, .ct__list { list-style: none; padding: 0; }
+  .ct-svc { display: flex; flex-wrap: wrap; gap: 0.6rem; margin-top: 1.6rem; }
+  .ct-svc a { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.7rem 1.1rem; border-radius: 999px; background: #fff; border: 1px solid var(--line); font-weight: 700; }
+  .ct-svc a:hover { border-color: #e30613; color: #e30613; }
+  .ct-other { text-align: center; color: var(--muted); }
+  .ct-other a { color: var(--ink); font-weight: 700; text-decoration: underline; }
+</style>
