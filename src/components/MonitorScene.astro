@@ -1,0 +1,289 @@
+---
+// Scena "monitoraggio": mentre si scorre la sezione resta ferma e una dashboard di
+// monitoraggio racconta il Noleggio Assistito in 4 passi: tutto sotto controllo, un disco
+// che cede, il tecnico che interviene, il PC sostituito con i dati ripristinati.
+// Il testo è HTML vero (SEO); la dashboard è decorativa e illustrativa.
+// Senza JS o con "riduci movimento" si vede lo stato finale.
+import Icon from './Icon.astro';
+import { waLink } from '../data/site';
+
+const steps = [
+  { t: 'Ogni postazione è sotto controllo', d: 'Monitoriamo da remoto computer, server, backup e stampanti, ogni giorno.' },
+  { t: 'Un disco inizia a cedere', d: 'Il monitoraggio lo vede prima che diventi un blocco, non quando il PC non si accende più.' },
+  { t: 'Interveniamo noi', d: 'Un tecnico G8A prende in carico il problema e controlla che i dati siano al sicuro nel backup.' },
+  { t: 'Il PC si cambia, il lavoro no', d: 'La sostituzione è nel canone: arriva una macchina configurata, con i tuoi dati ripristinati.' },
+];
+const tiles = [
+  ['pc', 'Reception'], ['pc', 'Amministrazione 1'], ['pc', 'Amministrazione 2'], ['laptop', 'Titolare'],
+  ['pc', 'Ufficio tecnico 1'], ['pc', 'Ufficio tecnico 2'], ['laptop', 'Commerciale'], ['pc', 'Magazzino'],
+  ['server', 'Server NAS'], ['printer', 'Multifunzione'], ['shieldok', 'Firewall'], ['wifi', 'Wi-Fi'],
+];
+const HOT = 4; // la postazione che si guasta
+const feed = [
+  { s: 0, k: 'ok', t: 'Backup del server NAS completato' },
+  { s: 0, k: 'ok', t: 'Aggiornamenti installati su tutte le postazioni' },
+  { s: 1, k: 'warn', t: 'Ufficio tecnico 1: il disco sta cedendo' },
+  { s: 2, k: 'g8a', t: 'Tecnico G8A: problema preso in carico' },
+  { s: 2, k: 'ok', t: 'Backup della postazione verificato' },
+  { s: 3, k: 'ok', t: 'PC sostituito, dati ripristinati' },
+  { s: 3, k: 'g8a', t: 'Nessun costo extra: incluso nel canone' },
+];
+---
+<section class="mon" id="monitoraggio" aria-labelledby="mon-h" data-state="3">
+  <div class="mon__pin">
+    <div class="mon__glow" aria-hidden="true"></div>
+    <div class="wrap mon__grid">
+      <div class="mon__copy">
+        <span class="kicker">Monitoraggio continuo</span>
+        <h2 id="mon-h" class="h h2" data-nosplit>Un guasto in arrivo? <span class="red">Lo vediamo prima noi.</span></h2>
+        <ol class="mon__steps">
+          {steps.map((s, i) => <li data-n={String(i + 1).padStart(2, '0')}><strong>{s.t}</strong><span>{s.d}</span></li>)}
+        </ol>
+        <div class="mon__bar" aria-hidden="true"><span></span></div>
+        <div class="mon__cta">
+          <a class="btn btn--red" href="/rmm">Come funziona il monitoraggio</a>
+          <a class="btn btn--wa" href={waLink('Ciao, vorrei sapere come funziona il monitoraggio del Noleggio Assistito.')}><Icon name="wa" />WhatsApp</a>
+        </div>
+      </div>
+
+      <div class="mon__app" aria-hidden="true">
+        <div class="app">
+          <div class="app__top">
+            <span class="app__dots"><i></i><i></i><i></i></span>
+            <span class="app__title">Monitoraggio G8A · <b>La tua azienda</b></span>
+            <span class="app__live"><i></i>LIVE</span>
+          </div>
+          <div class="app__kpi">
+            <div class="kpi"><span class="kpi__l">Dispositivi online</span><span class="kpi__v"><b class="kpi__on">12</b>/12</span></div>
+            <div class="kpi"><span class="kpi__l">Backup di stanotte</span><span class="kpi__v kpi__v--ok">Completato</span></div>
+            <div class="kpi"><span class="kpi__l">Avvisi aperti</span><span class="kpi__v"><b class="kpi__al">0</b></span></div>
+          </div>
+          <div class="app__body">
+            <ul class="tiles">
+              {tiles.map(([ic, name], i) => (
+                <li class:list={['tile', { 'tile--hot': i === HOT }]}>
+                  <span class="tile__ic"><Icon name={ic} size={18} width={1.9} /></span>
+                  <span class="tile__n">{name}</span>
+                  <span class="tile__st"></span>
+                  <svg class="tile__spark" viewBox="0 0 100 24" preserveAspectRatio="none"><polyline points="" /></svg>
+                  {i === HOT && (
+                    <span class="tile__msg">
+                      <span data-s="1">Disco: settori danneggiati</span>
+                      <span data-s="2">Tecnico G8A collegato</span>
+                      <span data-s="3">Nuovo PC · dati ripristinati</span>
+                    </span>
+                  )}
+                  {i === HOT && <span class="tile__new">NUOVO</span>}
+                </li>
+              ))}
+            </ul>
+            <ol class="feed">
+              <li class="feed__h">Attività</li>
+              {feed.map((f) => <li class={`feed__i feed__i--${f.k}`} data-s={f.s}><i></i>{f.t}</li>)}
+            </ol>
+          </div>
+          <div class="app__restore">
+            <span>Ripristino dati sul nuovo PC</span>
+            <span class="app__track"><span></span></span>
+            <b class="app__pct">100%</b>
+          </div>
+        </div>
+        <div class="tech">
+          <span class="tech__av">G8A</span>
+          <span><strong>Tecnico G8A</strong>Ho preso in carico l'avviso, ci pensiamo noi.</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .mon { position: relative; overflow: hidden; background: var(--ink); color: #fff; }
+  .mon__pin { position: relative; padding-block: clamp(3.5rem, 7vw, 5.5rem); }
+  .mon__glow { position: absolute; inset: 0; pointer-events: none; background: radial-gradient(55% 65% at 72% 50%, rgba(227,6,19,.22), transparent 70%); transition: background .6s ease; }
+  .mon[data-state="1"] .mon__glow { background: radial-gradient(55% 65% at 72% 50%, rgba(255,170,0,.2), transparent 70%); }
+  .mon[data-state="3"] .mon__glow { background: radial-gradient(55% 65% at 72% 50%, rgba(34,197,94,.14), transparent 70%), radial-gradient(40% 50% at 20% 80%, rgba(227,6,19,.14), transparent 70%); }
+  .mon__grid { position: relative; z-index: 1; display: grid; grid-template-columns: 0.82fr 1.35fr; gap: clamp(1.5rem, 4vw, 3.5rem); align-items: center; }
+  .mon h2 { margin: .8rem 0 1.3rem; color: #fff; }
+  .mon__steps { list-style: none; padding: 0; margin: 0 0 1.3rem; display: grid; gap: .25rem; }
+  .mon__steps li { position: relative; padding: .7rem .9rem .7rem 3.4rem; border-radius: 12px; transition: background .4s ease, opacity .4s ease, transform .4s ease; }
+  .mon__steps li::before { content: attr(data-n); position: absolute; left: .8rem; top: .75rem; font-weight: 900; font-size: 1.05rem; color: #5b5e66; font-stretch: 80%; font-variation-settings: 'wdth' 80; transition: color .4s ease; }
+  .mon__steps strong { display: block; font-size: 1.06rem; }
+  .mon__steps span { display: block; color: #a6a9b1; font-size: .95rem; line-height: 1.45; }
+  .mon__bar { display: none; }
+  .mon__cta { display: flex; gap: .7rem; flex-wrap: wrap; }
+
+  .mon.is-live .mon__steps li { opacity: .38; }
+  .mon.is-live .mon__steps li.is-on { opacity: 1; background: rgba(255,255,255,.05); transform: translateX(6px); }
+  .mon.is-live .mon__steps li.is-on::before { color: var(--red-hot); }
+  .mon.is-live[data-state="1"] .mon__steps li.is-on::before { color: #ffb020; }
+  .mon.is-live .mon__bar { display: block; height: 3px; border-radius: 3px; background: #24242a; margin: 0 0 1.3rem; overflow: hidden; }
+  .mon.is-live .mon__bar span { display: block; height: 100%; transform-origin: left; transform: scaleX(var(--p, 0)); background: var(--grad); }
+  .mon.is-live .mon__pin { min-height: calc(100svh - var(--hdr-h, 70px)); display: grid; align-items: center; }
+
+  /* Dashboard */
+  .mon__app { position: relative; perspective: 1400px; }
+  .app { position: relative; border-radius: 18px; background: linear-gradient(160deg, #18181d, #0e0e11); border: 1px solid #2a2a31; box-shadow: 0 40px 100px rgba(0,0,0,.6), 0 0 0 1px rgba(255,255,255,.03) inset, 0 0 80px rgba(227,6,19,.12); overflow: hidden; transform: rotateY(-8deg) rotateX(4deg); transform-origin: 60% 50%; transition: transform .8s cubic-bezier(.2,.7,.2,1), box-shadow .6s ease; }
+  .mon[data-state="3"] .app { transform: rotateY(-3deg) rotateX(2deg); }
+  .mon[data-state="1"] .app { box-shadow: 0 40px 100px rgba(0,0,0,.6), 0 0 0 1px rgba(255,176,32,.25) inset, 0 0 90px rgba(255,176,32,.18); }
+  .app__top { display: flex; align-items: center; gap: .8rem; padding: .7rem 1rem; border-bottom: 1px solid #24242b; background: rgba(255,255,255,.02); font-size: .82rem; color: #9a9ca4; }
+  .app__dots { display: inline-flex; gap: .35rem; } .app__dots i { width: .6rem; height: .6rem; border-radius: 50%; background: #34343c; }
+  .app__dots i:first-child { background: var(--red); }
+  .app__title b { color: #fff; }
+  .app__live { margin-left: auto; display: inline-flex; align-items: center; gap: .4rem; font-weight: 800; letter-spacing: .12em; font-size: .72rem; color: #fff; }
+  .app__live i { width: .5rem; height: .5rem; border-radius: 50%; background: var(--red-hot); box-shadow: 0 0 10px var(--red-hot); animation: monBlink 1.4s ease-in-out infinite; }
+  .app__kpi { display: grid; grid-template-columns: repeat(3, 1fr); gap: .6rem; padding: .9rem 1rem .4rem; }
+  .kpi { padding: .6rem .8rem; border-radius: 10px; background: #15151a; border: 1px solid #23232a; }
+  .kpi__l { display: block; font-size: .72rem; color: #8c8f97; text-transform: uppercase; letter-spacing: .06em; font-weight: 700; }
+  .kpi__v { display: block; font-size: 1.35rem; font-weight: 900; font-stretch: 85%; font-variation-settings: 'wdth' 85; color: #fff; }
+  .kpi__v--ok { color: #4ade80; }
+  .mon[data-state="1"] .kpi__al, .mon[data-state="2"] .kpi__al { color: #ffb020; }
+  .app__body { display: grid; grid-template-columns: 1.6fr 1fr; gap: .8rem; padding: .6rem 1rem 1rem; }
+  .tiles { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, 1fr); gap: .5rem; }
+  .tile { position: relative; padding: .55rem .6rem .4rem; border-radius: 10px; background: #141418; border: 1px solid #23232a; min-height: 4.9rem; overflow: hidden; transition: border-color .4s ease, background .4s ease, transform .4s ease, box-shadow .4s ease; }
+  .tile__ic { color: #cfd1d6; display: block; }
+  .tile__n { display: block; margin-top: .25rem; font-size: .76rem; font-weight: 700; color: #c9cbd1; line-height: 1.2; }
+  .tile__st { position: absolute; top: .6rem; right: .6rem; width: .5rem; height: .5rem; border-radius: 50%; background: #22c55e; box-shadow: 0 0 8px #22c55e; transition: background .3s ease, box-shadow .3s ease; }
+  .tile__spark { display: block; width: 100%; height: 1.1rem; margin-top: .3rem; }
+  .tile__spark polyline { fill: none; stroke: #e30613; stroke-width: 1.6; vector-effect: non-scaling-stroke; opacity: .75; }
+  .tile__msg { position: absolute; left: .55rem; right: .5rem; bottom: .45rem; font-size: .7rem; font-weight: 800; line-height: 1.15; }
+  .tile__msg span { display: none; }
+  .tile__new { position: absolute; top: .45rem; right: 1.4rem; font-size: .55rem; font-weight: 900; letter-spacing: .1em; padding: .1rem .35rem; border-radius: 4px; background: #22c55e; color: #052e14; opacity: 0; transform: scale(.6); transition: opacity .3s ease, transform .4s cubic-bezier(.2,.9,.3,1.4); }
+
+  .mon[data-state="1"] .tile--hot, .mon[data-state="2"] .tile--hot { border-color: #ffb020; background: linear-gradient(160deg, rgba(255,176,32,.18), #141418 70%); box-shadow: 0 0 0 1px rgba(255,176,32,.4), 0 10px 30px rgba(255,176,32,.2); transform: scale(1.04); z-index: 1; }
+  .mon[data-state="1"] .tile--hot .tile__st, .mon[data-state="2"] .tile--hot .tile__st { background: #ffb020; box-shadow: 0 0 10px #ffb020; animation: monBlink .6s ease-in-out infinite; }
+  .mon[data-state="1"] .tile--hot .tile__spark, .mon[data-state="2"] .tile--hot .tile__spark, .mon[data-state="3"] .tile--hot .tile__spark { visibility: hidden; }
+  .mon[data-state="1"] .tile--hot .tile__msg span[data-s="1"] { display: block; color: #ffb020; }
+  .mon[data-state="2"] .tile--hot .tile__msg span[data-s="2"] { display: block; color: #ff6b6b; }
+  .mon[data-state="2"] .tile--hot { border-color: var(--red); box-shadow: 0 0 0 1px rgba(227,6,19,.5), 0 10px 30px rgba(227,6,19,.3); }
+  .mon[data-state="3"] .tile--hot { border-color: #22c55e; background: linear-gradient(160deg, rgba(34,197,94,.16), #141418 70%); }
+  .mon[data-state="3"] .tile--hot .tile__msg span[data-s="3"] { display: block; color: #4ade80; }
+  .mon[data-state="3"] .tile__new { opacity: 1; transform: none; }
+  .mon:is([data-state="1"], [data-state="2"], [data-state="3"]) .tile--hot .tile__n { visibility: hidden; }
+
+  .feed { list-style: none; margin: 0; padding: .6rem .7rem; border-radius: 10px; background: #121216; border: 1px solid #23232a; display: flex; flex-direction: column; gap: .35rem; font-size: .78rem; color: #c9cbd1; overflow: hidden; }
+  .feed__h { font-size: .68rem; text-transform: uppercase; letter-spacing: .1em; font-weight: 800; color: #8c8f97; margin-bottom: .1rem; }
+  .feed__i { display: flex; gap: .45rem; align-items: flex-start; line-height: 1.3; padding: .35rem .45rem; border-radius: 7px; background: #18181d; }
+  .feed__i i { flex: none; width: .45rem; height: .45rem; margin-top: .3rem; border-radius: 50%; background: #22c55e; }
+  .feed__i--warn { color: #ffd38a; } .feed__i--warn i { background: #ffb020; }
+  .feed__i--g8a i { background: var(--red-hot); }
+  .mon.is-live .feed__i { display: none; }
+  .mon.is-live .feed__i.is-shown { display: flex; animation: monIn .5s cubic-bezier(.2,.8,.2,1); }
+
+  .app__restore { display: flex; align-items: center; gap: .8rem; padding: .7rem 1rem .9rem; font-size: .75rem; color: #a6a9b1; border-top: 1px solid #22222a; }
+  .app__track { flex: 1; height: 6px; border-radius: 6px; background: #24242b; overflow: hidden; }
+  .app__track span { display: block; height: 100%; width: 100%; background: linear-gradient(90deg, #22c55e, #4ade80); border-radius: inherit; }
+  .app__pct { color: #fff; min-width: 2.6rem; text-align: right; }
+  .mon.is-live .app__restore { opacity: .35; transition: opacity .4s ease; }
+  .mon.is-live[data-state="3"] .app__restore { opacity: 1; }
+  .mon.is-live .app__track span { width: var(--restore, 0%); }
+
+  .tech { position: absolute; left: -1.5rem; bottom: -1.2rem; z-index: 2; display: flex; gap: .7rem; align-items: center; max-width: 17rem; padding: .7rem .9rem; border-radius: 14px; background: #fff; color: var(--ink); font-size: .86rem; line-height: 1.35; box-shadow: 0 18px 40px rgba(0,0,0,.45); }
+  .tech strong { display: block; }
+  .tech__av { flex: none; display: grid; place-items: center; width: 2.4rem; height: 2.4rem; border-radius: 50%; background: var(--grad); color: #fff; font-weight: 900; font-size: .72rem; }
+  .mon.is-live .tech { opacity: 0; transform: translateY(16px) scale(.95); transition: opacity .45s ease, transform .45s cubic-bezier(.2,.9,.3,1.3); }
+  .mon.is-live[data-state="2"] .tech, .mon.is-live[data-state="3"] .tech { opacity: 1; transform: none; }
+
+  @keyframes monBlink { 50% { opacity: .35; } }
+  @keyframes monIn { from { opacity: 0; transform: translateY(8px); } }
+
+  @media (max-width: 1000px) {
+    .mon__grid { grid-template-columns: 1fr; }
+    .mon__app { order: -1; }
+    .app { transform: none !important; }
+    .tech { left: auto; right: .5rem; bottom: -1rem; font-size: .78rem; max-width: 14rem; }
+  }
+  @media (max-width: 640px) {
+    .app__body { grid-template-columns: 1fr; }
+    .tiles { grid-template-columns: repeat(4, 1fr); gap: .35rem; }
+    .tile { min-height: 3.6rem; padding: .4rem; }
+    .tile__n { font-size: .58rem; }
+    .tile__spark { display: none; }
+    .tile__msg { font-size: .55rem; bottom: .3rem; left: .4rem; }
+    .tile__new { display: none; }
+    .kpi__v { font-size: 1.05rem; } .kpi__l { font-size: .6rem; }
+    .feed { display: none; }
+    .app__restore { font-size: .68rem; }
+    .mon.is-live .mon__steps li:not(.is-on) { display: none; }
+    .mon.is-live .mon__steps li.is-on { transform: none; }
+    .mon.is-live h2 { font-size: clamp(1.5rem, 7vw, 2rem); margin: .3rem 0 .6rem; }
+    .mon.is-live .kicker, .mon.is-live .mon__cta { display: none; }
+    .mon.is-live .mon__pin { padding-block: 1.2rem; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .mon *, .mon *::before { animation: none !important; transition: none !important; }
+  }
+</style>
+
+<script>
+  import { gsap } from 'gsap';
+  import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  gsap.registerPlugin(ScrollTrigger);
+
+  const sec = document.querySelector<HTMLElement>('.mon');
+  // Grafici delle singole postazioni: si muovono sempre un po', come una dashboard vera
+  const sparks = sec ? [...sec.querySelectorAll<SVGPolylineElement>('.tile__spark polyline')] : [];
+  const series = sparks.map(() => Array.from({ length: 24 }, () => 30 + Math.random() * 40));
+  const drawSparks = () => sparks.forEach((pl, i) => pl.setAttribute('points', series[i].map((v, k) => `${(k / 23) * 100},${24 - (v / 100) * 22}`).join(' ')));
+  drawSparks();
+
+  if (sec && !reduce) {
+    const steps = sec.querySelectorAll<HTMLElement>('.mon__steps li');
+    const feed = sec.querySelectorAll<HTMLElement>('.feed__i');
+    const bar = sec.querySelector<HTMLElement>('.mon__bar');
+    const on = sec.querySelector<HTMLElement>('.kpi__on')!;
+    const al = sec.querySelector<HTMLElement>('.kpi__al')!;
+    const pct = sec.querySelector<HTMLElement>('.app__pct')!;
+    const app = sec.querySelector<HTMLElement>('.app')!;
+    sec.classList.add('is-live');
+    const hdr = document.querySelector<HTMLElement>('.hdr');
+    sec.style.setProperty('--hdr-h', `${hdr?.offsetHeight ?? 70}px`);
+
+    let state = -1;
+    const restore = { v: 0 };
+    function setState(s: number) {
+      if (s === state) return;
+      const prev = state; state = s;
+      sec!.dataset.state = String(s);
+      steps.forEach((li, i) => li.classList.toggle('is-on', i === s));
+      feed.forEach((li) => li.classList.toggle('is-shown', Number(li.dataset.s) <= s));
+      on.textContent = s === 1 || s === 2 ? '11' : '12';
+      al.textContent = s === 1 || s === 2 ? '1' : '0';
+      if (s === 1 && prev < 1) gsap.fromTo(app, { x: -10 }, { x: 0, duration: 0.6, ease: 'elastic.out(1, 0.3)' });
+      if (s === 3) gsap.to(restore, { v: 100, duration: 1.6, ease: 'power2.inOut', onUpdate: paint });
+      else gsap.to(restore, { v: 0, duration: 0.3, onUpdate: paint });
+    }
+    function paint() {
+      sec!.style.setProperty('--restore', `${restore.v.toFixed(1)}%`);
+      pct.textContent = `${Math.round(restore.v)}%`;
+    }
+    setState(0);
+
+    ScrollTrigger.create({
+      trigger: sec,
+      start: () => `top top+=${hdr?.offsetHeight ?? 70}`,
+      end: '+=260%',
+      pin: true,
+      anticipatePin: 1,
+      invalidateOnRefresh: true,
+      onUpdate: (st) => {
+        const p = st.progress;
+        bar?.style.setProperty('--p', p.toFixed(3));
+        setState(p < 0.22 ? 0 : p < 0.48 ? 1 : p < 0.72 ? 2 : 3);
+      },
+    });
+
+    // Entrata della dashboard
+    gsap.from(app, { y: 80, opacity: 0, rotateX: 18, duration: 1.2, ease: 'expo.out', scrollTrigger: { trigger: sec, start: 'top 75%', once: true } });
+
+    let visible = false;
+    new IntersectionObserver(([e]) => { visible = e.isIntersecting; }).observe(sec);
+    setInterval(() => {
+      if (!visible) return;
+      series.forEach((s) => { s.shift(); s.push(Math.max(5, Math.min(95, s[s.length - 1] + (Math.random() - 0.5) * 30))); });
+      drawSparks();
+    }, 700);
+  }
+</script>

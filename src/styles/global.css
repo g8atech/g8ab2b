@@ -80,3 +80,25 @@ p, h1, h2, h3 { margin: 0; }
   html { scroll-behavior: auto; }
   *, *::before, *::after { animation: none !important; transition: none !important; }
 }
+
+/* Movimento (src/scripts/motion.ts) */
+html.motion { scroll-behavior: auto !important; }
+.w-mask { display: inline-block; overflow: hidden; vertical-align: top; padding-bottom: 0.1em; margin-bottom: -0.1em; }
+.w { display: inline-block; will-change: transform; }
+/* Alone rosso che segue il cursore */
+.spot { position: relative; isolation: isolate; }
+.spot::after { content: ''; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; z-index: 1; opacity: 0; transition: opacity .3s ease; background: radial-gradient(260px circle at var(--mx, 50%) var(--my, 50%), rgba(227, 6, 19, .12), transparent 65%); }
+.spot:hover::after { opacity: 1; }
+/* "Come funziona": linea che si riempie con lo scroll */
+.line.line--scrub::after { animation: none; left: 0; width: 100%; transform-origin: left; transform: scaleX(var(--fill, 0)); }
+#come-funziona .steps li { transition: opacity .4s ease, transform .4s ease; }
+html.motion #come-funziona .steps li:not(.is-lit) { opacity: .35; }
+html.motion #come-funziona .steps li.is-lit .steps__n { color: var(--red); }
+/* Passaggio morbido tra le pagine */
+@view-transition { navigation: auto; }
+@media (prefers-reduced-motion: no-preference) {
+  ::view-transition-old(root) { animation: vt-out .28s cubic-bezier(.4,0,1,1) both; }
+  ::view-transition-new(root) { animation: vt-in .45s cubic-bezier(0,0,.2,1) both; }
+}
+@keyframes vt-out { to { opacity: 0; transform: translateY(-12px); filter: blur(4px); } }
+@keyframes vt-in { from { opacity: 0; transform: translateY(16px); filter: blur(4px); } }

@@ -1,0 +1,130 @@
+---
+// Circuito stampato animato (canvas): piste che partono dai bordi e convergono verso
+// il logo dietro ai robot, con impulsi rossi che le percorrono. All'avvio parte un'onda
+// su tutte le piste. Si ferma fuori schermo; con "riduci movimento" resta un'immagine ferma.
+---
+<canvas class="pcb" aria-hidden="true"></canvas>
+
+<style>
+  .pcb { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
+  @media (min-width: 901px) {
+    .pcb { -webkit-mask-image: linear-gradient(90deg, transparent 0%, rgba(0,0,0,.25) 30%, #000 55%); mask-image: linear-gradient(90deg, transparent 0%, rgba(0,0,0,.25) 30%, #000 55%); }
+  }
+  @media (max-width: 900px) {
+    .pcb { -webkit-mask-image: linear-gradient(180deg, transparent 0%, rgba(0,0,0,.2) 45%, #000 75%); mask-image: linear-gradient(180deg, transparent 0%, rgba(0,0,0,.2) 45%, #000 75%); }
+  }
+</style>
+
+<script>
+  type Trace = { pts: [number, number][]; len: number[]; total: number };
+  type Pulse = { tr: number; d: number; v: number; tail: number };
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  document.querySelectorAll<HTMLCanvasElement>('canvas.pcb').forEach((canvas) => {
+    const ctx = canvas.getContext('2d');
+    const host = canvas.parentElement;
+    if (!ctx || !host) return;
+    let W = 0, H = 0, traces: Trace[] = [], pulses: Pulse[] = [], running = false, raf = 0, last = 0;
+    const off = document.createElement('canvas');
+
+    function build() {
+      const r = host!.getBoundingClientRect();
+      const dpr = Math.min(devicePixelRatio || 1, 2);
+      W = r.width; H = r.height;
+      for (const c of [canvas, off]) { c.width = Math.round(W * dpr); c.height = Math.round(H * dpr); }
+      ctx!.setTransform(dpr, 0, 0, dpr, 0, 0);
+      const mobile = W < 900;
+      const fx = mobile ? W * 0.5 : W * 0.74, fy = mobile ? H * 0.78 : H * 0.48;
+      const R = Math.min(W, H) * (mobile ? 0.16 : 0.2);
+      const n = mobile ? 22 : 40;
+      traces = [];
+      // Piste a 90° e 45°, come su un circuito vero: dal bordo verso l'anello intorno al logo
+      for (let i = 0; i < n; i++) {
+        const a = (i / n) * Math.PI * 2 + Math.random() * 0.1;
+        const ex = fx + Math.cos(a) * R, ey = fy + Math.sin(a) * R; // arrivo sull'anello
+        const far = Math.max(W, H) * (0.55 + Math.random() * 0.35);
+        let x = fx + Math.cos(a) * far, y = fy + Math.sin(a) * far;
+        const pts: [number, number][] = [[x, y]];
+        // prima tratta orizzontale o verticale, poi diagonale a 45°, poi dritta all'arrivo
+        const dx = ex - x, dy = ey - y;
+        if (Math.abs(dx) > Math.abs(dy)) {
+          const run = dx - Math.sign(dx) * Math.abs(dy);
+          x += run * (0.4 + Math.random() * 0.4); pts.push([x, y]);
+          const d = Math.min(Math.abs(ex - x), Math.abs(ey - y));
+          x += Math.sign(ex - x) * d; y += Math.sign(ey - y) * d; pts.push([x, y]);
+        } else {
+          const run = dy - Math.sign(dy) * Math.abs(dx);
+          y += run * (0.4 + Math.random() * 0.4); pts.push([x, y]);
+          const d = Math.min(Math.abs(ex - x), Math.abs(ey - y));
+          x += Math.sign(ex - x) * d; y += Math.sign(ey - y) * d; pts.push([x, y]);
+        }
+        pts.push([ex, ey]);
+        const len: number[] = [0];
+        for (let k = 1; k < pts.length; k++) len.push(len[k - 1] + Math.hypot(pts[k][0] - pts[k - 1][0], pts[k][1] - pts[k - 1][1]));
+        traces.push({ pts, len, total: len[len.length - 1] });
+      }
+      // Disegno statico delle piste e delle piazzole su un canvas a parte
+      const o = off.getContext('2d')!;
+      o.setTransform(dpr, 0, 0, dpr, 0, 0);
+      o.clearRect(0, 0, W, H);
+      o.lineCap = 'round'; o.lineJoin = 'round';
+      for (const t of traces) {
+        o.beginPath(); t.pts.forEach(([x, y], k) => (k ? o.lineTo(x, y) : o.moveTo(x, y)));
+        o.strokeStyle = 'rgba(11,11,13,.09)'; o.lineWidth = 2; o.stroke();
+        const [px, py] = t.pts[t.pts.length - 1];
+        o.beginPath(); o.arc(px, py, 3.2, 0, Math.PI * 2); o.fillStyle = 'rgba(227,6,19,.35)'; o.fill();
+        for (const [vx, vy] of t.pts.slice(1, -1)) { o.beginPath(); o.arc(vx, vy, 2.2, 0, Math.PI * 2); o.fillStyle = 'rgba(11,11,13,.14)'; o.fill(); }
+      }
+      o.beginPath(); o.arc(fx, fy, R, 0, Math.PI * 2); o.strokeStyle = 'rgba(227,6,19,.18)'; o.lineWidth = 1.5; o.setLineDash([4, 6]); o.stroke(); o.setLineDash([]);
+      pulses = traces.map((_, i) => ({ tr: i, d: -Math.random() * 200, v: 520 + Math.random() * 200, tail: 90 }));
+    }
+
+    function at(t: Trace, d: number): [number, number] {
+      d = Math.max(0, Math.min(t.total, d));
+      let k = 1; while (k < t.len.length - 1 && t.len[k] < d) k++;
+      const a = t.pts[k - 1], b = t.pts[k], seg = t.len[k] - t.len[k - 1] || 1, r = (d - t.len[k - 1]) / seg;
+      return [a[0] + (b[0] - a[0]) * r, a[1] + (b[1] - a[1]) * r];
+    }
+
+    function draw() {
+      ctx!.clearRect(0, 0, W, H);
+      ctx!.drawImage(off, 0, 0, W, H);
+      ctx!.lineCap = 'round';
+      for (const p of pulses) {
+        const t = traces[p.tr];
+        if (p.d <= 0 || p.d - p.tail >= t.total) continue;
+        const steps = 10;
+        for (let s = 0; s < steps; s++) {
+          const d0 = p.d - (p.tail * (s + 1)) / steps, d1 = p.d - (p.tail * s) / steps;
+          if (d1 < 0 || d0 > t.total) continue;
+          const [ax, ay] = at(t, d0), [bx, by] = at(t, d1);
+          const k = 1 - s / steps;
+          ctx!.beginPath(); ctx!.moveTo(ax, ay); ctx!.lineTo(bx, by);
+          ctx!.strokeStyle = `rgba(255,26,26,${0.12 * k})`; ctx!.lineWidth = 8 * k; ctx!.stroke();
+          ctx!.strokeStyle = `rgba(227,6,19,${0.9 * k})`; ctx!.lineWidth = 2.4; ctx!.stroke();
+        }
+        if (p.d <= t.total) {
+          const [hx, hy] = at(t, p.d);
+          ctx!.beginPath(); ctx!.arc(hx, hy, 3, 0, Math.PI * 2); ctx!.fillStyle = '#ff1a1a'; ctx!.fill();
+        }
+      }
+    }
+
+    function tick(now: number) {
+      const dt = Math.min(0.05, (now - (last || now)) / 1000); last = now;
+      for (const p of pulses) p.d += p.v * dt;
+      pulses = pulses.filter((p) => p.d - p.tail < traces[p.tr].total);
+      const max = W < 900 ? 7 : 14;
+      while (pulses.length < max) pulses.push({ tr: Math.floor(Math.random() * traces.length), d: 0, v: 160 + Math.random() * 220, tail: 50 + Math.random() * 60 });
+      draw();
+      raf = requestAnimationFrame(tick);
+    }
+    const start = () => { if (!running && !reduce) { running = true; last = 0; raf = requestAnimationFrame(tick); } };
+    const stop = () => { running = false; cancelAnimationFrame(raf); };
+
+    build(); draw();
+    new IntersectionObserver(([e]) => (e.isIntersecting ? start() : stop())).observe(canvas);
+    let rt = 0;
+    new ResizeObserver(() => { clearTimeout(rt); rt = window.setTimeout(() => { build(); draw(); }, 150); }).observe(host);
+  });
+</script>

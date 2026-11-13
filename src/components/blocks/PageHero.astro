@@ -2,11 +2,13 @@
 import { Image } from 'astro:assets';
 import Icon from '../Icon.astro';
 import PressBar from './PressBar.astro';
+import CircuitCanvas from '../CircuitCanvas.astro';
 import { SITE, waLink, telLink } from '../../data/site';
 interface Props { kicker: string; crumb: string; lead: string; waText: string; image?: ImageMetadata; imageAlt?: string; chips?: string[]; note?: string[] }
 const { kicker, crumb, lead, waText, image, imageAlt = '', chips = [], note = ['Nessun vincolo', 'Assistenza inclusa', 'Garanzia 30 giorni'] } = Astro.props;
 ---
 <section class="b-hero">
+  <CircuitCanvas />
   <div class="wrap b-hero__row">
     <div class="b-hero__copy">
       <ol class="b-crumbs" aria-label="Percorso"><li><a href="/">Home</a></li><li aria-current="page">{crumb}</li></ol>

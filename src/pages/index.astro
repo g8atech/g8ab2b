@@ -17,6 +17,8 @@ import PressBar from '../components/blocks/PressBar.astro';
 import Rassegna from '../components/blocks/Rassegna.astro';
 import InTv from '../components/blocks/InTv.astro';
 import { TV } from '../data/tv';
+import MonitorScene from '../components/MonitorScene.astro';
+import CircuitCanvas from '../components/CircuitCanvas.astro';
 
 
 const canone = ['Computer nuovi', 'Server e backup', 'Stampanti e toner', 'Assistenza tecnica', 'Monitoraggio continuo', 'Sostituzione guasti'];
@@ -73,6 +75,7 @@ const serviceLd = {
   <!-- HERO -->
   <section class="hero">
     <div class="hero__dots" aria-hidden="true"></div>
+    <CircuitCanvas />
     <div class="wrap hero__row">
       <div class="hero__copy">
         <h1 class="h hero__h1"><span class="hero__tag"><Image src={mark} alt="" height={22} densities={[1, 2]} loading="eager" />Noleggio assistito e assistenza informatica per aziende</span> Tutta l'informatica della tua azienda. <span class="red hero__sweep" data-text="Un canone.">Un canone.</span> Zero pensieri.</h1>
@@ -156,6 +159,8 @@ const serviceLd = {
       </div>
     </div>
   </section>
+
+  <MonitorScene />
 
   <!-- NUMERI -->
   <section class="nums">
@@ -380,7 +385,7 @@ const serviceLd = {
   .hero__links a { font-weight: 700; color: var(--ink); }
   .hero__links a:hover { color: var(--red); }
   .hero__g span { color: #fbbc05; }
-  .hero__tv { display: inline-flex; align-items: center; gap: 0.7rem; max-width: 100%; margin-top: 1rem; padding: 0.35rem 0.9rem 0.35rem 0.35rem; border-radius: 999px; background: var(--ink); color: #fff; text-decoration: none; font-size: 0.9rem; box-shadow: 0 10px 26px rgba(11, 11, 13, 0.18); transition: transform 0.15s, box-shadow 0.15s; }
+  .hero__tv { display: flex; width: fit-content; align-items: center; gap: 0.7rem; max-width: 100%; margin-top: 1rem; padding: 0.35rem 0.9rem 0.35rem 0.35rem; border-radius: 999px; background: var(--ink); color: #fff; text-decoration: none; font-size: 0.9rem; box-shadow: 0 10px 26px rgba(11, 11, 13, 0.18); transition: transform 0.15s, box-shadow 0.15s; }
   .hero__tv:hover { transform: translateY(-2px); box-shadow: 0 14px 30px rgba(227, 6, 19, 0.3); }
   .hero__tv-on { display: inline-flex; align-items: center; gap: 0.45rem; flex: none; padding: 0.3rem 0.7rem 0.3rem 0.55rem; border-radius: 999px; background: var(--grad); font-weight: 800; font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase; }
   .hero__tv-on .live { background: #fff; }
