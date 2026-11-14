@@ -63,6 +63,7 @@ const organization = {
   subOrganization: GRUPPO.map((g) => ({ '@type': 'Organization', name: g.name, url: g.url })),
   // Profili ufficiali della stessa azienda: la scheda Google della sede (collega sito e recensioni per le AI).
   sameAs: [GOOGLE.leggi],
+  hasMap: GOOGLE.leggi,
 };
 // I negozi con pagina propria hanno i loro dati strutturati nella pagina; qui le altre sedi.
 const stores = SEDI.filter((s) => !s.operativa && !s.negozio).map((s) => ({
@@ -213,7 +214,7 @@ const bing = import.meta.env.PUBLIC_BING_VERIFICATION;
         </div>
       </div>
       <div class="wrap ftr__legal">
-        <span>© {new Date().getFullYear()} {SITE.company} · P.IVA {SITE.vat} · REA {SITE.rea} · Cap. soc. {SITE.capital} · Sede legale {SITE.legalAddress}</span>
+        <span>© {new Date().getFullYear()} {SITE.company} · P.IVA {SITE.vat} · REA {SITE.rea} · Cap. soc. {SITE.capital} · Sede legale <a href={GOOGLE.leggi} target="_blank" rel="noopener">{SITE.legalAddress}</a></span>
         <span class="ftr__pol"><a href="/privacy-policy">Privacy policy</a><a href="/cookie-policy">Cookie policy</a><button type="button" data-cookie-prefs>Preferenze cookie</button></span>
       </div>
     </footer>
