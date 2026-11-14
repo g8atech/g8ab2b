@@ -144,8 +144,9 @@ export const CITTA: Citta[] = [
     provincia: 'LC',
     sede: 'Viale Dante Alighieri 22, 23900 Lecco (LC)',
     sottodominio: 'lecco.g8a.it',
-    titolo: 'Assistenza informatica aziende a Lecco e provincia | G8A Technology',
-    descrizione: 'Assistenza informatica per aziende a Lecco e provincia: computer, server, backup e stampanti in un canone, monitoraggio da remoto e tecnici in sede. Viale Dante 22.',
+    // Search Console: a Lecco si cercano molto "assistenza/vendita/noleggio stampanti e multifunzione".
+    titolo: 'Assistenza informatica e stampanti per aziende a Lecco | G8A Technology',
+    descrizione: 'Assistenza informatica per aziende a Lecco: computer, server, backup e noleggio di stampanti e multifunzione con assistenza, in un canone. Viale Dante 22.',
     lead: "Officine, aziende meccaniche, studi e attività del lago: a Lecco e provincia gestiamo computer, server, backup e stampanti in un unico canone, dal punto G8A di Viale Dante Alighieri.",
     contesto: {
       titolo: 'Lecco: meccanica, studi e attività del lago',
@@ -158,6 +159,7 @@ export const CITTA: Citta[] = [
       { t: 'Officine e meccanica', d: 'Workstation per CAD/CAM, server dei progetti, PC in reparto resistenti e sempre aggiornati.' },
       { t: 'Studi tecnici', d: 'Disegni e progetti al sicuro con backup automatici e copia fuori sede.' },
       { t: 'Turismo e attività del lago', d: 'PC di reception e uffici, Wi-Fi per ospiti e personale, stampanti affidabili.' },
+      { t: 'Stampanti e multifunzione', d: 'Noleggio di stampanti e multifunzione da ufficio con toner, assistenza e sostituzione inclusi, da 29 € al mese a stampante.' },
     ],
     comuni: ['Lecco', 'Valmadrera', 'Malgrate', 'Galbiate', 'Pescate', 'Civate', 'Olginate', 'Calolziocorte', 'Mandello del Lario'],
     recensioni: ['testa'],
