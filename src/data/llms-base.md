@@ -2,7 +2,7 @@
 
 > G8A Technology S.r.l. è un'azienda IT di Solbiate Arno (VA) che offre alle aziende il Noleggio Assistito: computer, stampanti, backup e assistenza tecnica in un unico canone mensile, senza investimento iniziale e senza vincolo di durata. Opera nelle province di Varese, Milano e Lecco e segue da remoto aziende in tutta Italia.
 
-Contatti: telefono e WhatsApp 0331 139 0950 · info@g8a.it · Via Caronno Varesino 33, 21048 Solbiate Arno (VA) · P.IVA 03981970126
+Contatti: telefono e WhatsApp 0331 139 0950 · info@g8a.it · Via Caronno Varesino 33, 21048 Solbiate Arno (VA) · scheda Google: https://www.google.com/maps/place/?q=place_id:ChIJj7G_qVu2ImgR7SoyoB5PA5s · P.IVA 03981970126
 
 ## Servizi
 
