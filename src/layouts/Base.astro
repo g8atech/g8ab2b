@@ -75,7 +75,8 @@ const schemas = [organization, ...stores, ...jsonLd];
 // Google Tag Manager: si attiva solo se su Vercel è impostata PUBLIC_GTM_ID (es. GTM-M5FDVQDW).
 const gtm = import.meta.env.PUBLIC_GTM_ID;
 // In alternativa a GTM: Google Analytics 4 diretto (PUBLIC_GA4_ID, es. G-XXXXXXX), sempre dopo il Consent Mode.
-const ga4 = gtm ? undefined : import.meta.env.PUBLIC_GA4_ID;
+// Di base Google Analytics 4 diretto sulla proprietà storica di g8a.it (G-4C66D465V6, la stessa del vecchio sito: lo storico continua).
+const ga4 = gtm ? undefined : import.meta.env.PUBLIC_GA4_ID || 'G-4C66D465V6';
 const live = SITE_LIVE;
 // Verifica proprietà: Google Search Console e Bing Webmaster Tools (solo il codice "content" del meta tag).
 const gsc = import.meta.env.PUBLIC_GSC_VERIFICATION;

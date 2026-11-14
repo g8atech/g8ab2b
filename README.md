@@ -48,7 +48,8 @@ Il sito non si indicizza finché non lo dici tu: tutto passa da due variabili su
 | Variabile | Valore | Effetto |
 |---|---|---|
 | `PUBLIC_SITE_LIVE` | `true` | `robots.txt` apre il sito a Google e ai motori AI, toglie il `noindex` |
-| `PUBLIC_GTM_ID` | `GTM-M5FDVQDW` (quello del vecchio sito) | attiva Google Tag Manager |
+| `PUBLIC_GTM_ID` | facoltativa | attiva Google Tag Manager al posto di GA4 diretto |
+| `PUBLIC_GA4_ID` | facoltativa: di base `G-4C66D465V6` (proprietà storica di g8a.it) | Google Analytics 4 diretto, solo dopo il consenso |
 | `PUBLIC_CLARITY_ID` | ID del progetto Microsoft Clarity (es. `abcd1234ef`) | carica Clarity, **solo dopo il consenso** ai cookie statistici |
 | `PUBLIC_GSC_VERIFICATION` | il codice `content` del meta tag di Google Search Console | verifica del sito in Search Console (se non si usa il DNS) |
 | `PUBLIC_BING_VERIFICATION` | il codice `content` del meta tag `msvalidate.01` | verifica in Bing Webmaster Tools (serve anche per Copilot) |
@@ -88,7 +89,7 @@ Ogni clic su telefono, WhatsApp o email invia a GTM l'evento `contatto` con `can
 1. Controllare l'anteprima su Vercel, pagina per pagina.
 2. Su Vercel → Settings → Domains aggiungere `www.g8a.it` (principale) e `g8a.it` (reindirizza a www).
 3. Dal registrar del dominio cambiare i DNS indicati da Vercel al posto di quelli di GoHighLevel. Le email non cambiano: non toccare i record MX.
-4. Impostare `PUBLIC_SITE_LIVE=true`, `PUBLIC_GTM_ID` e `PUBLIC_CLARITY_ID`, poi Redeploy. In GTM eliminare i tag del vecchio sito che non servono più.
+4. Impostare `PUBLIC_SITE_LIVE=true` e, se servono, `PUBLIC_GTM_ID` e `PUBLIC_CLARITY_ID`, poi Redeploy. In GTM eliminare i tag del vecchio sito che non servono più.
 5. Sottodomini per città (es. `gallarate.g8a.it`, con e senza www) : aggiungerli a questo progetto su Vercel; i 301 sono già in `vercel.json`.
 6. Google Search Console: inviare `https://www.g8a.it/sitemap-index.xml` e controllare le pagine indicizzate nei giorni seguenti.
 7. In GTM verificare che le conversioni di Google Ads arrivino dal nuovo evento `contatto`.
