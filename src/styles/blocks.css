@@ -138,3 +138,8 @@
 
 .b-hero__press { grid-column: 1 / -1; padding-top: 1rem; border-top: 1px solid var(--line); }
 @media (max-width: 900px) { .b-hero__copy { order: 1; } .b-hero__press { order: 2; } .b-hero__visual { order: 3; } }
+
+/* Prezzo di partenza nell'apertura delle pagine servizio */
+.b-hero__price { display: flex; flex-wrap: wrap; align-items: center; gap: .4rem .9rem; margin-top: 1rem; }
+.b-hero__price span { display: inline-flex; padding: .4rem .9rem; border-radius: 999px; background: var(--ink); color: #fff; font-weight: 900; font-size: 1.05rem; box-shadow: 0 10px 24px -10px rgba(11,11,13,.5); }
+.b-hero__price a { font-weight: 700; font-size: .9rem; color: var(--red); }

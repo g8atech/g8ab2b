@@ -32,6 +32,8 @@ Le pagine hanno **gli stessi indirizzi del vecchio sito**, così Google non perd
 | `/noleggio-stampanti` | Noleggio stampanti | `src/pages/noleggio-stampanti.astro` |
 | `/noleggio-backup` | Backup e NAS | `src/pages/noleggio-backup.astro` |
 | `/rmm` | Monitoraggio RMM | `src/pages/rmm.astro` |
+| `/prezzi` | Listino del Noleggio Assistito (prezzi in `src/data/listino.ts`) | `src/pages/prezzi.astro` |
+| `/assistenza-informatica/<comune>` | Pagine delle 5 sedi (`src/data/citta.ts`) e dei comuni principali (`src/data/zone.ts`) | `src/components/pages/` |
 | `/testimonianze-casistudio` | Casi studio e testimonianze | `src/pages/testimonianze-casistudio.astro` |
 | `/assistenza-business` | Contatti | `src/pages/assistenza-business.astro` |
 | `/guidagratuitai7errori-3556` | reindirizza a `/` (guida sospesa) | `vercel.json` |

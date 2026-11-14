@@ -46,8 +46,10 @@ export const GRUPPO = [
 export const FAQ = [
   { q: "Cos'è il Noleggio Assistito?", a: "È il metodo G8A: computer, server, stampanti e assistenza tecnica in un unico canone mensile. Non compri le macchine, non paghi gli interventi: ci pensiamo noi a installare, controllare, aggiornare e sostituire." },
   { q: 'Conviene rispetto a comprare i computer?', a: "Non immobilizzi capitale, il canone è un costo fisso e prevedibile, e non paghi riparazioni né il tecnico a chiamata. Quando una macchina invecchia o si guasta, la sostituiamo noi." },
+  { q: 'Quanto costa?', a: 'Si parte da 45 € al mese per un computer a noleggio e da 39 € al mese per gestire un PC che hai già; stampanti da 29 €, NAS e firewall da 39 €. Prezzi di partenza IVA esclusa: il canone esatto lo confermiamo dopo l\'analisi gratuita in sede. Tutti i prezzi su g8a.it/prezzi.' },
   { q: "C'è un vincolo di durata?", a: 'No, nessun vincolo: la disdetta è libera.' },
   { q: "L'assistenza è inclusa?", a: 'Sì, con un numero dedicato raggiungibile anche su WhatsApp.' },
+  { q: 'In quanto tempo intervenite?', a: 'Prendiamo in carico ogni richiesta in giornata, nei giorni lavorativi: prima da remoto e, se serve, con un tecnico in sede.' },
   { q: 'Quali sono i tempi di installazione?', a: 'Di solito da 1 a 4 giorni lavorativi.' },
   { q: 'E se non sono soddisfatto?', a: 'Hai la garanzia soddisfatto o rimborsato di 30 giorni.' },
   { q: 'In quali zone intervenite?', a: 'Province di Varese, Milano e Lecco, partendo dalle nostre sedi. Da remoto seguiamo aziende in tutta Italia.' },

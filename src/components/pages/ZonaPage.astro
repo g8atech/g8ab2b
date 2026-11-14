@@ -1,0 +1,145 @@
+---
+// Pagina "Assistenza informatica per aziende a <comune>" per i comuni intorno alle sedi G8A.
+// Testo sul territorio proprio (zone.ts), sede di riferimento, listino, recensioni, comuni vicini.
+import Base from '../../layouts/Base.astro';
+import Icon from '../Icon.astro';
+import PageHero from '../blocks/PageHero.astro';
+import PriceGrid from '../blocks/PriceGrid.astro';
+import GoogleReviews from '../blocks/GoogleReviews.astro';
+import Quotes from '../blocks/Quotes.astro';
+import Faq from '../blocks/Faq.astro';
+import Cta from '../blocks/Cta.astro';
+import { CITTA } from '../../data/citta';
+import { ZONE, type Zona } from '../../data/zone';
+import { SEDI, faqLd } from '../../data/site';
+import { offersLd } from '../../data/listino';
+
+const { z } = Astro.props as { z: Zona };
+const sede = CITTA.find((c) => c.slug === z.sede)!;
+const punto = SEDI.find((s) => s.negozio?.slug === z.sede);
+const path = `/assistenza-informatica/${z.slug}`;
+const prov = z.provincia === 'MI' ? 'Milano' : z.provincia === 'LC' ? 'Lecco' : 'Varese';
+const wa = `Ciao, vi scrivo dal sito g8a.it: vorrei informazioni sull'assistenza informatica per la mia azienda a ${z.nome}.`;
+const altre = ZONE.filter((x) => x.sede === z.sede && x.slug !== z.slug);
+const title = `Assistenza informatica aziende a ${z.nome} | G8A Technology`;
+const description = `Assistenza informatica per aziende a ${z.nome} (${z.provincia}): computer, server, backup e stampanti in un canone, da 39 €/mese. Presa in carico in giornata, punto G8A a ${sede.nome}.`;
+const faq = [
+  { q: `Avete una sede vicino a ${z.nome}?`, a: `Sì: il punto G8A di riferimento per ${z.nome} è quello di ${sede.nome}, in ${sede.sede}. I tecnici che vengono in azienda partono da lì o dalla sede operativa di Solbiate Arno.` },
+  { q: `Quanto costa l'assistenza informatica per un'azienda a ${z.nome}?`, a: "Si parte da 39 € al mese per gestire un PC che hai già e da 45 € al mese per un computer a noleggio con assistenza inclusa; stampanti da 29 €, NAS e firewall da 39 €. Prezzi di partenza IVA esclusa: il canone esatto lo confermiamo dopo l'analisi gratuita in sede." },
+  { q: `In quanto tempo intervenite a ${z.nome}?`, a: 'Prendiamo in carico ogni richiesta in giornata, nei giorni lavorativi: prima da remoto, così spesso il problema si risolve subito, e se serve con un tecnico in azienda.' },
+  { q: `Seguite anche ${z.focus} con pochi computer?`, a: 'Sì. Il canone si costruisce sulle postazioni che hai, senza minimi: molti nostri clienti hanno da 2 a 10 computer e nessun informatico interno.' },
+  { q: "C'è un vincolo di durata?", a: 'No, nessun vincolo: la disdetta è libera. E nei primi 30 giorni, se non sei soddisfatto, ti rimborsiamo.' },
+];
+const serviceLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Service',
+  name: `Assistenza informatica per aziende a ${z.nome}`,
+  serviceType: 'Assistenza informatica e noleggio computer per aziende',
+  description,
+  url: `https://www.g8a.it${path}`,
+  provider: { '@id': 'https://www.g8a.it/#organization' },
+  areaServed: [{ '@type': 'City', name: z.nome }, ...z.vicini.map((n) => ({ '@type': 'City', name: n }))],
+  hasOfferCatalog: { '@type': 'OfferCatalog', name: 'Listino Noleggio Assistito', itemListElement: offersLd() },
+};
+const crumbsLd = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://www.g8a.it/' },
+    { '@type': 'ListItem', position: 2, name: 'Assistenza informatica', item: 'https://www.g8a.it/assistenza-informatica' },
+    { '@type': 'ListItem', position: 3, name: z.nome, item: `https://www.g8a.it${path}` },
+  ],
+};
+---
+<Base title={title} description={description} jsonLd={[serviceLd, crumbsLd, faqLd(faq)]}>
+  <PageHero kicker={`Assistenza informatica · ${z.nome} (${z.provincia})`} crumb={`Assistenza informatica a ${z.nome}`} waText={wa}
+    price="Da 39 €/mese a computer"
+    lead={`Per le aziende di ${z.nome}: computer, server, backup e stampanti gestiti da noi in un unico canone, con assistenza da remoto e in sede e presa in carico in giornata.`}
+    chips={['Presa in carico in giornata', 'Un canone, tutto incluso', `Punto G8A a ${sede.nome}`]}>
+    <Fragment slot="title">Assistenza informatica per aziende <span class="red">a {z.nome}</span></Fragment>
+    <div slot="visual" class="zn" aria-hidden="true">
+      <div class="zn__box">
+        <p class="zn__k">Il punto G8A più vicino</p>
+        <p class="zn__h"><Icon name="building" size={18} />G8A · {sede.nome}</p>
+        <p class="zn__addr">{sede.sede}</p>
+        {punto?.negozio && <p class="zn__tel"><Icon name="phone" size={14} />{punto.negozio.phone}</p>}
+        <div class="zn__route"><span>{z.nome}</span><i></i><span>{sede.nome}</span></div>
+        <p class="zn__more">Interveniamo anche a {z.vicini.slice(0, 3).join(', ')} e dintorni</p>
+      </div>
+    </div>
+  </PageHero>
+
+  <section class="section">
+    <div class="wrap b-split">
+      <div data-reveal>
+        <span class="kicker">Le aziende di {z.nome}</span>
+        <h2 class="h h2" style="margin-top:.8rem">{z.area}: <span class="red">{z.focus}</span></h2>
+        {z.contesto.map((p) => <p class="lead" style="margin-top:1rem">{p}</p>)}
+      </div>
+      <ol class="zn-how" data-reveal style="--d:.1s">
+        <li><b><Icon name="wa" size={18} /></b><div><strong>Ci scrivi o ci chiami</strong><span>Su WhatsApp o al telefono, ti risponde una persona del team.</span></div></li>
+        <li><b><Icon name="laptop" size={18} /></b><div><strong>Presa in carico in giornata</strong><span>Un tecnico si collega da remoto e spesso risolve subito.</span></div></li>
+        <li><b><Icon name="wrench" size={18} /></b><div><strong>Se serve, veniamo a {z.nome}</strong><span>Dal punto G8A di {sede.nome} o dalla sede operativa di Solbiate Arno.</span></div></li>
+        <li><b><Icon name="refresh" size={18} /></b><div><strong>Se si guasta, lo cambiamo</strong><span>Con il Noleggio Assistito la sostituzione è nel canone.</span></div></li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="section section--paper">
+    <div class="wrap">
+      <div class="b-head" data-reveal>
+        <span class="kicker">Prezzi chiari</span>
+        <h2 class="h h2">Cosa gestiamo <span class="red">e quanto costa</span></h2>
+        <p class="lead">Gli stessi prezzi di partenza per tutte le aziende che seguiamo. Combina quello che ti serve: il canone finale lo confermiamo dopo l'analisi gratuita in sede.</p>
+      </div>
+      <div style="margin-top:1.8rem"><PriceGrid ids={['pc', 'gestione', 'stampanti', 'nas', 'firewall', 'centralino', 'ups', 'smartphone']} /></div>
+    </div>
+  </section>
+
+  <Quotes ids={sede.recensioni ?? ['milani', 'testa', 'vallerini']}>Chi lavora già <span class="red">con noi</span></Quotes>
+  <GoogleReviews paper />
+
+  <section class="section">
+    <div class="wrap b-split">
+      <div data-reveal>
+        <span class="kicker">Zona servita</span>
+        <h2 class="h h2" style="margin-top:.8rem">Intorno a <span class="red">{z.nome}</span></h2>
+        <p class="lead" style="margin-top:1rem">Seguiamo le aziende di {z.nome} e dei comuni vicini, e in tutta la provincia di {prov}. Da remoto seguiamo aziende in tutta Italia.</p>
+        <p style="margin-top:1rem"><a class="zn-link" href={`/assistenza-informatica/${sede.slug}`}>Assistenza informatica a {sede.nome}, la sede di riferimento →</a></p>
+      </div>
+      <div data-reveal style="--d:.1s">
+        <ul class="zn-zone">{z.vicini.map((n) => <li>{n}</li>)}</ul>
+        {altre.length > 0 && <p class="zn-also">Anche: {altre.map((x, i) => <><a href={`/assistenza-informatica/${x.slug}`}>{x.nome}</a>{i < altre.length - 1 ? ', ' : ''}</>)}</p>}
+      </div>
+    </div>
+  </section>
+
+  <Faq items={faq}>Assistenza informatica a {z.nome}: <span class="red">domande frequenti</span></Faq>
+
+  <Cta lead={`Raccontaci quanti computer avete a ${z.nome}: ti diciamo cosa serve e quanto costa, senza impegno.`} waText={wa}>La tua azienda a {z.nome}, <span class="red">senza pensieri IT</span></Cta>
+</Base>
+
+<style>
+  .zn { position: relative; z-index: 1; width: min(100%, 24rem); margin: auto; }
+  .zn__box { padding: 1.5rem 1.6rem; border-radius: 22px; background: rgba(11, 11, 13, .94); color: #fff; box-shadow: 0 30px 60px -20px rgba(11, 11, 13, .6); border: 1px solid rgba(255, 255, 255, .1); }
+  .zn__k { color: #9a9aa5; font-size: .78rem; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; }
+  .zn__h { display: flex; align-items: center; gap: .5rem; margin-top: .4rem; font-weight: 900; font-size: 1.25rem; }
+  .zn__h :global(svg) { color: #ff1a1a; }
+  .zn__addr { margin-top: .3rem; color: #c9c9d0; font-size: .92rem; }
+  .zn__tel { display: flex; align-items: center; gap: .4rem; margin-top: .3rem; color: #c9c9d0; font-size: .92rem; }
+  .zn__route { display: flex; align-items: center; gap: .6rem; margin-top: 1.2rem; font-weight: 800; font-size: .9rem; }
+  .zn__route i { position: relative; flex: 1; height: 2px; background: linear-gradient(90deg, #ff1a1a, #961d22); border-radius: 2px; }
+  .zn__route i::after { content: ''; position: absolute; top: -4px; left: 0; width: 10px; height: 10px; border-radius: 50%; background: #fff; box-shadow: 0 0 12px #ff1a1a; animation: znGo 2.4s ease-in-out infinite; }
+  @keyframes znGo { 0% { left: 0; } 50% { left: calc(100% - 10px); } 100% { left: 0; } }
+  @media (prefers-reduced-motion: reduce) { .zn__route i::after { animation: none; } }
+  .zn__more { margin-top: 1rem; color: #9a9aa5; font-size: .85rem; }
+  .zn-how { list-style: none; padding: 0; margin: 0; display: grid; gap: .8rem; }
+  .zn-how li { display: flex; gap: 1rem; align-items: flex-start; padding: 1rem 1.2rem; border-radius: 16px; background: var(--paper); }
+  .zn-how b { flex: none; display: grid; place-items: center; width: 2.4rem; height: 2.4rem; border-radius: 12px; background: var(--grad); color: #fff; }
+  .zn-how strong { display: block; }
+  .zn-how span { color: var(--muted); }
+  .zn-zone { list-style: none; padding: 0; display: flex; flex-wrap: wrap; gap: .5rem; }
+  .zn-zone li { padding: .45rem .85rem; border-radius: 999px; background: var(--paper); border: 1px solid var(--line); font-size: .92rem; font-weight: 600; }
+  .zn-also { margin-top: 1rem; color: var(--muted); }
+  .zn-also a, .zn-link { font-weight: 700; color: var(--ink); text-decoration: underline; }
+</style>

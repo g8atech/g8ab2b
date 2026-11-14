@@ -4,8 +4,8 @@ import Icon from '../Icon.astro';
 import PressBar from './PressBar.astro';
 import CircuitCanvas from '../CircuitCanvas.astro';
 import { SITE, waLink, telLink } from '../../data/site';
-interface Props { kicker: string; crumb: string; lead: string; waText: string; image?: ImageMetadata; imageAlt?: string; chips?: string[]; note?: string[] }
-const { kicker, crumb, lead, waText, image, imageAlt = '', chips = [], note = ['Nessun vincolo', 'Assistenza inclusa', 'Garanzia 30 giorni'] } = Astro.props;
+interface Props { kicker: string; crumb: string; lead: string; waText: string; image?: ImageMetadata; imageAlt?: string; chips?: string[]; note?: string[]; price?: string }
+const { kicker, crumb, lead, waText, image, imageAlt = '', chips = [], note = ['Nessun vincolo', 'Assistenza inclusa', 'Garanzia 30 giorni'], price } = Astro.props;
 ---
 <section class="b-hero">
   <CircuitCanvas />
@@ -13,6 +13,7 @@ const { kicker, crumb, lead, waText, image, imageAlt = '', chips = [], note = ['
     <div class="b-hero__copy">
       <ol class="b-crumbs" aria-label="Percorso"><li><a href="/">Home</a></li><li aria-current="page">{crumb}</li></ol>
       <h1 class="h b-hero__h1"><span class="kicker b-hero__kicker">{kicker}</span> <slot name="title" /></h1>
+      {price && <p class="b-hero__price"><span>{price}</span><a href="/prezzi">tutti i prezzi →</a></p>}
       <p class="lead b-hero__lead">{lead}</p>
       <div class="b-actions">
         <a class="btn btn--red" href={telLink}><Icon name="phone" />Chiama {SITE.phone}</a>

@@ -19,6 +19,8 @@ import InTv from '../components/blocks/InTv.astro';
 import { TV } from '../data/tv';
 import MonitorScene from '../components/MonitorScene.astro';
 import CircuitCanvas from '../components/CircuitCanvas.astro';
+import PriceGrid from '../components/blocks/PriceGrid.astro';
+import { offersLd } from '../data/listino';
 
 
 const canone = ['Computer nuovi', 'Server e backup', 'Stampanti e toner', 'Assistenza tecnica', 'Monitoraggio continuo', 'Sostituzione guasti'];
@@ -65,6 +67,7 @@ const serviceLd = {
   provider: { '@id': `${SITE.url}/#organization` },
   areaServed: ['Provincia di Varese', 'Città metropolitana di Milano', 'Provincia di Lecco'],
   description: 'Computer, server, stampanti e assistenza tecnica in un unico canone mensile, con monitoraggio e sostituzione inclusi.',
+  hasOfferCatalog: { '@type': 'OfferCatalog', name: 'Listino Noleggio Assistito', itemListElement: offersLd() },
 };
 ---
 <Base
@@ -85,7 +88,7 @@ const serviceLd = {
           <a class="btn btn--wa" href={waLink('Ciao, vorrei sapere come funziona il Noleggio Assistito per la mia azienda.')}><Icon name="wa" />Scrivici su WhatsApp</a>
         </div>
         <a class="hero__tv" href="#tv"><span class="hero__tv-on"><span class="live"></span>Visto in TV</span><span class="hero__tv-t"><strong>{TV.programma}</strong> · Sky {TV.sky}<span class="hero__tv-x"> · DTT {TV.dtt}</span></span><span class="hero__tv-go">Guarda ▶</span></a>
-        <p class="hero__links"><a href="#come-funziona">Come funziona</a><span aria-hidden="true">·</span><a href="#quanto-costa">Quanto costa</a><span aria-hidden="true">·</span><span>Ti risponde una persona, non un call center</span></p>
+        <p class="hero__links"><a href="#come-funziona">Come funziona</a><span aria-hidden="true">·</span><a href="#quanto-costa">Prezzi: PC da 45 €/mese</a><span aria-hidden="true">·</span><span>Presa in carico in giornata, da persone vere</span></p>
       </div>
       <div class="hero__press"><PressBar row label="Ne hanno parlato" /></div>
 
@@ -230,8 +233,8 @@ const serviceLd = {
         <div class="price__mark" aria-hidden="true"><Image src={mark} alt="" width={420} densities={[1, 2]} /></div>
         <div class="price__copy">
           <span class="kicker kicker--w">Quanto costa</span>
-          <h2 class="h price__h">Un prezzo fisso al mese, costruito sulla tua azienda</h2>
-          <p class="price__lead">Il canone dipende da quante postazioni hai e da cosa vuoi includere. Dopo l'analisi in sede ricevi una cifra chiara, senza sorprese.</p>
+          <h2 class="h price__h">Si parte da 45 € al mese. Con tutto dentro.</h2>
+          <p class="price__lead">Ogni servizio ha un prezzo di partenza chiaro. Il canone finale dipende da quante postazioni hai e da cosa vuoi includere: dopo l'analisi gratuita in sede ricevi una cifra unica, senza sorprese.</p>
           <div class="hero__actions">
             <a class="btn btn--white" href={waLink('Ciao, vorrei un preventivo per il Noleggio Assistito. In azienda abbiamo ... postazioni.')}><Icon name="wa" />Chiedi il tuo canone</a>
             <a class="btn btn--line-w" href={telLink}><Icon name="phone" />{SITE.phone}</a>
@@ -243,6 +246,10 @@ const serviceLd = {
           <li><strong>30 giorni</strong><span>soddisfatto o rimborsato</span></li>
           <li><strong>Tutto incluso</strong><span>assistenza, monitoraggio, sostituzioni</span></li>
         </ul>
+      </div>
+      <div class="price-list">
+        <PriceGrid ids={['pc', 'gestione', 'stampanti', 'nas', 'firewall', 'centralino', 'ups', 'smartphone']} />
+        <p class="price-all"><a class="btn btn--ink" href="/prezzi">Vedi tutto il listino →</a></p>
       </div>
     </div>
   </section>
@@ -597,4 +604,6 @@ const serviceLd = {
   .cta__h { margin-top: 1.6rem; font-size: clamp(2.4rem, 5.4vw, 4.4rem); }
   .cta__lead { margin-top: 1rem; max-width: 36rem; font-size: 1.2rem; color: #c3c6cd; }
   .cta__actions { justify-content: center; }
+  .price-list { margin-top: 2rem; }
+  .price-all { margin-top: 1.4rem; text-align: center; }
 </style>

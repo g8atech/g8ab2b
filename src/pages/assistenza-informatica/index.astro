@@ -8,6 +8,7 @@ import Faq from '../../components/blocks/Faq.astro';
 import Cta from '../../components/blocks/Cta.astro';
 import GoogleReviews from '../../components/blocks/GoogleReviews.astro';
 import { CITTA } from '../../data/citta';
+import { ZONE } from '../../data/zone';
 import { FAQ_BASE, faqLd, serviceLd } from '../../data/site';
 const wa = "Ciao, vi scrivo dal sito g8a.it: vorrei informazioni sull'assistenza informatica per la mia azienda.";
 const desc = 'Assistenza informatica per aziende nelle province di Varese, Milano e Lecco: punti G8A a Gallarate, Busto Arsizio, Bollate, Jerago con Orago e Lecco. Un canone, tutto incluso.';
@@ -37,6 +38,10 @@ const faq = FAQ_BASE;
           </a>
         ))}
       </div>
+      <div class="zz-more" data-reveal>
+        <p class="zz-more__h">Seguiamo anche le aziende di</p>
+        <ul class="zz-more__list">{ZONE.map((z) => <li><a href={`/assistenza-informatica/${z.slug}`}>{z.nome} <small>({z.provincia})</small></a></li>)}</ul>
+      </div>
     </div>
   </section>
 
@@ -52,6 +57,12 @@ const faq = FAQ_BASE;
 </Base>
 
 <style>
+  .zz-more { margin-top: 2.2rem; }
+  .zz-more__h { font-weight: 800; }
+  .zz-more__list { list-style: none; padding: 0; margin: .9rem 0 0; display: flex; flex-wrap: wrap; gap: .5rem; }
+  .zz-more__list a { display: inline-block; padding: .5rem .95rem; border-radius: 999px; background: var(--paper); border: 1px solid var(--line); font-weight: 700; text-decoration: none; color: var(--ink); }
+  .zz-more__list a:hover { border-color: #e30613; color: #e30613; }
+  .zz-more__list small { color: var(--muted); font-weight: 600; }
   .zz { display: grid; grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr)); gap: 1rem; margin-top: 2rem; }
   .zz__card { display: grid; gap: 0.35rem; padding: 1.4rem 1.5rem; border-radius: 18px; background: #fff; border: 1px solid var(--line); transition: transform 0.2s, border-color 0.2s; }
   .zz__card:hover { transform: translateY(-2px); border-color: #e30613; }

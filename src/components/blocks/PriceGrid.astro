@@ -1,0 +1,54 @@
+---
+// Griglia del listino: card con il prezzo di partenza grande, per /prezzi, home e pagine città.
+import Icon from '../Icon.astro';
+import { LISTINO, NOTA_PREZZI, euro, type Voce } from '../../data/listino';
+interface Props { ids?: string[]; dark?: boolean; note?: boolean }
+const { ids, dark = false, note = true } = Astro.props;
+const items: Voce[] = ids ? ids.map((id) => LISTINO.find((v) => v.id === id)!).filter(Boolean) : LISTINO;
+---
+<div class:list={['pg', { 'pg--dark': dark }]}>
+  <ul class="pg__grid">
+    {items.map((v, i) => {
+      const Tag = v.href ? 'a' : 'div';
+      return (
+        <li data-reveal style={`--d:${(i % 4) * 0.06}s`}>
+          <Tag class="pg__card glow" href={v.href}>
+            <span class="pg__ic"><Icon name={v.icon} size={22} stroke="#fff" width={1.9} /></span>
+            <span class="pg__t">{v.t}</span>
+            {v.da != null ? (
+              <span class="pg__p"><small>da</small><b>{euro(v.da).replace(' €', '')}</b><span class="pg__cur">€<small>/mese{v.unita ? ` ${v.unita}` : ''}</small></span></span>
+            ) : (
+              <span class="pg__p pg__p--txt">{v.testo}</span>
+            )}
+            <span class="pg__d">{v.d}</span>
+            {v.href && <span class="pg__go">Dettagli →</span>}
+          </Tag>
+        </li>
+      );
+    })}
+  </ul>
+  {note && <p class="pg__note"><Icon name="check" size={14} width={3} />Sempre inclusi: assistenza, monitoraggio e sostituzione dei guasti. Nessun vincolo, 30 giorni soddisfatto o rimborsato. {NOTA_PREZZI}</p>}
+</div>
+
+<style>
+  .pg__grid { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(15.5rem, 1fr)); gap: 1rem; }
+  .pg__card { position: relative; display: flex; flex-direction: column; height: 100%; padding: 1.35rem 1.35rem 1.2rem; border-radius: 18px; background: #fff; border: 1px solid var(--line); text-decoration: none; color: var(--ink); overflow: hidden; transition: border-color .2s ease, box-shadow .2s ease; }
+  a.pg__card:hover { border-color: rgba(227,6,19,.45); box-shadow: 0 18px 40px -18px rgba(227,6,19,.35); color: var(--ink); }
+  .pg__card::before { content: ''; position: absolute; inset: 0 0 auto; height: 3px; background: var(--grad); transform: scaleX(0); transform-origin: left; transition: transform .35s ease; }
+  a.pg__card:hover::before { transform: scaleX(1); }
+  .pg__ic { display: grid; place-items: center; width: 2.6rem; height: 2.6rem; border-radius: 12px; background: var(--grad); box-shadow: 0 8px 20px -6px rgba(227,6,19,.55); }
+  .pg__t { margin-top: .9rem; font-weight: 800; font-size: 1.02rem; line-height: 1.25; }
+  .pg__p { display: flex; align-items: baseline; gap: .3rem; margin-top: .55rem; color: var(--ink); }
+  .pg__p small { font-size: .85rem; color: var(--muted); font-weight: 700; }
+  .pg__p b { font-size: 2.6rem; line-height: 1; font-weight: 900; font-stretch: 80%; font-variation-settings: 'wdth' 80; letter-spacing: -.01em; background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .pg__cur { font-weight: 900; font-size: 1.2rem; }
+  .pg__cur small { margin-left: .15rem; font-weight: 700; }
+  .pg__p--txt { font-weight: 900; font-size: 1.25rem; text-transform: uppercase; font-stretch: 85%; font-variation-settings: 'wdth' 85; min-height: 2.6rem; align-items: center; }
+  .pg__d { margin-top: .5rem; color: var(--muted); font-size: .93rem; line-height: 1.45; }
+  .pg__go { margin-top: auto; padding-top: .8rem; font-weight: 800; font-size: .9rem; color: var(--red); }
+  .pg__note { display: flex; gap: .5rem; align-items: flex-start; margin-top: 1.2rem; color: var(--muted); font-size: .9rem; max-width: 70ch; }
+  .pg__note :global(svg) { flex: none; margin-top: .2rem; color: var(--red); }
+  .pg--dark .pg__card { background: #141418; border-color: #26262d; color: #fff; }
+  .pg--dark .pg__t, .pg--dark .pg__cur, .pg--dark .pg__p { color: #fff; }
+  .pg--dark .pg__d, .pg--dark .pg__note, .pg--dark .pg__p small { color: #a6a9b1; }
+</style>

@@ -32,6 +32,8 @@ const NOLEGGIO = [
   { href: '/rmm', t: 'Monitoraggio RMM', d: 'Controlliamo i tuoi PC di continuo', icon: 'activity' },
 ];
 const NAV = [
+  { href: '/prezzi', t: 'Prezzi' },
+  { href: '/assistenza-informatica', t: 'Zone' },
   { href: '/testimonianze-casistudio', t: 'Casi studio' },
   { href: storeUrl(), t: 'Negozi' },
   { href: '/assistenza-business', t: 'Contatti' },
@@ -182,6 +184,7 @@ const bing = import.meta.env.PUBLIC_BING_VERIFICATION;
             <li><a href="/noleggio-stampanti">Noleggio stampanti</a></li>
             <li><a href="/noleggio-backup">Backup e NAS</a></li>
             <li><a href="/rmm">Monitoraggio RMM</a></li>
+            <li><a href="/prezzi">Prezzi</a></li>
             <li><a href="/testimonianze-casistudio">Casi studio</a></li>
             {GUIDE_NINA.length > 0 && <li><a href="/guide">Guide per le aziende</a></li>}
           </ul>

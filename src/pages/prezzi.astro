@@ -1,0 +1,122 @@
+---
+// Listino del Noleggio Assistito: prezzi di partenza chiari, come chiedono le aziende che confrontano.
+import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
+import PageHero from '../components/blocks/PageHero.astro';
+import PriceGrid from '../components/blocks/PriceGrid.astro';
+import Confronto from '../components/lp/Confronto.astro';
+import GoogleReviews from '../components/blocks/GoogleReviews.astro';
+import Faq from '../components/blocks/Faq.astro';
+import Cta from '../components/blocks/Cta.astro';
+import { faqLd, waLink } from '../data/site';
+import { LISTINO, NOTA_PREZZI, euro, offersLd, voce } from '../data/listino';
+
+const wa = 'Ciao, ho visto i prezzi sul sito g8a.it e vorrei un preventivo per la mia azienda.';
+const faq = [
+  { q: 'I prezzi sono IVA esclusa?', a: NOTA_PREZZI },
+  { q: 'Cosa è compreso nel canone?', a: "Il dispositivo, l'installazione, il monitoraggio da remoto, l'assistenza tecnica e la sostituzione se si guasta. Non paghi interventi a chiamata." },
+  { q: "C'è un vincolo di durata?", a: 'No, nessun vincolo: la disdetta è libera. E nei primi 30 giorni, se non sei soddisfatto, ti rimborsiamo.' },
+  { q: 'Posso far gestire i computer che ho già?', a: `Sì. Con la gestione dei tuoi PC (${'da ' + euro(voce('gestione').da!) + ' al mese per PC'}) li monitoriamo, aggiorniamo e assistiamo come quelli a noleggio. Quando vanno sostituiti, puoi passare al noleggio.` },
+  { q: 'In quanto tempo intervenite?', a: 'Prendiamo in carico ogni richiesta in giornata, nei giorni lavorativi: prima da remoto e, se serve, con un tecnico in sede.' },
+  { q: 'Come si arriva al prezzo finale?', a: "Un tecnico viene in sede, vede computer, rete, stampanti e backup e ti propone un canone unico con tutto dentro. L'analisi è gratuita." },
+];
+const pageLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Service',
+  name: 'Noleggio Assistito G8A',
+  serviceType: 'Noleggio computer e assistenza informatica per aziende',
+  url: 'https://www.g8a.it/prezzi',
+  provider: { '@id': 'https://www.g8a.it/#organization' },
+  areaServed: ['Provincia di Varese', 'Città metropolitana di Milano', 'Provincia di Lecco'],
+  hasOfferCatalog: { '@type': 'OfferCatalog', name: 'Listino Noleggio Assistito', itemListElement: offersLd() },
+};
+const crumbsLd = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://www.g8a.it/' },
+    { '@type': 'ListItem', position: 2, name: 'Prezzi', item: 'https://www.g8a.it/prezzi' },
+  ],
+};
+---
+<Base
+  title="Prezzi noleggio computer e assistenza informatica aziende | G8A"
+  description={`Listino del Noleggio Assistito G8A: computer da ${euro(voce('pc').da!)}/mese, gestione PC da ${euro(voce('gestione').da!)}, stampanti da ${euro(voce('stampanti').da!)}, NAS e firewall da ${euro(voce('nas').da!)}. Assistenza inclusa, nessun vincolo.`}
+  jsonLd={[pageLd, crumbsLd, faqLd(faq)]}
+>
+  <PageHero kicker="Prezzi del Noleggio Assistito" crumb="Prezzi" waText={wa}
+    lead="Prezzi di partenza chiari per ogni servizio. Li combini come serve alla tua azienda: dopo l'analisi in sede ricevi un canone unico, con assistenza e sostituzioni già dentro."
+    chips={['Assistenza inclusa', 'Nessun vincolo', '30 giorni soddisfatto o rimborsato']}>
+    <Fragment slot="title">Quanto costa <span class="red">il Noleggio Assistito</span></Fragment>
+    <div slot="visual" class="pz" aria-hidden="true">
+      <div class="pz__card">
+        <p class="pz__k">Un computer con tutto dentro, da</p>
+        <p class="pz__n"><b>{euro(voce('pc').da!).replace(' €', '')}</b><span>€/mese</span></p>
+        <ul class="pz__list">
+          {['gestione', 'stampanti', 'nas', 'firewall'].map((id) => { const v = voce(id); return <li><span>{v.t}</span><strong>{euro(v.da!)}</strong></li>; })}
+        </ul>
+        <p class="pz__foot">Assistenza, monitoraggio e sostituzione inclusi</p>
+      </div>
+    </div>
+  </PageHero>
+
+  <section class="section" id="listino">
+    <div class="wrap">
+      <div class="b-head" data-reveal>
+        <span class="kicker">Listino</span>
+        <h2 class="h h2">Ogni servizio, <span class="red">il suo prezzo di partenza</span></h2>
+        <p class="lead">Nessun costo nascosto e nessun tecnico a chiamata da pagare a parte. Scegli cosa ti serve: il resto lo gestiamo noi.</p>
+      </div>
+      <div style="margin-top:2rem"><PriceGrid /></div>
+    </div>
+  </section>
+
+  <Confronto oggi="Comprare e chiamare il tecnico" rows={[
+    { t: 'Spesa iniziale', oggi: 'Migliaia di euro subito per i computer', g8a: `Nessun anticipo: PC da ${euro(voce('pc').da!)} al mese` },
+    { t: 'Guasti', oggi: 'Ogni intervento è una fattura', g8a: 'Riparazione o sostituzione già comprese' },
+    { t: 'Backup', oggi: 'Se qualcuno se ne ricorda', g8a: `Automatici e controllati, NAS da ${euro(voce('nas').da!)} al mese` },
+    { t: 'Sicurezza', oggi: 'Antivirus scaduto, rete aperta', g8a: `Firewall gestito da ${euro(voce('firewall').da!)} al mese` },
+    { t: 'Tempi', oggi: 'Il tecnico arriva quando può', g8a: 'Presa in carico in giornata' },
+  ]} />
+
+  <section class="section">
+    <div class="wrap b-split">
+      <div data-reveal>
+        <span class="kicker">Come si arriva al canone</span>
+        <h2 class="h h2" style="margin-top:.8rem">Un'analisi gratuita, <span class="red">poi un numero solo</span></h2>
+        <p class="lead" style="margin-top:1rem">Un tecnico G8A viene in azienda, vede computer, rete, stampanti e backup e ti propone un canone mensile unico. Da lì in poi non ci sono altre voci da pagare per l'assistenza.</p>
+        <div class="b-actions" style="margin-top:1.5rem">
+          <a class="btn btn--red" href={waLink(wa)}><Icon name="wa" />Chiedi l'analisi gratuita</a>
+        </div>
+      </div>
+      <ol class="pz-steps" data-reveal style="--d:.1s">
+        <li><b>1</b><div><strong>Ci scrivi o ci chiami</strong><span>Ti risponde una persona del team, non un call center.</span></div></li>
+        <li><b>2</b><div><strong>Analisi in sede, gratuita</strong><span>Vediamo cosa hai e cosa serve davvero.</span></div></li>
+        <li><b>3</b><div><strong>Canone unico</strong><span>Una cifra al mese con tutto dentro.</span></div></li>
+        <li><b>4</b><div><strong>Operativi in 1–4 giorni</strong><span>Installazione e migrazione dei dati a cura nostra.</span></div></li>
+      </ol>
+    </div>
+  </section>
+
+  <GoogleReviews paper />
+  <Faq items={faq}>Prezzi: <span class="red">domande frequenti</span></Faq>
+  <Cta lead="Raccontaci quanti computer avete: in una telefonata ti diciamo quanto verrebbe il canone." waText={wa}>Il tuo canone, <span class="red">in una telefonata</span></Cta>
+</Base>
+
+<style>
+  .pz { position: relative; z-index: 1; width: min(100%, 23rem); margin: auto; }
+  .pz__card { padding: 1.6rem 1.6rem 1.3rem; border-radius: 22px; background: rgba(11, 11, 13, .94); color: #fff; box-shadow: 0 30px 60px -20px rgba(11, 11, 13, .6); border: 1px solid rgba(255, 255, 255, .1); }
+  .pz__k { color: #c9c9d0; font-weight: 700; font-size: .9rem; text-transform: uppercase; letter-spacing: .12em; }
+  .pz__n { display: flex; align-items: baseline; gap: .4rem; margin-top: .2rem; }
+  .pz__n b { font-size: 4.2rem; line-height: 1; font-weight: 900; font-stretch: 78%; font-variation-settings: 'wdth' 78; background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .pz__n span { font-weight: 800; color: #fff; }
+  .pz__list { list-style: none; padding: 0; margin: 1.1rem 0 0; display: grid; gap: .5rem; }
+  .pz__list li { display: flex; justify-content: space-between; gap: 1rem; padding: .55rem .75rem; border-radius: 10px; background: rgba(255, 255, 255, .06); font-size: .92rem; }
+  .pz__list strong { color: #ff4d4d; white-space: nowrap; }
+  .pz__foot { margin-top: .9rem; color: #9a9aa5; font-size: .82rem; }
+  .pz-steps { list-style: none; padding: 0; margin: 0; display: grid; gap: .8rem; }
+  .pz-steps li { display: flex; gap: 1rem; align-items: flex-start; padding: 1rem 1.2rem; border-radius: 16px; background: var(--paper); }
+  .pz-steps b { flex: none; display: grid; place-items: center; width: 2.2rem; height: 2.2rem; border-radius: 50%; background: var(--grad); color: #fff; font-weight: 900; }
+  .pz-steps strong { display: block; }
+  .pz-steps span { color: var(--muted); }
+</style>
