@@ -23,7 +23,7 @@ const wa = `Ciao, vi scrivo dal sito g8a.it: vorrei informazioni sull'assistenza
 const altre = CITTA.filter((x) => x.slug !== c.slug);
 const faq = [
   ...c.faq,
-  { q: `Quanto costa l'assistenza informatica a ${c.nome}?`, a: `Si parte da 39 € al mese per gestire un PC che hai già e da 45 € al mese per un computer a noleggio con assistenza inclusa; stampanti da 29 €, NAS e firewall da 39 €. Prezzi di partenza IVA esclusa: il canone esatto lo confermiamo dopo l'analisi gratuita in sede.` },
+  { q: `Quanto costa l'assistenza informatica a ${c.nome}?`, a: `Si parte da 12 € al mese a PC per monitoraggio e antivirus, 39 € al mese per la gestione completa di un PC che hai già e 45 € al mese per un computer a noleggio con assistenza inclusa; stampanti da 29 €, NAS e firewall da 39 €. Prezzi di partenza IVA esclusa: il canone esatto lo confermiamo dopo l'analisi gratuita in sede.` },
   { q: `In quanto tempo intervenite a ${c.nome}?`, a: 'Prendiamo in carico ogni richiesta in giornata, nei giorni lavorativi: prima da remoto e, se serve, con un tecnico in azienda.' },
 ];
 const maps = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`G8A ${c.sede}`)}`;
@@ -116,7 +116,7 @@ const crumbsLd = {
         <h2 class="h h2">Quanto costa <span class="red">a {c.nome}</span></h2>
         <p class="lead">Gli stessi prezzi di partenza in tutte le nostre sedi. Nessun tecnico a chiamata da pagare a parte.</p>
       </div>
-      <div style="margin-top:1.8rem"><PriceGrid ids={['pc', 'gestione', 'stampanti', 'nas', 'firewall', 'centralino']} /></div>
+      <div style="margin-top:1.8rem"><PriceGrid ids={['pc', 'gestione', 'rmm', 'stampanti', 'nas', 'firewall', 'wifi', 'centralino']} /></div>
     </div>
   </section>
 

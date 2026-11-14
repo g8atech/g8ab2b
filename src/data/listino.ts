@@ -16,10 +16,12 @@ export type Voce = {
 export const LISTINO: Voce[] = [
   { id: 'pc', t: 'Computer a noleggio', d: 'PC G8A configurato, installato e sostituito se si guasta.', da: 45, icon: 'pc', href: '/noleggio-computer' },
   { id: 'gestione', t: 'Gestione dei tuoi PC', d: 'I computer che hai già: monitoraggio, aggiornamenti e assistenza.', da: 39, unita: 'per PC', icon: 'activity', href: '/rmm' },
+  { id: 'rmm', t: 'Monitoraggio e antivirus', d: 'Controllo da remoto, aggiornamenti e antivirus gestito su ogni PC.', da: 12, unita: 'per PC', icon: 'shieldok', href: '/rmm' },
   { id: 'stampanti', t: 'Stampanti e multifunzione', d: 'Manutenzione e assistenza comprese.', da: 29, icon: 'printer', href: '/noleggio-stampanti' },
   { id: 'nas', t: 'NAS e backup', d: 'Backup automatici dei dati aziendali, controllati da noi.', da: 39, icon: 'server', href: '/noleggio-backup' },
   { id: 'firewall', t: 'Firewall', d: 'Protezione della rete aziendale, configurata e aggiornata.', da: 39, icon: 'shieldok' },
-  { id: 'centralino', t: 'Centralino cloud', d: 'Numeri, interni e app sul telefono.', da: 15, unita: 'per utente', icon: 'phone' },
+  { id: 'centralino', t: 'Centralino cloud', d: 'Numeri, interni e app sul telefono.', da: 19, icon: 'phone', href: 'https://www.fibrahero.it/centralino-cloud-voip' },
+  { id: 'wifi', t: 'Antenna Wi-Fi', d: 'Access point aziendale configurato e gestito, Wi-Fi ospiti separato.', da: 9.9, icon: 'wifi' },
   { id: 'ups', t: 'UPS', d: 'Server e rete protetti da blackout e sbalzi di corrente.', da: 9.9, icon: 'zap' },
   { id: 'tablet', t: 'Tablet', d: 'Per agenti, magazzino e reparto.', da: 19, icon: 'laptop' },
   { id: 'smartphone', t: 'Smartphone', d: 'Telefoni aziendali configurati e gestiti.', da: 19, icon: 'phone' },

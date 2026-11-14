@@ -22,10 +22,10 @@ const prov = z.provincia === 'MI' ? 'Milano' : z.provincia === 'LC' ? 'Lecco' : 
 const wa = `Ciao, vi scrivo dal sito g8a.it: vorrei informazioni sull'assistenza informatica per la mia azienda a ${z.nome}.`;
 const altre = ZONE.filter((x) => x.sede === z.sede && x.slug !== z.slug);
 const title = `Assistenza informatica aziende a ${z.nome} | G8A Technology`;
-const description = `Assistenza informatica per aziende a ${z.nome} (${z.provincia}): computer, server, backup e stampanti in un canone, da 39 €/mese. Presa in carico in giornata, punto G8A a ${sede.nome}.`;
+const description = `Assistenza informatica per aziende a ${z.nome} (${z.provincia}): monitoraggio e antivirus da 12 €/mese a PC, computer a noleggio da 45 €. Presa in carico in giornata, punto G8A a ${sede.nome}.`;
 const faq = [
   { q: `Avete una sede vicino a ${z.nome}?`, a: `Sì: il punto G8A di riferimento per ${z.nome} è quello di ${sede.nome}, in ${sede.sede}. I tecnici che vengono in azienda partono da lì o dalla sede operativa di Solbiate Arno.` },
-  { q: `Quanto costa l'assistenza informatica per un'azienda a ${z.nome}?`, a: "Si parte da 39 € al mese per gestire un PC che hai già e da 45 € al mese per un computer a noleggio con assistenza inclusa; stampanti da 29 €, NAS e firewall da 39 €. Prezzi di partenza IVA esclusa: il canone esatto lo confermiamo dopo l'analisi gratuita in sede." },
+  { q: `Quanto costa l'assistenza informatica per un'azienda a ${z.nome}?`, a: "Si parte da 12 € al mese a PC per monitoraggio e antivirus, 39 € al mese per la gestione completa di un PC che hai già e 45 € al mese per un computer a noleggio con assistenza inclusa; stampanti da 29 €, NAS e firewall da 39 €. Prezzi di partenza IVA esclusa: il canone esatto lo confermiamo dopo l'analisi gratuita in sede." },
   { q: `In quanto tempo intervenite a ${z.nome}?`, a: 'Prendiamo in carico ogni richiesta in giornata, nei giorni lavorativi: prima da remoto, così spesso il problema si risolve subito, e se serve con un tecnico in azienda.' },
   { q: `Seguite anche ${z.focus} con pochi computer?`, a: 'Sì. Il canone si costruisce sulle postazioni che hai, senza minimi: molti nostri clienti hanno da 2 a 10 computer e nessun informatico interno.' },
   { q: "C'è un vincolo di durata?", a: 'No, nessun vincolo: la disdetta è libera. E nei primi 30 giorni, se non sei soddisfatto, ti rimborsiamo.' },
@@ -53,7 +53,7 @@ const crumbsLd = {
 ---
 <Base title={title} description={description} jsonLd={[serviceLd, crumbsLd, faqLd(faq)]}>
   <PageHero kicker={`Assistenza informatica · ${z.nome} (${z.provincia})`} crumb={`Assistenza informatica a ${z.nome}`} waText={wa}
-    price="Da 39 €/mese a computer"
+    price="Da 12 €/mese a computer"
     lead={`Per le aziende di ${z.nome}: computer, server, backup e stampanti gestiti da noi in un unico canone, con assistenza da remoto e in sede e presa in carico in giornata.`}
     chips={['Presa in carico in giornata', 'Un canone, tutto incluso', `Punto G8A a ${sede.nome}`]}>
     <Fragment slot="title">Assistenza informatica per aziende <span class="red">a {z.nome}</span></Fragment>
@@ -92,7 +92,7 @@ const crumbsLd = {
         <h2 class="h h2">Cosa gestiamo <span class="red">e quanto costa</span></h2>
         <p class="lead">Gli stessi prezzi di partenza per tutte le aziende che seguiamo. Combina quello che ti serve: il canone finale lo confermiamo dopo l'analisi gratuita in sede.</p>
       </div>
-      <div style="margin-top:1.8rem"><PriceGrid ids={['pc', 'gestione', 'stampanti', 'nas', 'firewall', 'centralino', 'ups', 'smartphone']} /></div>
+      <div style="margin-top:1.8rem"><PriceGrid ids={['pc', 'gestione', 'rmm', 'stampanti', 'nas', 'firewall', 'wifi', 'centralino']} /></div>
     </div>
   </section>
 
