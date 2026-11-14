@@ -48,7 +48,7 @@ Il sito non si indicizza finché non lo dici tu: tutto passa da due variabili su
 | Variabile | Valore | Effetto |
 |---|---|---|
 | `PUBLIC_SITE_LIVE` | `true` | `robots.txt` apre il sito a Google e ai motori AI, toglie il `noindex` |
-| `PUBLIC_GTM_ID` | facoltativa: di base è già attivo `GTM-WQ3RR99N` | sostituisce il contenitore Google Tag Manager |
+| `PUBLIC_GTM_ID` | `GTM-M5FDVQDW` (quello del vecchio sito) | attiva Google Tag Manager |
 | `PUBLIC_CLARITY_ID` | ID del progetto Microsoft Clarity (es. `abcd1234ef`) | carica Clarity, **solo dopo il consenso** ai cookie statistici |
 | `PUBLIC_GSC_VERIFICATION` | il codice `content` del meta tag di Google Search Console | verifica del sito in Search Console (se non si usa il DNS) |
 | `PUBLIC_BING_VERIFICATION` | il codice `content` del meta tag `msvalidate.01` | verifica in Bing Webmaster Tools (serve anche per Copilot) |

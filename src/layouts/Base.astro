@@ -72,8 +72,8 @@ const stores = SEDI.filter((s) => !s.operativa && !s.negozio).map((s) => ({
   address: { '@type': 'PostalAddress', streetAddress: s.address, postalCode: s.cap, addressLocality: s.city, addressRegion: s.province, addressCountry: 'IT' },
 }));
 const schemas = [organization, ...stores, ...jsonLd];
-// Google Tag Manager del nuovo g8a.it (GTM-WQ3RR99N); PUBLIC_GTM_ID su Vercel lo sostituisce.
-const gtm = import.meta.env.PUBLIC_GTM_ID || 'GTM-WQ3RR99N';
+// Google Tag Manager: si attiva solo se su Vercel è impostata PUBLIC_GTM_ID (es. GTM-M5FDVQDW).
+const gtm = import.meta.env.PUBLIC_GTM_ID;
 // In alternativa a GTM: Google Analytics 4 diretto (PUBLIC_GA4_ID, es. G-XXXXXXX), sempre dopo il Consent Mode.
 const ga4 = gtm ? undefined : import.meta.env.PUBLIC_GA4_ID;
 const live = SITE_LIVE;
