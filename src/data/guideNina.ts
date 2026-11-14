@@ -3,6 +3,155 @@
 /* eslint-disable */
 export const GUIDE_NINA: any[] = [
   {
+    "slug": "nas-ufficio-perche-averlo",
+    "titolo": "NAS per l'ufficio: perché averlo e cosa fa davvero",
+    "h1": "NAS per l'ufficio: perché averlo (e perché da solo non basta)",
+    "descrizione": "NAS in ufficio: cos'è, a cosa serve, perché il RAID non è un backup e quando ti conviene averne uno. Guida semplice per PMI e studi professionali.",
+    "intro": "Un NAS per l'ufficio è un archivio condiviso collegato alla tua rete: tutti i PC aprono gli stessi file da un posto solo, invece di averli sparsi su computer, chiavette e dischi esterni. Averlo ha senso se in ufficio siete in due o più e lavorate sugli stessi documenti. Ma attenzione: il NAS è un ottimo archivio, non è un backup completo.",
+    "in_breve": [
+      "Il NAS (Network Attached Storage, archiviazione collegata alla rete) è un piccolo server che custodisce i file di tutto l'ufficio in un posto solo.",
+      "Serve a condividere documenti, ordinare le cartelle, decidere chi può vedere cosa e avere dischi che reggono la rottura di uno di loro (RAID).",
+      "Il RAID protegge dal guasto di un disco, non da errori, ransomware, furto o incendio: serve sempre anche una copia fuori dal NAS.",
+      "Il NAS diventa una scelta forte se è configurato bene, aggiornato e inserito in un piano di backup 3-2-1."
+    ],
+    "sezioni": [
+      {
+        "punti": [],
+        "titolo": "Cos'è un NAS e come funziona in ufficio?",
+        "paragrafi": [
+          "NAS significa Network Attached Storage, cioè archiviazione collegata alla rete. È un apparecchio con uno o più dischi, sempre acceso, collegato al router o allo switch dell'ufficio. Dai PC lo vedi come una cartella condivisa.",
+          "Non è un computer da usare ogni giorno: il suo lavoro è custodire i file e metterli a disposizione di chi ha il permesso."
+        ]
+      },
+      {
+        "punti": [
+          "Una sola versione dei file: niente più \"contratto_finale_v7\" sparso su cinque PC.",
+          "Permessi per persona o per gruppo: l'amministrazione vede le sue cartelle, i collaboratori le loro.",
+          "Se un PC si rompe, i documenti di lavoro non vanno con lui.",
+          "Più dischi insieme (RAID): se un disco si guasta, l'ufficio può continuare a lavorare mentre lo si sostituisce.",
+          "Accesso ai file anche da fuori sede, se configurato in modo sicuro.",
+          "I dati restano in casa tua, sotto il tuo controllo."
+        ],
+        "titolo": "Perché avere un NAS? I vantaggi concreti",
+        "paragrafi": []
+      },
+      {
+        "punti": [
+          "RAID protegge da: rottura di un disco.",
+          "RAID non protegge da: cancellazioni per errore, ransomware, furto, incendio, guasto dell'intero apparecchio."
+        ],
+        "titolo": "Il NAS è un backup? Perché il RAID non basta",
+        "immagine": {
+          "alt": "Schema: il RAID protegge dal guasto di un disco ma non da errori, ransomware, furto e incendio",
+          "url": "https://ijrrnuurjbgugystlfry.supabase.co/storage/v1/object/public/guide-immagini/g8a/nas-ufficio-perche-averlo-fbe7a8b6.jpg",
+          "fonte": "nina",
+          "didascalia": "Cosa copre il RAID e cosa no."
+        },
+        "paragrafi": [
+          "No. È l'errore più comune. Il RAID unisce più dischi per sopravvivere al guasto di uno di loro. Non crea però una copia del passato.",
+          "Se un collega cancella una cartella per sbaglio, la cancellazione si riflette su tutti i dischi. Se un ransomware cifra i file condivisi, li cifra sul NAS. Se c'è un furto, un incendio o un allagamento, il NAS va perso con tutto il resto."
+        ]
+      },
+      {
+        "punti": [],
+        "titolo": "Come si protegge davvero un NAS? La regola 3-2-1",
+        "paragrafi": [
+          "La regola 3-2-1 dice: tre copie dei dati, su due supporti diversi, di cui una fuori sede. Il NAS può essere una di queste copie oppure la destinazione dei backup dei PC, ma non deve essere l'unica difesa.",
+          "Una copia fuori sede può stare in cloud o in un secondo luogo. Se vuoi approfondire, leggi la nostra guida sulla regola 3-2-1 per il backup aziendale."
+        ]
+      },
+      {
+        "punti": [
+          "Non esporlo direttamente su internet aprendo porte sul router: è uno dei modi più semplici per essere attaccati.",
+          "Non lasciare le password di fabbrica né un unico utente amministratore condiviso da tutti.",
+          "Non ignorare gli aggiornamenti del sistema dell'apparecchio.",
+          "Non pensare \"ho il RAID, sono a posto\" e smettere di fare backup.",
+          "Non ignorare gli avvisi di disco in errore: un secondo guasto prima della sostituzione può far perdere i dati.",
+          "Non metterlo in un angolo caldo e polveroso o senza gruppo di continuità."
+        ],
+        "titolo": "Cosa NON fare con un NAS in ufficio",
+        "paragrafi": []
+      },
+      {
+        "punti": [],
+        "titolo": "Quando ti serve un NAS e quando no?",
+        "paragrafi": [
+          "Ti serve se avete più PC che condividono cartelle, se i file stanno su computer diversi senza ordine, o se una chiavetta persa sarebbe un problema serio.",
+          "Se lavori da solo con pochi file, un buon backup automatico (anche in cloud) può bastare. Se invece servono programmi centralizzati o molti utenti, può servire un vero server. Il punto di partenza è sempre capire quali dati sono vitali per la tua attività."
+        ]
+      },
+      {
+        "punti": [],
+        "titolo": "Cosa succede se ci affidi il NAS?",
+        "paragrafi": [
+          "Guardiamo come lavorate: quanti PC, quali dati, cosa fermerebbe l'attività. Poi proponiamo la configurazione adatta, con permessi, aggiornamenti e controllo a distanza dello stato dei dischi tramite la gestione remota dei PC.",
+          "Il NAS si inserisce in un piano di backup completo, con copia fuori sede. Trovi i dettagli nelle pagine dei servizi indicate qui sotto."
+        ]
+      }
+    ],
+    "faq": [
+      {
+        "d": "Il NAS sostituisce il backup?",
+        "r": "No. Il NAS custodisce i file e con il RAID regge il guasto di un disco, ma errori, ransomware, furto e incendio possono colpire anche lui. Serve una copia separata, meglio se fuori sede."
+      },
+      {
+        "d": "Quanti dischi servono in un NAS?",
+        "r": "Per avere ridondanza ne servono almeno due (RAID 1). Livelli come RAID 5 richiedono almeno tre dischi. La scelta dipende da quanti dati hai e da quanto ti pesa un fermo."
+      },
+      {
+        "d": "Un NAS è meglio del cloud?",
+        "r": "Dipende. Il NAS tiene i dati in sede ed è veloce sulla rete locale; il cloud è accessibile ovunque e sta fuori dall'ufficio. Spesso si usano insieme: NAS per lavorare, cloud per la copia fuori sede."
+      },
+      {
+        "d": "Un NAS è sicuro dai ransomware?",
+        "r": "Non da solo. Se un PC infetto ha accesso alle cartelle condivise, il ransomware può cifrare anche i file sul NAS. Servono permessi limitati, aggiornamenti e copie di backup separate."
+      },
+      {
+        "d": "Chi lo gestisce se non ho un informatico?",
+        "r": "Puoi affidare configurazione, aggiornamenti e controllo a un'assistenza informatica esterna, così sai che qualcuno guarda lo stato dei dischi e dei backup."
+      }
+    ],
+    "link": [
+      {
+        "url": "/guide/backup-aziendale-regola-3-2-1",
+        "testo": "Backup aziendale: la regola 3-2-1 spiegata semplice"
+      },
+      {
+        "url": "/noleggio-backup",
+        "testo": "Noleggio backup per l'azienda"
+      },
+      {
+        "url": "/rmm",
+        "testo": "Gestione remota dei PC aziendali"
+      },
+      {
+        "url": "/assistenza-business",
+        "testo": "Assistenza informatica per aziende"
+      },
+      {
+        "url": "/noleggio-computer",
+        "testo": "Noleggio computer per l'ufficio"
+      },
+      {
+        "url": "/assistenza-informatica/gallarate",
+        "testo": "Assistenza informatica a Gallarate"
+      },
+      {
+        "url": "/assistenza-informatica/busto-arsizio",
+        "testo": "Assistenza informatica a Busto Arsizio"
+      }
+    ],
+    "extra": {},
+    "copertina": {
+      "alt": "NAS per l'ufficio: perché averlo (e perché da solo non basta)",
+      "url": "https://ijrrnuurjbgugystlfry.supabase.co/storage/v1/object/public/guide-immagini/g8a/nas-ufficio-perche-averlo-foto-f38cd9cf.png",
+      "fonte": "foto"
+    },
+    "firmato_da": "Antonio Arrigo",
+    "pubblicata_il": "2026-11-13",
+    "aggiornata_il": "2026-11-13"
+  },
+  {
     "slug": "backup-aziendale-regola-3-2-1",
     "titolo": "Backup aziendale: la regola 3-2-1 spiegata semplice",
     "h1": "Backup aziendale: la regola 3-2-1 spiegata semplice",
