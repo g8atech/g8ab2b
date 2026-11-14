@@ -11,7 +11,7 @@ import ConsentHead from '../components/ConsentHead.astro';
 import ConsentBanner from '../components/ConsentBanner.astro';
 import logoWhite from '../assets/logo-g8a-bianco.png';
 import logoColor from '../assets/logo-g8a.png';
-import { SITE, SEDI, GRUPPO, waLink, telLink, storeUrl } from '../data/site';
+import { SITE, SEDI, GRUPPO, GOOGLE, waLink, telLink, storeUrl } from '../data/site';
 
 interface Props { title: string; description: string; jsonLd?: object[]; mbar?: { tel: string; wa: string } }
 const { title, description: rawDescription, jsonLd = [], mbar } = Astro.props;
@@ -61,6 +61,8 @@ const organization = {
   areaServed: ['Provincia di Varese', 'Città metropolitana di Milano', 'Provincia di Lecco'],
   address: { '@type': 'PostalAddress', streetAddress: 'Via Caronno Varesino 33', postalCode: '21048', addressLocality: 'Solbiate Arno', addressRegion: 'VA', addressCountry: 'IT' },
   subOrganization: GRUPPO.map((g) => ({ '@type': 'Organization', name: g.name, url: g.url })),
+  // Profili ufficiali della stessa azienda: la scheda Google della sede (collega sito e recensioni per le AI).
+  sameAs: [GOOGLE.leggi],
 };
 // I negozi con pagina propria hanno i loro dati strutturati nella pagina; qui le altre sedi.
 const stores = SEDI.filter((s) => !s.operativa && !s.negozio).map((s) => ({
