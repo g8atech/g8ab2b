@@ -23,8 +23,26 @@ export const LISTINO: Voce[] = [
   { id: 'ups', t: 'UPS', d: 'Server e rete protetti da blackout e sbalzi di corrente.', da: 9.9, icon: 'zap' },
   { id: 'tablet', t: 'Tablet', d: 'Per agenti, magazzino e reparto.', da: 19, icon: 'laptop' },
   { id: 'smartphone', t: 'Smartphone', d: 'Telefoni aziendali configurati e gestiti.', da: 19, icon: 'phone' },
-  { id: 'licenze', t: 'Microsoft 365 e Google Workspace', d: 'Email, Office e cloud, attivati e gestiti da noi.', testo: 'al prezzo di listino', icon: 'briefcase' },
+  { id: 'm365', t: 'Microsoft 365', d: 'Email aziendale, Office, Teams e OneDrive, attivati e gestiti da noi.', da: 6.07, unita: 'per utente', icon: 'briefcase', href: '/prezzi#licenze' },
+  { id: 'gws', t: 'Google Workspace', d: 'Gmail aziendale, Drive, Meet e Documenti, attivati e gestiti da noi.', da: 6.8, unita: 'per utente', icon: 'briefcase', href: '/prezzi#licenze' },
 ];
+
+// Licenze: prezzi ufficiali Microsoft e Google (impegno annuale, IVA esclusa), rilevati a novembre 2026.
+// Aggiornarli quando cambiano i listini di Microsoft o Google.
+export const LICENZE = [
+  { marca: 'Microsoft 365', piani: [
+    { t: 'Business Basic', p: 6.07, d: 'Email aziendale, Teams, Word ed Excel web, 1 TB OneDrive' },
+    { t: 'Apps for business', p: 11.0, d: 'Word, Excel, Outlook installati sul PC, senza email' },
+    { t: 'Business Standard', p: 12.13, d: 'Tutto Basic più Office installato sul PC' },
+    { t: 'Business Premium', p: 19.06, d: 'Tutto Standard più sicurezza avanzata (Defender, Intune)' },
+  ] },
+  { marca: 'Google Workspace', piani: [
+    { t: 'Business Starter', p: 6.8, d: 'Gmail aziendale, Meet, 30 GB per utente' },
+    { t: 'Business Standard', p: 13.6, d: 'Tutto Starter più 2 TB per utente e registrazione riunioni' },
+    { t: 'Business Plus', p: 21.1, d: 'Tutto Standard più 5 TB per utente e sicurezza avanzata' },
+  ] },
+];
+export const NOTA_LICENZE = 'Prezzi ufficiali di Microsoft e Google per utente al mese, con impegno annuale, IVA esclusa (novembre 2026). Attivazione, migrazione delle caselle e gestione le facciamo noi.';
 
 export const NOTA_PREZZI = 'Prezzi di partenza al mese, IVA esclusa. Il canone esatto dipende da modelli e quantità: lo confermiamo dopo l\'analisi in sede.';
 

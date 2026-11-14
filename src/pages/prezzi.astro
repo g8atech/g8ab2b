@@ -9,7 +9,7 @@ import GoogleReviews from '../components/blocks/GoogleReviews.astro';
 import Faq from '../components/blocks/Faq.astro';
 import Cta from '../components/blocks/Cta.astro';
 import { faqLd, waLink } from '../data/site';
-import { LISTINO, NOTA_PREZZI, euro, offersLd, voce } from '../data/listino';
+import { NOTA_PREZZI, LICENZE, NOTA_LICENZE, euro, offersLd, voce } from '../data/listino';
 
 const wa = 'Ciao, ho visto i prezzi sul sito g8a.it e vorrei un preventivo per la mia azienda.';
 const faq = [
@@ -71,6 +71,27 @@ const crumbsLd = {
     </div>
   </section>
 
+  <section class="section section--paper" id="licenze">
+    <div class="wrap">
+      <div class="b-head" data-reveal>
+        <span class="kicker">Licenze</span>
+        <h2 class="h h2">Microsoft 365 e Google Workspace, <span class="red">ai prezzi ufficiali</span></h2>
+        <p class="lead">Le licenze costano quanto sul sito di Microsoft e Google. In più hai noi: attiviamo gli account, spostiamo le caselle email e ti seguiamo quando qualcosa non va.</p>
+      </div>
+      <div class="lic">
+        {LICENZE.map((m) => (
+          <div class="lic__col" data-reveal>
+            <p class="lic__h">{m.marca}</p>
+            <ul>
+              {m.piani.map((x) => <li><div><strong>{x.t}</strong><span>{x.d}</span></div><b>{euro(x.p)}<small>/utente al mese</small></b></li>)}
+            </ul>
+          </div>
+        ))}
+      </div>
+      <p class="lic__note">{NOTA_LICENZE}</p>
+    </div>
+  </section>
+
   <Confronto oggi="Comprare e chiamare il tecnico" rows={[
     { t: 'Spesa iniziale', oggi: 'Migliaia di euro subito per i computer', g8a: `Nessun anticipo: PC da ${euro(voce('pc').da!)} al mese` },
     { t: 'Guasti', oggi: 'Ogni intervento è una fattura', g8a: 'Riparazione o sostituzione già comprese' },
@@ -114,6 +135,16 @@ const crumbsLd = {
   .pz__list li { display: flex; justify-content: space-between; gap: 1rem; padding: .55rem .75rem; border-radius: 10px; background: rgba(255, 255, 255, .06); font-size: .92rem; }
   .pz__list strong { color: #ff4d4d; white-space: nowrap; }
   .pz__foot { margin-top: .9rem; color: #9a9aa5; font-size: .82rem; }
+  .lic { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1.8rem; }
+  .lic__col { padding: 1.4rem; border-radius: 18px; background: #fff; border: 1px solid var(--line); }
+  .lic__h { font-weight: 900; font-size: 1.2rem; text-transform: uppercase; font-stretch: 85%; font-variation-settings: 'wdth' 85; }
+  .lic__col ul { list-style: none; padding: 0; margin: .9rem 0 0; display: grid; gap: .5rem; }
+  .lic__col li { display: flex; justify-content: space-between; align-items: center; gap: 1rem; padding: .7rem .9rem; border-radius: 12px; background: var(--paper); }
+  .lic__col li span { display: block; color: var(--muted); font-size: .88rem; }
+  .lic__col li b { white-space: nowrap; font-size: 1.15rem; color: var(--red); text-align: right; }
+  .lic__col li b small { display: block; font-size: .7rem; color: var(--muted); font-weight: 600; }
+  .lic__note { margin-top: 1rem; color: var(--muted); font-size: .9rem; }
+  @media (max-width: 800px) { .lic { grid-template-columns: 1fr; } }
   .pz-steps { list-style: none; padding: 0; margin: 0; display: grid; gap: .8rem; }
   .pz-steps li { display: flex; gap: 1rem; align-items: flex-start; padding: 1rem 1.2rem; border-radius: 16px; background: var(--paper); }
   .pz-steps b { flex: none; display: grid; place-items: center; width: 2.2rem; height: 2.2rem; border-radius: 50%; background: var(--grad); color: #fff; font-weight: 900; }
