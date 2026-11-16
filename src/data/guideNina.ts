@@ -3,6 +3,171 @@
 /* eslint-disable */
 export const GUIDE_NINA: any[] = [
   {
+    "slug": "fine-supporto-windows-10-azienda",
+    "titolo": "Fine supporto Windows 10: cosa fare in azienda",
+    "h1": "Fine supporto Windows 10: cosa deve fare la tua azienda",
+    "descrizione": "Windows 10 è fuori supporto dal 14 ottobre 2025. Scopri i rischi per l'ufficio, le opzioni (Windows 11, ESU, nuovi PC) e come pianificare il passaggio.",
+    "intro": "Il fine supporto di Windows 10 è già arrivato: Microsoft ha chiuso il supporto il 14 ottobre 2025. I PC con Windows 10 continuano ad accendersi e a funzionare, ma non ricevono più le correzioni di sicurezza gratuite: ogni nuova falla resta aperta. In azienda questo è un rischio concreto, e conviene avere un piano chiaro: controllare i PC, scegliere tra Windows 11, aggiornamenti estesi o sostituzione, e fare il passaggio senza fermare il lavoro.",
+    "in_breve": [
+      "Dal 14 ottobre 2025 Windows 10 non riceve più aggiornamenti di sicurezza, correzioni né assistenza tecnica standard da Microsoft.",
+      "I PC non si bloccano, ma ogni vulnerabilità scoperta da ora in poi resta senza correzione: virus e ransomware hanno più strada.",
+      "Le strade sono tre: portare i PC a Windows 11, usare gli aggiornamenti estesi (ESU) come soluzione ponte, oppure sostituire i PC troppo vecchi.",
+      "Per le organizzazioni l'ESU è a pagamento, si rinnova anno per anno e dura al massimo fino a ottobre 2028: serve solo a guadagnare tempo.",
+      "Il primo passo è un inventario: quanti PC, quali versioni, quali compatibili con Windows 11."
+    ],
+    "sezioni": [
+      {
+        "punti": [],
+        "titolo": "Cosa significa davvero che Windows 10 è fuori supporto?",
+        "paragrafi": [
+          "Significa che Microsoft non rilascia più, per Windows 10, aggiornamenti di sicurezza, correzioni di errori e assistenza tecnica standard. Il sistema non smette di funzionare, e nemmeno i programmi che usi ogni giorno.",
+          "Il problema è un altro. I criminali informatici cercano continuamente falle nei sistemi. Quando ne trovano una in Windows 10, nessuno la chiude più (a meno di aderire al programma ESU, vedi sotto). Con il tempo il PC diventa un bersaglio facile.",
+          "Vale anche per le applicazioni: il supporto di Microsoft 365 Apps su Windows 10 è terminato con il sistema operativo, ma Microsoft ha dichiarato che continuerà a fornire aggiornamenti di sicurezza per Microsoft 365 su Windows 10 fino al 10 ottobre 2028. Aiuta, ma non protegge il sistema operativo sotto."
+        ]
+      },
+      {
+        "punti": [
+          "Virus e ransomware: le falle nuove non vengono corrette e restano sfruttabili.",
+          "Fermo del lavoro: se un PC si blocca o viene attaccato, l'attività si ferma finché non si ripristina tutto.",
+          "Programmi e dispositivi che col tempo smettono di essere compatibili: i produttori testano i loro software sui sistemi supportati.",
+          "Questioni di conformità: norme come GDPR e NIS2 chiedono misure di sicurezza adeguate. Un sistema senza correzioni può essere difficile da giustificare. Per sapere cosa vale nel tuo caso, parlane con il tuo consulente."
+        ],
+        "titolo": "Quali rischi corre un ufficio con PC ancora su Windows 10?",
+        "paragrafi": [
+          "Un ufficio piccolo non ha un reparto IT che controlla tutto. Un solo PC non aggiornato basta per far entrare un ransomware e bloccare gestionale, fatture e documenti."
+        ]
+      },
+      {
+        "punti": [],
+        "titolo": "Come faccio a sapere quali PC dell'ufficio sono ancora su Windows 10?",
+        "paragrafi": [
+          "Prima di decidere serve un elenco. Per ogni PC annota: nome o utente, versione di Windows, età, processore, e se ci sono programmi particolari (gestionale, software di studio, collegamenti a macchinari).",
+          "Su un singolo PC puoi controllare la versione da Impostazioni → Sistema → Informazioni. Se hai più di qualche computer, farlo a mano è lento e si sbaglia: uno strumento di gestione remota mostra versioni e stato di tutti i PC in un colpo solo."
+        ]
+      },
+      {
+        "punti": [],
+        "titolo": "Il mio PC può passare a Windows 11?",
+        "paragrafi": [
+          "Windows 11 ha requisiti più severi di Windows 10. Secondo Microsoft servono, tra gli altri: processore a 64 bit compatibile, almeno 4 GB di RAM, almeno 64 GB di archiviazione, firmware UEFI con Secure Boot e chip TPM versione 2.0.",
+          "Il controllo più semplice è l'app Microsoft PC Health Check, che dice se il PC è idoneo e cosa blocca l'aggiornamento. Puoi verificare il TPM anche premendo Windows + R e scrivendo tpm.msc.",
+          "A volte TPM o Secure Boot sono solo disattivati nelle impostazioni del PC e si risolve con una modifica. Se invece il blocco è il processore, non c'è impostazione che lo sistemi: quel PC va sostituito.",
+          "Cosa NON fare: non forzare l'installazione di Windows 11 su PC non compatibili con trucchi trovati online. Microsoft non garantisce gli aggiornamenti di sicurezza su quell'hardware e rischi problemi proprio dove volevi sicurezza."
+        ]
+      },
+      {
+        "punti": [],
+        "titolo": "Cos'è l'ESU e conviene usarlo in azienda?",
+        "paragrafi": [
+          "ESU significa Extended Security Updates, aggiornamenti di sicurezza estesi. Sono correzioni critiche e importanti per Windows 10 versione 22H2 dopo la fine del supporto. Non portano nuove funzioni e non includono assistenza tecnica generale.",
+          "Per le organizzazioni l'ESU si compra per dispositivo, anno per anno, tramite i programmi di licenza Microsoft, e può durare al massimo tre anni dopo la fine del supporto, cioè fino a ottobre 2028. Il prezzo cresce ogni anno. Per i privati esiste un programma separato, con scadenza ottobre 2027, che non vale per i PC aziendali.",
+          "In pratica l'ESU è un ponte: va bene per un PC che non puoi cambiare subito (per esempio perché un programma non è ancora compatibile) ma non è una soluzione stabile. Conviene attivarlo solo sui PC che hai già in programma di sostituire o aggiornare, con una data precisa."
+        ]
+      },
+      {
+        "punti": [
+          "PC compatibile e ancora in buono stato: si passa a Windows 11, dopo backup e verifica dei programmi.",
+          "PC compatibile ma lento o con molti anni: spesso conviene sostituirlo invece di investire in un passaggio che dura poco.",
+          "PC non compatibile: sostituzione. L'ESU solo come ponte, se serve tempo.",
+          "Parco PC misto o molti computer da cambiare: valuta il noleggio, che evita di sostenere tutta la spesa in una volta e include assistenza e sostituzione."
+        ],
+        "titolo": "Aggiornare, sostituire o noleggiare i PC: come decidere?",
+        "paragrafi": [
+          "Per ogni PC la scelta è semplice se hai l'inventario:"
+        ]
+      },
+      {
+        "punti": [
+          "Backup completo prima di toccare qualunque PC. Se non sei sicuro del tuo, leggi la guida sulla regola 3-2-1.",
+          "Controllo dei programmi: gestionale, firma digitale, stampanti, lettori e collegamenti vanno testati su Windows 11.",
+          "Test su un PC pilota e poi gli altri, a gruppi, fuori dagli orari di punta.",
+          "Dopo il passaggio: aggiornamenti automatici attivi, antivirus e backup funzionanti, nessun PC dimenticato.",
+          "Controllo continuo: un PC lasciato indietro diventa di nuovo il punto debole."
+        ],
+        "titolo": "Come si fa il passaggio senza fermare l'ufficio?",
+        "paragrafi": [
+          "Un passaggio ordinato segue sempre gli stessi passi:"
+        ]
+      },
+      {
+        "punti": [],
+        "titolo": "Cosa fa G8A per le aziende con ancora Windows 10?",
+        "paragrafi": [
+          "Per aziende, studi e uffici nelle province di Varese, Milano e Lecco facciamo l'inventario dei PC, verifichiamo la compatibilità, prepariamo il passaggio a Windows 11 e, dove serve, forniamo PC nuovi anche in noleggio. Con la gestione remota teniamo sotto controllo aggiornamenti e stato di ogni computer, così il problema non si ripresenta. In caso di dubbi sul lato legale (NIS2, GDPR) ti consigliamo di sentire il tuo consulente."
+        ]
+      }
+    ],
+    "faq": [
+      {
+        "d": "Windows 10 smette di funzionare dopo il fine supporto?",
+        "r": "No. I PC continuano ad avviarsi e a funzionare, ma Microsoft non fornisce più aggiornamenti di sicurezza, correzioni né assistenza tecnica standard."
+      },
+      {
+        "d": "Fino a quando posso usare Windows 10 in azienda con gli aggiornamenti di sicurezza?",
+        "r": "Solo aderendo al programma ESU a pagamento per le organizzazioni, che può durare al massimo tre anni dopo il 14 ottobre 2025, cioè fino a ottobre 2028. Va attivato per ogni dispositivo."
+      },
+      {
+        "d": "Il programma ESU per i privati vale anche per i PC dell'ufficio?",
+        "r": "No. Il programma per utenti privati è pensato per uso personale. I PC di aziende e organizzazioni usano l'ESU commerciale."
+      },
+      {
+        "d": "Posso installare Windows 11 su un PC non compatibile?",
+        "r": "Esistono metodi non ufficiali, ma Microsoft non garantisce gli aggiornamenti di sicurezza su hardware non supportato. In azienda è meglio evitare."
+      },
+      {
+        "d": "Devo aggiornare anche se uso solo il gestionale e la posta?",
+        "r": "Sì, perché il rischio riguarda la sicurezza del sistema, non quello che usi. Prima però verifica con il fornitore del gestionale la compatibilità con Windows 11."
+      },
+      {
+        "d": "Quanto tempo serve per passare tutti i PC?",
+        "r": "Dipende da quanti PC hai, dalla compatibilità e dai programmi installati. Dopo l'inventario si può fare un piano con date concrete."
+      }
+    ],
+    "link": [
+      {
+        "url": "/assistenza-informatica",
+        "testo": "assistenza informatica per aziende"
+      },
+      {
+        "url": "/rmm",
+        "testo": "gestione remota dei PC (RMM)"
+      },
+      {
+        "url": "/noleggio-computer",
+        "testo": "noleggio computer per l'azienda"
+      },
+      {
+        "url": "/guide/backup-aziendale-regola-3-2-1",
+        "testo": "backup aziendale: la regola 3-2-1"
+      },
+      {
+        "url": "/noleggio-backup",
+        "testo": "noleggio con backup"
+      },
+      {
+        "url": "/assistenza-informatica/gallarate",
+        "testo": "assistenza informatica a Gallarate"
+      },
+      {
+        "url": "/assistenza-informatica/varese",
+        "testo": "assistenza informatica a Varese"
+      },
+      {
+        "url": "/assistenza-business",
+        "testo": "assistenza business"
+      }
+    ],
+    "extra": {},
+    "copertina": {
+      "alt": "Ufficio con PC Windows 10 a fine supporto e passaggio a un PC protetto",
+      "url": "https://ijrrnuurjbgugystlfry.supabase.co/storage/v1/object/public/guide-immagini/g8a/fine-supporto-windows-10-azienda-363a3a92.jpg",
+      "fonte": "nina"
+    },
+    "firmato_da": "Antonio Arrigo",
+    "pubblicata_il": "2026-11-15",
+    "aggiornata_il": "2026-11-15"
+  },
+  {
     "slug": "nas-ufficio-perche-averlo",
     "titolo": "NAS per l'ufficio: perché averlo e cosa fa davvero",
     "h1": "NAS per l'ufficio: perché averlo (e perché da solo non basta)",
