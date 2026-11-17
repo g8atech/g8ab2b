@@ -3,6 +3,171 @@
 /* eslint-disable */
 export const GUIDE_NINA: any[] = [
   {
+    "slug": "ransomware-ufficio-cosa-fare-prima-ora",
+    "titolo": "Ransomware in ufficio: cosa fare nella prima ora",
+    "h1": "Ransomware in ufficio: cosa fare nella prima ora",
+    "descrizione": "File bloccati e richiesta di riscatto? Ransomware in ufficio: i passi della prima ora, cosa non fare e chi avvisare. Leggi la guida e prepara il piano.",
+    "intro": "Se hai un ransomware in ufficio, nella prima ora devi fare tre cose: isolare i computer colpiti dalla rete, non spegnere con la forza e non cancellare nulla, avvisare chi gestisce la tua informatica. Pagare il riscatto non garantisce di riavere i dati. La strada migliore è ripartire da un backup che l'attacco non ha raggiunto.",
+    "in_breve": [
+      "Scollega dalla rete i PC colpiti (cavo e Wi-Fi), ma non cancellare nulla.",
+      "Scollega anche i dischi e i NAS di backup, se non sono già stati colpiti.",
+      "Avvisa subito il tuo tecnico informatico e annota cosa è successo e a che ora.",
+      "Pagare il riscatto è sconsigliato dalle autorità e non garantisce di riavere i dati.",
+      "Se sono coinvolti dati personali, ci sono obblighi di comunicazione con tempi stretti: senti subito il tuo consulente."
+    ],
+    "sezioni": [
+      {
+        "punti": [
+          "i file cambiano nome o estensione e non si aprono più;",
+          "compare un messaggio, a schermo o in un file di testo, con la richiesta di riscatto;",
+          "i PC diventano lentissimi o la cartella condivisa sul server non risponde;",
+          "un collega segnala che non riesce più ad aprire documenti che usava ieri."
+        ],
+        "titolo": "Come capisci che è un ransomware?",
+        "paragrafi": [
+          "Un ransomware è un programma dannoso che blocca i file (li cifra) e chiede un pagamento per sbloccarli. Di solito te ne accorgi così:"
+        ]
+      },
+      {
+        "punti": [
+          "Isola: stacca il cavo di rete e disattiva il Wi-Fi dei computer colpiti. Così il blocco non si estende agli altri PC e al server.",
+          "Non spegnere in modo forzato: nella memoria del computer possono restare informazioni utili per capire cosa è successo e, in alcuni casi, recuperare dati.",
+          "Proteggi i backup: scollega dalla rete i dischi esterni e i NAS di backup, se non sono già stati colpiti. Sono la tua via d'uscita.",
+          "Avvisa il tecnico: chiama chi gestisce la tua informatica. Più tempo passa, più la situazione può peggiorare.",
+          "Scrivi tutto: ora in cui te ne sei accorto, PC colpiti, messaggio del riscatto (fotografalo con il telefono). Serviranno al tecnico, al consulente e alle autorità.",
+          "Avvisa i colleghi: nessuno deve usare i PC, aprire allegati o collegare chiavette USB finché il tecnico non dà il via."
+        ],
+        "titolo": "Cosa fare nella prima ora?",
+        "paragrafi": [
+          "La calma conta più della fretta. Segui questi passi, in ordine."
+        ]
+      },
+      {
+        "punti": [
+          "Non cancellare file e non reinstallare Windows subito: distruggi tracce e copie recuperabili.",
+          "Non scaricare programmi di pulizia o \"sblocca file\" trovati online: spesso peggiorano il danno.",
+          "Non collegare il disco di backup a un PC colpito: rischi di cifrare anche le copie.",
+          "Non rispondere ai criminali e non pagare di tua iniziativa.",
+          "Non fingere che non sia successo niente: il tempo conta anche per gli obblighi di legge."
+        ],
+        "titolo": "Cosa NON devi fare?",
+        "paragrafi": []
+      },
+      {
+        "punti": [],
+        "titolo": "Conviene pagare il riscatto?",
+        "paragrafi": [
+          "Le autorità e le forze dell'ordine lo sconsigliano. Pagare non garantisce di riavere i dati e finanzia i criminali. La strada da preferire è il ripristino da un backup che l'attacco non ha raggiunto.",
+          "Per questo un backup fatto bene conta più di qualunque antivirus. Se non conosci la regola delle tre copie, leggi la guida sul backup aziendale con la regola 3-2-1."
+        ]
+      },
+      {
+        "punti": [],
+        "titolo": "Chi devi avvisare e quali obblighi hai?",
+        "paragrafi": [
+          "Un ransomware spesso tocca dati personali di clienti, fornitori o dipendenti. In questi casi il GDPR prevede di comunicare la violazione al Garante per la protezione dei dati personali, in genere entro 72 ore da quando ne vieni a conoscenza, salvo che sia improbabile un rischio per le persone. Alcune imprese rientrano anche nella direttiva NIS2, con segnalazioni al CSIRT Italia (l'unità dell'Agenzia per la Cybersicurezza Nazionale) con tempi ancora più brevi.",
+          "Qui non diamo pareri legali: se pensi di essere coinvolto, chiama subito il tuo consulente o il responsabile della privacy. Anche chi non è obbligato può segnalare l'incidente al CSIRT Italia dal portale ufficiale e puoi fare denuncia alla Polizia Postale."
+        ]
+      },
+      {
+        "punti": [
+          "capire come sono entrati (password rubata, accesso remoto aperto, email, programma non aggiornato) e chiudere quella porta;",
+          "controllare tutti i PC e il server, anche quelli che sembrano a posto;",
+          "reinstallare i sistemi colpiti e recuperare i dati dall'ultimo backup integro;",
+          "cambiare tutte le password, partendo da amministratori e accessi remoti;",
+          "verificare che i backup nuovi funzionino e che una copia resti fuori dalla rete."
+        ],
+        "titolo": "Come si riparte dopo l'attacco?",
+        "paragrafi": [
+          "Il tecnico di solito segue questi passaggi:"
+        ]
+      },
+      {
+        "punti": [
+          "backup con più copie, di cui una offline o separata dalla rete, e prove di ripristino ogni tanto;",
+          "aggiornamenti di Windows e dei programmi sempre fatti: un servizio di gestione remota dei PC (RMM) li controlla per te;",
+          "password forti e diverse, con verifica in due passaggi sugli accessi importanti;",
+          "nessun dispositivo o pannello di controllo esposto direttamente a internet;",
+          "un piano di due pagine con nomi, numeri di telefono e cosa fare, stampato e a portata di mano;",
+          "dipendenti informati: molti attacchi partono da una email o da un clic sbagliato."
+        ],
+        "titolo": "Come ti prepari prima che succeda?",
+        "paragrafi": [
+          "Il lavoro che fa la differenza si fa prima dell'attacco. Le misure di base raccomandate dal CSIRT Italia sono semplici:"
+        ]
+      },
+      {
+        "punti": [],
+        "titolo": "Quando serve un informatico esterno?",
+        "paragrafi": [
+          "Se in ufficio non hai un informatico, nel momento dell'emergenza non sai chi chiamare. Un'assistenza già attiva conosce i tuoi PC, il tuo server e i tuoi backup, e sa cosa fare. Con la gestione remota e il backup controllato molti problemi si evitano. Lavoriamo nelle province di Varese, Milano e Lecco, anche in sede.",
+          "Vuoi controllare se i tuoi backup reggerebbero un attacco? Scrivici su WhatsApp o chiama lo 0331 139 0950, oppure chiedi un sopralluogo."
+        ]
+      }
+    ],
+    "faq": [
+      {
+        "d": "Devo spegnere il computer se vedo un ransomware?",
+        "r": "Meglio non spegnerlo in modo forzato. Scollega subito rete e Wi-Fi e chiama il tecnico: nella memoria possono esserci informazioni utili. Se il tecnico ti dice di spegnere, fai come ti indica."
+      },
+      {
+        "d": "Posso recuperare i file senza pagare?",
+        "r": "Dipende dal tipo di attacco. La via più sicura è il ripristino da un backup non colpito. Un tecnico valuta caso per caso se esistono alternative."
+      },
+      {
+        "d": "Il ransomware può colpire anche un NAS?",
+        "r": "Sì, se il NAS è raggiungibile dalla rete dei PC colpiti. Per questo serve una copia separata o offline."
+      },
+      {
+        "d": "Devo avvisare il Garante della privacy?",
+        "r": "Se sono coinvolti dati personali, il GDPR prevede una valutazione e, in molti casi, una comunicazione al Garante entro 72 ore. Senti subito il tuo consulente."
+      },
+      {
+        "d": "Un antivirus basta a proteggermi?",
+        "r": "No. Aiuta, ma servono anche aggiornamenti, password robuste, backup separati e persone che sanno riconoscere le email false."
+      }
+    ],
+    "link": [
+      {
+        "url": "/guide/backup-aziendale-regola-3-2-1",
+        "testo": "backup aziendale con la regola 3-2-1"
+      },
+      {
+        "url": "/guide/nas-ufficio-perche-averlo",
+        "testo": "NAS per l'ufficio"
+      },
+      {
+        "url": "/rmm",
+        "testo": "gestione remota dei PC (RMM)"
+      },
+      {
+        "url": "/noleggio-backup",
+        "testo": "backup in noleggio per le aziende"
+      },
+      {
+        "url": "/assistenza-informatica",
+        "testo": "assistenza informatica per aziende"
+      },
+      {
+        "url": "/guide/fine-supporto-windows-10-azienda",
+        "testo": "fine supporto di Windows 10 in azienda"
+      },
+      {
+        "url": "/assistenza-informatica/varese",
+        "testo": "assistenza informatica a Varese"
+      }
+    ],
+    "extra": {},
+    "copertina": {
+      "alt": "Illustrazione di un computer d'ufficio con cavo di rete scollegato e lucchetto: ransomware in ufficio",
+      "url": "https://ijrrnuurjbgugystlfry.supabase.co/storage/v1/object/public/guide-immagini/g8a/ransomware-ufficio-cosa-fare-prima-ora-31ab3f17.jpg",
+      "fonte": "nina"
+    },
+    "firmato_da": "Antonio Arrigo",
+    "pubblicata_il": "2026-11-17",
+    "aggiornata_il": "2026-11-17"
+  },
+  {
     "slug": "fine-supporto-windows-10-azienda",
     "titolo": "Fine supporto Windows 10: cosa fare in azienda",
     "h1": "Fine supporto Windows 10: cosa deve fare la tua azienda",
