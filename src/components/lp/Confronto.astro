@@ -8,7 +8,7 @@ const { kicker = 'Fai il confronto', oggi, rows } = Astro.props;
   <div class="wrap">
     <div class="b-head" data-reveal>
       <span class="kicker">{kicker}</span>
-      <h2 class="h h2"><slot /></h2>
+      <h2 class="h h2"><slot>Comprare o noleggiare? <span class="red">Guarda la differenza.</span></slot></h2>
     </div>
     <div class="cmp" data-reveal>
       <div class="cmp__hd"><span></span><span class="cmp__old">{oggi}</span><span class="cmp__new">Noleggio Assistito G8A</span></div>

@@ -19,28 +19,45 @@ export const SITE = {
   // I ticket li aprono i clienti dall'area clienti di Brain.
   ticket: 'https://parts-plan.vercel.app/area-clienti',
   rmmLogin: 'https://g8a.rmmservice.eu/auth/#/login',
+  // Profili social ufficiali di G8A Technology (LinkedIn, Facebook, YouTube…): finiscono nello schema (sameAs).
+  // Solo indirizzi reali dell'azienda: lasciare vuoto finché non sono confermati.
+  social: [] as string[],
 };
 
+export const FONDATORI = [
+  { nome: 'Giuseppe Arrigo', ruolo: 'Co-fondatore di G8A Technology' },
+  { nome: 'Antonio Arrigo', ruolo: 'Co-fondatore e amministratore delegato di G8A Technology' },
+];
+
 // Negozi G8A Store: sito a parte (progetto g8astore) su www.g8astore.it/<slug>/.
-export type Negozio = { slug: string; phone: string; phoneIntl: string; whatsapp: string; email: string; zona: string };
+export type Negozio = { slug: string; phone: string; phoneIntl: string; whatsapp: string; email: string; zona: string; placeId?: string };
 export type Sede = { city: string; address: string; cap: string; province: string; operativa?: boolean; negozio?: Negozio };
 
 
 export const SEDI: Sede[] = [
-  { city: 'Gallarate', address: 'Viale Milano 1', cap: '21013', province: 'VA', negozio: { slug: 'gallarate', phone: '0331 24 88 59', phoneIntl: '+390331248859', whatsapp: '390331248859', email: 'gallarate@g8a.it', zona: 'Gallarate, Cardano al Campo, Samarate, Cassano Magnago' } },
-  { city: 'Busto Arsizio', address: 'Via Q. Sella 27', cap: '21052', province: 'VA', negozio: { slug: 'busto-arsizio', phone: '0331 98 45 55', phoneIntl: '+390331984555', whatsapp: '390331984555', email: 'bustoarsizio@g8a.it', zona: 'Busto Arsizio, Castellanza, Olgiate Olona, Fagnano Olona' } },
-  { city: 'Bollate', address: 'Piazza Indipendenza 8', cap: '20021', province: 'MI', negozio: { slug: 'bollate', phone: '02 350 4614', phoneIntl: '+39023504614', whatsapp: '39023504614', email: 'bollate@g8a.it', zona: 'Bollate e dintorni' } },
-  { city: 'Jerago con Orago', address: 'Via Varesina 3', cap: '21040', province: 'VA', negozio: { slug: 'jerago-con-orago', phone: '0331 02 00 08', phoneIntl: '+390331020008', whatsapp: '390331020008', email: 'jerago@g8a.it', zona: 'Jerago con Orago, Cavaria, Besnate, Albizzate, Solbiate Arno' } },
-  { city: 'Lecco', address: 'Viale Dante Alighieri 22', cap: '23900', province: 'LC', negozio: { slug: 'lecco', phone: '0341 36 77 54', phoneIntl: '+390341367754', whatsapp: '390341367754', email: 'lecco@g8a.it', zona: 'Lecco e provincia' } },
+  { city: 'Gallarate', address: 'Viale Milano 1', cap: '21013', province: 'VA', negozio: { slug: 'gallarate', placeId: 'ChIJ6yyZkqWJhkcRWl-oGsLTGlE', phone: '0331 24 88 59', phoneIntl: '+390331248859', whatsapp: '390331248859', email: 'gallarate@g8a.it', zona: 'Gallarate, Cardano al Campo, Samarate, Cassano Magnago' } },
+  { city: 'Busto Arsizio', address: 'Via Q. Sella 27', cap: '21052', province: 'VA', negozio: { slug: 'busto-arsizio', placeId: 'ChIJP50Vl0mLhkcRcFXw61MM-tE', phone: '0331 98 45 55', phoneIntl: '+390331984555', whatsapp: '390331984555', email: 'bustoarsizio@g8a.it', zona: 'Busto Arsizio, Castellanza, Olgiate Olona, Fagnano Olona' } },
+  { city: 'Bollate', address: 'Piazza Indipendenza 8', cap: '20021', province: 'MI', negozio: { slug: 'bollate', placeId: 'ChIJuVB-8zqVhkcRIBQ06wksGto', phone: '02 350 4614', phoneIntl: '+39023504614', whatsapp: '39023504614', email: 'bollate@g8a.it', zona: 'Bollate e dintorni' } },
+  { city: 'Jerago con Orago', address: 'Via Varesina 3', cap: '21040', province: 'VA', negozio: { slug: 'jerago-con-orago', placeId: 'ChIJI1NQYgmIhkcRIyYGwWW3ESs', phone: '0331 02 00 08', phoneIntl: '+390331020008', whatsapp: '390331020008', email: 'jerago@g8a.it', zona: 'Jerago con Orago, Cavaria, Besnate, Albizzate, Solbiate Arno' } },
+  { city: 'Lecco', address: 'Viale Dante Alighieri 22', cap: '23900', province: 'LC', negozio: { slug: 'lecco', placeId: 'ChIJe_rlE8QdhEcRDsib-RoqdKc', phone: '0341 36 77 54', phoneIntl: '+390341367754', whatsapp: '390341367754', email: 'lecco@g8a.it', zona: 'Lecco e provincia' } },
   { city: 'Solbiate Arno', address: 'Via Caronno Varesino 33', cap: '21048', province: 'VA', operativa: true },
 ];
 
+// Brand del gruppo G8A: footer, schema Organization e pagina /chi-siamo.
 export const GRUPPO = [
-  { name: 'FibraHero', what: 'Fibra per aziende', url: 'https://www.fibrahero.it' },
-  { name: 'TonerHero', what: 'Toner e cartucce', url: 'https://www.tonerhero.it' },
-  { name: 'RiparoHero', what: 'Riparazioni', url: 'https://www.riparohero.it' },
-  { name: 'G8A Store', what: 'PC e negozi', url: 'https://www.g8astore.it' },
-  { name: 'SuperPMI', what: 'Intelligenza artificiale', url: 'https://www.superpmi.it' },
+  { name: 'G8A Store', what: 'Negozi: PC, notebook e Mac', url: 'https://www.g8astore.it', key: 'g8astore',
+    desc: 'I cinque negozi G8A per privati e partite IVA: riparazione e vendita di computer, notebook e Mac, PC G8A configurabili e assistenza al banco.',
+    negozio: (slug: string) => `https://www.g8astore.it/${slug}/` },
+  { name: 'RiparoHero', what: 'Riparazione smartphone e tablet', url: 'https://www.riparohero.it', key: 'riparohero',
+    desc: 'Riparazione di smartphone e tablet negli stessi negozi: schermi, batterie e connettori con prezzo chiaro, diagnosi gratuita e garanzia.',
+    negozio: (slug: string) => `https://www.riparohero.it/${slug}` },
+  { name: 'TonerHero', what: 'Toner, cartucce e stampanti', url: 'https://www.tonerhero.it', key: 'tonerhero',
+    desc: 'Toner e cartucce originali e compatibili, carta e stampanti per uffici, scuole e pubblica amministrazione, con i negozi come punto di ritiro e assistenza.',
+    negozio: (slug: string) => `https://www.tonerhero.it/negozi/${slug}` },
+  { name: 'FibraHero', what: 'Fibra e connettività per aziende', url: 'https://www.fibrahero.it', key: 'fibrahero',
+    desc: 'Connettività per sole aziende con G8A come operatore: fibra, linee di backup e centralino, con il supporto diretto dei nostri tecnici.' },
+  { name: 'SuperPMI', what: 'Intelligenza artificiale per le PMI', url: 'https://www.superpmi.it', key: 'superpmi',
+    desc: "L'intelligenza artificiale applicata alle piccole e medie imprese: formazione per titolari e dipendenti, assistenti e strumenti AI su misura." },
 ];
 
 export const FAQ = [
@@ -60,6 +77,8 @@ export const waLink = (text: string = SITE.whatsappText) =>
 // I negozi sono un sito a parte: www.g8astore.it
 export const STORE_SITE = 'https://www.g8astore.it';
 export const storeUrl = (slug?: string) => (slug ? `${STORE_SITE}/${slug}/` : `${STORE_SITE}/`);
+// Scheda Google del negozio G8A (place_id in Brain → store_settings.g8a_google_place_id).
+export const mapsPlace = (placeId: string) => `https://www.google.com/maps/place/?q=place_id:${placeId}`;
 export const telLink = `tel:${SITE.phoneIntl}`;
 
 // Domande comuni a tutte le pagine del Noleggio Assistito (dal sito storico).

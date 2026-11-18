@@ -5,10 +5,16 @@
 // (Google ne restituisce al massimo 5, le più pertinenti), con l'attribuzione richiesta da Google.
 import { GOOGLE } from '../../data/site';
 import { RECENSIONI } from '../../data/recensioni';
-interface Props { paper?: boolean; show?: number }
-const { paper = false, show = 6 } = Astro.props;
+interface Props { paper?: boolean; show?: number; all?: boolean; offset?: number }
+const { paper = false, show = 6, all = false, offset } = Astro.props;
 // Se ci sono recensioni copiate a mano in recensioni.ts, si mostrano quelle (tutte) e non si chiama Google.
-const manuali = RECENSIONI;
+// Nell'HTML finiscono solo le recensioni mostrate (tutte solo con all, nella pagina dei casi studio):
+// la stessa lista lunga su ogni pagina rendeva le pagine quasi identiche per Google.
+// Ogni pagina parte da un punto diverso della lista (dal percorso), così le recensioni variano tra le pagine.
+const tutte = RECENSIONI;
+const path = Astro.url.pathname.replace(/\/$/, '') || '/';
+const start = offset !== undefined ? offset % Math.max(1, RECENSIONI.length) : path === '/' || all ? 0 : [...path].reduce((h, ch) => (h * 31 + ch.charCodeAt(0)) >>> 0, 7) % Math.max(1, tutte.length);
+const manuali = all ? tutte : Array.from({ length: Math.min(show, tutte.length) }, (_, i) => tutte[(start + i) % tutte.length]);
 const key = manuali.length ? '' : (import.meta.env.PUBLIC_GOOGLE_MAPS_KEY ?? '');
 const voto = GOOGLE.voto.toLocaleString('it-IT', { minimumFractionDigits: 1 });
 ---
@@ -45,7 +51,8 @@ const voto = GOOGLE.voto.toLocaleString('it-IT', { minimumFractionDigits: 1 });
           </figure>
         ))}
       </div>
-      {manuali.length > show && <div class="gr__showall"><button class="btn btn--line" type="button" data-g="tutte">Mostra tutte le {manuali.length} recensioni con commento</button></div>}
+      {all && manuali.length > show && <div class="gr__showall"><button class="btn btn--line" type="button" data-g="tutte">Mostra tutte le {manuali.length} recensioni con commento</button></div>}
+      {!all && tutte.length > manuali.length && <div class="gr__showall"><a class="btn btn--line" href="/testimonianze-casistudio#recensioni">Leggi tutte le {tutte.length} recensioni con commento</a></div>}
       </>
     ) : (
       <div class="gr__list" data-g="lista" hidden></div>

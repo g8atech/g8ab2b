@@ -19,6 +19,7 @@ Contatti: telefono e WhatsApp 0331 139 0950 · info@g8a.it · Via Caronno Varesi
 
 ## Approfondimenti
 
+- [Chi siamo e il gruppo G8A](https://www.g8a.it/chi-siamo): storia, fondatori (Giuseppe e Antonio Arrigo), i brand del gruppo e le pagine di ogni sede.
 - [Casi studio e testimonianze](https://www.g8a.it/testimonianze-casistudio): interventi reali del Protocollo Emergency G8A e recensioni dei clienti.
 - [Contatti e sedi](https://www.g8a.it/assistenza-business): sedi a Gallarate, Busto Arsizio, Bollate, Jerago con Orago, Lecco e Solbiate Arno.
 
@@ -36,8 +37,10 @@ Contatti: telefono e WhatsApp 0331 139 0950 · info@g8a.it · Via Caronno Varesi
 
 ## Gruppo
 
-- [FibraHero](https://www.fibrahero.it): connettività in fibra per aziende.
-- [TonerHero](https://www.tonerhero.it): toner e cartucce.
-- [RiparoHero](https://www.riparohero.it): riparazioni.
-- [G8A Store](https://www.g8astore.it): PC e negozi.
+Tutti i brand fanno capo a G8A Technology S.r.l. (fondatori Giuseppe e Antonio Arrigo) e condividono sedi e tecnici. Panoramica: https://www.g8a.it/chi-siamo
+
+- [G8A Store](https://www.g8astore.it): i cinque negozi per privati e partite IVA, riparazione e vendita di computer, notebook e Mac.
+- [RiparoHero](https://www.riparohero.it): riparazione di smartphone e tablet negli stessi negozi.
+- [TonerHero](https://www.tonerhero.it): toner e cartucce originali e compatibili, carta e stampanti, anche per scuole e pubblica amministrazione.
+- [FibraHero](https://www.fibrahero.it): connettività per sole aziende, con G8A come operatore.
 - [SuperPMI](https://www.superpmi.it): intelligenza artificiale per le PMI (formazione, chatbot e centralini AI, software).

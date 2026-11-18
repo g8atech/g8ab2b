@@ -286,11 +286,6 @@
       "permanent": true
     },
     {
-      "source": "/chi-siamo",
-      "destination": "/#chi-siamo",
-      "permanent": true
-    },
-    {
       "source": "/iron-safe",
       "destination": "/noleggio-backup",
       "permanent": true
@@ -311,8 +306,38 @@
       "permanent": true
     },
     {
-      "source": "/chi(.*)siamo(.*)",
-      "destination": "/#chi-siamo",
+      "source": "/chisiamo(.*)",
+      "destination": "/chi-siamo",
+      "permanent": true
+    },
+    {
+      "source": "/chi-siamo-:rest",
+      "destination": "/chi-siamo",
+      "permanent": true
+    },
+    {
+      "source": "/chi-siamo/:rest+",
+      "destination": "/chi-siamo",
+      "permanent": true
+    },
+    {
+      "source": "/gruppo",
+      "destination": "/chi-siamo",
+      "permanent": true
+    },
+    {
+      "source": "/sitemap.xml",
+      "destination": "/sitemap-index.xml",
+      "permanent": true
+    },
+    {
+      "source": "/faq",
+      "destination": "/#faq",
+      "permanent": true
+    },
+    {
+      "source": "/assistenza",
+      "destination": "/assistenza-business",
       "permanent": true
     }
   ]

@@ -11,10 +11,12 @@ import ConsentHead from '../components/ConsentHead.astro';
 import ConsentBanner from '../components/ConsentBanner.astro';
 import logoWhite from '../assets/logo-g8a-bianco.png';
 import logoColor from '../assets/logo-g8a.png';
-import { SITE, SEDI, GRUPPO, GOOGLE, waLink, telLink, storeUrl } from '../data/site';
+import { SITE, SEDI, GRUPPO, GOOGLE, FONDATORI, waLink, telLink, storeUrl } from '../data/site';
+import { STAMPA } from '../data/stampa';
+import { TV } from '../data/tv';
 
-interface Props { title: string; description: string; jsonLd?: object[]; mbar?: { tel: string; wa: string } }
-const { title, description: rawDescription, jsonLd = [], mbar } = Astro.props;
+interface Props { title: string; description: string; jsonLd?: object[]; mbar?: { tel: string; wa: string }; ogImage?: string; ogAlt?: string }
+const { title, description: rawDescription, jsonLd = [], mbar, ogImage, ogAlt } = Astro.props;
 // Description per Google: max ~158 caratteri, tagliata a fine frase o a fine parola (mai a metà parola).
 const description = (() => {
   const d = rawDescription.replace(/\s+/g, ' ').trim();
@@ -35,6 +37,7 @@ const NAV = [
   { href: '/prezzi', t: 'Prezzi' },
   { href: '/assistenza-informatica', t: 'Zone' },
   { href: '/testimonianze-casistudio', t: 'Casi studio' },
+  { href: '/chi-siamo', t: 'Chi siamo' },
   { href: storeUrl(), t: 'Negozi' },
   { href: '/assistenza-business', t: 'Contatti' },
 ];
@@ -60,9 +63,18 @@ const organization = {
   slogan: SITE.tagline,
   areaServed: ['Provincia di Varese', 'Città metropolitana di Milano', 'Provincia di Lecco'],
   address: { '@type': 'PostalAddress', streetAddress: 'Via Caronno Varesino 33', postalCode: '21048', addressLocality: 'Solbiate Arno', addressRegion: 'VA', addressCountry: 'IT' },
-  subOrganization: GRUPPO.map((g) => ({ '@type': 'Organization', name: g.name, url: g.url })),
-  // Profili ufficiali della stessa azienda: la scheda Google della sede (collega sito e recensioni per le AI).
-  sameAs: [GOOGLE.leggi],
+  description: 'Azienda IT lombarda che offre alle imprese il Noleggio Assistito: computer, stampanti, backup e assistenza tecnica in un unico canone mensile.',
+  founder: FONDATORI.map((f) => ({ '@type': 'Person', name: f.nome, jobTitle: f.ruolo })),
+  brand: GRUPPO.map((g) => ({ '@type': 'Brand', name: g.name, url: g.url })),
+  subOrganization: GRUPPO.map((g) => ({ '@type': 'Organization', name: g.name, url: g.url, description: g.what })),
+  knowsAbout: ['Noleggio operativo di computer', 'Assistenza informatica per aziende', 'Backup e NAS', 'Monitoraggio RMM', 'Stampanti multifunzione', 'Sicurezza informatica'],
+  // Uscite su stampa e TV che parlano di G8A: segnali di autorevolezza per Google e per le AI.
+  subjectOf: [
+    ...STAMPA.map((u) => ({ '@type': 'NewsArticle', headline: u.titolo, url: u.url, publisher: { '@type': 'Organization', name: u.testata } })),
+    { '@type': 'VideoObject', name: TV.titolo, description: TV.descrizione, uploadDate: TV.dataIso, thumbnailUrl: `${SITE.url}${TV.poster}`, contentUrl: `${SITE.url}${TV.video}` },
+  ],
+  // Profili ufficiali della stessa azienda: scheda Google della sede e social (SOCIAL in site.ts).
+  sameAs: [GOOGLE.leggi, ...SITE.social],
   hasMap: GOOGLE.leggi,
 };
 // I negozi con pagina propria hanno i loro dati strutturati nella pagina; qui le altre sedi.
@@ -120,10 +132,10 @@ const bing = import.meta.env.PUBLIC_BING_VERIFICATION;
     <meta property="og:title" content={fullTitle} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
-    <meta property="og:image" content={`${SITE.url}/og-g8a.jpg`} />
-    <meta property="og:image:width" content="1200" />
-    <meta property="og:image:height" content="630" />
-    <meta property="og:image:alt" content="G8A Technology, Noleggio Assistito per aziende" />
+    <meta property="og:image" content={ogImage ?? `${SITE.url}/og-g8a.jpg`} />
+    {!ogImage && <meta property="og:image:width" content="1200" />}
+    {!ogImage && <meta property="og:image:height" content="630" />}
+    <meta property="og:image:alt" content={ogAlt ?? 'G8A Technology, Noleggio Assistito per aziende'} />
     <meta name="twitter:card" content="summary_large_image" />
     {schemas.map((s) => <script type="application/ld+json" set:html={JSON.stringify(s)} />)}
   </head>
@@ -198,8 +210,11 @@ const bing = import.meta.env.PUBLIC_BING_VERIFICATION;
           <ul>{SEDI.filter((s) => s.negozio).map((s) => <li><a href={storeUrl(s.negozio!.slug)}>{s.city}</a></li>)}</ul>
         </div>
         <div>
-          <p class="ftr__h">Il gruppo</p>
-          <ul>{GRUPPO.map((g) => <li><a href={g.url}>{g.name}</a></li>)}</ul>
+          <p class="ftr__h"><a href="/chi-siamo">Il gruppo G8A</a></p>
+          <ul>
+            <li><a href="/chi-siamo">Chi siamo</a></li>
+            {GRUPPO.map((g) => <li><a href={g.url}>{g.name}</a></li>)}
+          </ul>
         </div>
         <div>
           <p class="ftr__h">Contatti</p>

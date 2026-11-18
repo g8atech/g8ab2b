@@ -12,7 +12,7 @@ import PriceGrid from '../blocks/PriceGrid.astro';
 import GoogleReviews from '../blocks/GoogleReviews.astro';
 import { CITTA, type Citta } from '../../data/citta';
 import { ZONE } from '../../data/zone';
-import { SEDI, SITE, faqLd, storeUrl } from '../../data/site';
+import { SEDI, SITE, faqLd, storeUrl, mapsPlace } from '../../data/site';
 import { offersLd } from '../../data/listino';
 
 const { c } = Astro.props as { c: Citta };
@@ -47,12 +47,14 @@ const localLd = sede ? {
   url: `https://www.g8a.it${path}`,
   telephone: sede.negozio?.phoneIntl,
   email: sede.negozio?.email,
-  image: 'https://www.g8a.it/og.png',
+  image: 'https://www.g8a.it/og-g8a.jpg',
+  logo: 'https://www.g8a.it/logo.png',
   priceRange: '€€',
   address: { '@type': 'PostalAddress', streetAddress: sede.address, postalCode: sede.cap, addressLocality: sede.city, addressRegion: sede.province, addressCountry: 'IT' },
   areaServed: c.comuni.map((n) => ({ '@type': 'City', name: n })),
   parentOrganization: { '@id': 'https://www.g8a.it/#organization' },
-  hasMap: `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`G8A ${c.sede}`)}`,
+  hasMap: sede.negozio?.placeId ? mapsPlace(sede.negozio.placeId) : `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`G8A ${c.sede}`)}`,
+  ...(sede.negozio?.placeId ? { sameAs: [mapsPlace(sede.negozio.placeId), storeUrl(sede.negozio.slug)] } : {}),
 } : null;
 const crumbsLd = {
   '@context': 'https://schema.org',
@@ -142,7 +144,7 @@ const crumbsLd = {
     </div>
   </section>
 
-  <GoogleReviews paper />
+  <GoogleReviews paper show={4} offset={6 + 16 * 4 + CITTA.findIndex((x) => x.slug === c.slug) * 4} />
 
   {zone.length > 0 && (
     <section class="section">

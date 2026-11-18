@@ -295,6 +295,7 @@ const serviceLd = {
         <span class="kicker">Chi siamo</span>
         <h2 class="h h2" style="margin-top:.8rem">Due fratelli che hanno <span class="red">inventato un metodo</span></h2>
         <p class="lead" style="margin-top:1.2rem">Giuseppe e Antonio Arrigo hanno fondato G8A circa quindici anni fa. Hanno ideato il Noleggio Assistito per dare alle piccole e medie imprese un reparto IT vero, senza doverlo assumere. Oggi G8A ha sei sedi in Lombardia e tecnici interni.</p>
+        <p style="margin-top:1rem"><a class="btn btn--line btn--sm" href="/chi-siamo">Il gruppo G8A e i suoi brand →</a></p>
         <div class="sedi">{SEDI.map((s) => { const T = s.negozio ? 'a' : 'span'; return <T class:list={['sede', { 'sede--hq': s.operativa }]} href={s.negozio ? storeUrl(s.negozio.slug) : undefined}><strong>{s.city}</strong>{s.operativa ? 'Sede operativa' : s.address}</T>; })}</div>
       </div>
     </div>
@@ -310,13 +311,13 @@ const serviceLd = {
       <div class="more">
         <a class="more__card glow" data-reveal href="https://www.fibrahero.it"><Icon name="wifi" size={28} stroke="#e30613" width={1.8} /><h3>Fibra e centralino</h3><p>Con FibraHero, G8A è il tuo operatore: connessione e telefono con lo stesso supporto.</p><span>fibrahero.it →</span></a>
         <div class="more__card glow" data-reveal style="--d:.08s"><Icon name="shieldok" size={28} stroke="#e30613" width={1.8} /><h3>Sicurezza informatica</h3><p>Firewall, antivirus gestito e protezione dai ransomware, anche sui computer che hai già.</p></div>
-        <div class="more__card glow" data-reveal style="--d:.16s"><Icon name="bot" size={28} stroke="#e30613" width={1.8} /><h3>AI per aziende</h3><p>Formazione per titolari e team e assistenti AI su WhatsApp per i tuoi clienti.</p></div>
+        <a class="more__card glow" data-reveal style="--d:.16s" href="https://www.superpmi.it"><Icon name="bot" size={28} stroke="#e30613" width={1.8} /><h3>AI per aziende</h3><p>Con SuperPMI: formazione per titolari e team e assistenti AI su WhatsApp per i tuoi clienti.</p><span>superpmi.it →</span></a>
       </div>
     </div>
   </section>
 
   <!-- FAQ -->
-  <section class="section section--paper">
+  <section class="section section--paper" id="faq">
     <div class="wrap faq">
       <span class="kicker">Domande frequenti</span>
       <h2 class="h h2" style="margin-top:.8rem">Tutto sul Noleggio Assistito</h2>

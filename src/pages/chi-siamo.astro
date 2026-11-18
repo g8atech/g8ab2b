@@ -1,0 +1,222 @@
+---
+// Chi siamo: il gruppo G8A. Storia, fondatori, i brand con i loro siti e, per ogni sede,
+// i collegamenti a tutte le pagine del gruppo (aziende, G8A Store, RiparoHero, TonerHero).
+// Solo fatti veri: niente date, numeri o clienti inventati.
+import { Image } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/blocks/PageHero.astro';
+import Rassegna from '../components/blocks/Rassegna.astro';
+import InTv from '../components/blocks/InTv.astro';
+import Icon from '../components/Icon.astro';
+import Cta from '../components/blocks/Cta.astro';
+import fondatori from '../assets/fondatori.png';
+import g8aLogo from '../assets/logo-g8a.png';
+import g8astore from '../assets/brand/g8astore.png';
+import riparohero from '../assets/brand/riparohero.png';
+import tonerhero from '../assets/brand/tonerhero.png';
+import fibrahero from '../assets/brand/fibrahero.png';
+import superpmi from '../assets/brand/superpmi.png';
+import { SITE, SEDI, GRUPPO, GOOGLE, FONDATORI, storeUrl } from '../data/site';
+import { CITTA } from '../data/citta';
+
+const LOGHI: Record<string, ImageMetadata> = { g8astore, riparohero, tonerhero, fibrahero, superpmi };
+const wa = 'Ciao, vi scrivo dalla pagina Chi siamo di g8a.it: vorrei parlare con voi della mia azienda.';
+const negozi = SEDI.filter((s) => s.negozio);
+const operativa = SEDI.find((s) => s.operativa)!;
+const conPagina = (slug: string) => CITTA.some((c) => c.slug === slug);
+const title = 'Chi siamo: il gruppo G8A e i suoi brand | G8A Technology';
+const description = "G8A Technology e il suo gruppo: Noleggio Assistito per le aziende, negozi G8A Store, RiparoHero, TonerHero, FibraHero e SuperPMI. Fondata da Giuseppe e Antonio Arrigo, sei sedi in Lombardia.";
+const BASE = SITE.url;
+
+const aboutLd = {
+  '@context': 'https://schema.org',
+  '@type': 'AboutPage',
+  name: 'Chi siamo: il gruppo G8A',
+  url: `${BASE}/chi-siamo`,
+  description,
+  inLanguage: 'it-IT',
+  mainEntity: { '@id': `${BASE}/#organization` },
+  about: { '@id': `${BASE}/#organization` },
+};
+const brandsLd = {
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  name: 'I brand del gruppo G8A',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, item: { '@type': 'Organization', name: SITE.name, url: BASE, description: 'Noleggio Assistito e assistenza informatica per le aziende' } },
+    ...GRUPPO.map((g, i) => ({ '@type': 'ListItem', position: i + 2, item: { '@type': 'Organization', name: g.name, url: g.url, description: g.desc, parentOrganization: { '@id': `${BASE}/#organization` } } })),
+  ],
+};
+const crumbsLd = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: `${BASE}/` },
+    { '@type': 'ListItem', position: 2, name: 'Chi siamo', item: `${BASE}/chi-siamo` },
+  ],
+};
+---
+<Base title={title} description={description} jsonLd={[aboutLd, brandsLd, crumbsLd]}>
+  <PageHero kicker="Chi siamo · il gruppo G8A" crumb="Chi siamo" waText={wa} image={fondatori} imageAlt="Giuseppe e Antonio Arrigo, fondatori di G8A Technology"
+    note={['Sei sedi in Lombardia', 'Tecnici interni', '4,9 su Google']}
+    lead="G8A è nata circa quindici anni fa da un'idea di due fratelli, Giuseppe e Antonio Arrigo: dare alle piccole e medie imprese un reparto informatico vero, senza doverlo assumere. Da lì è cresciuto un gruppo che segue aziende, negozi e famiglie tra Varese, Milano e Lecco.">
+    <Fragment slot="title">Un gruppo, <span class="red">tanti modi di aiutarti con la tecnologia</span></Fragment>
+  </PageHero>
+
+  <section class="section">
+    <div class="wrap cs-story">
+      <div data-reveal>
+        <span class="kicker">La nostra storia</span>
+        <h2 class="h h2" style="margin-top:.8rem">Dal garage <span class="red">al Noleggio Assistito</span></h2>
+        <p class="lead" style="margin-top:1.2rem">G8A è partita come piccola ditta individuale, in provincia di Varese. Giuseppe e Antonio hanno visto ogni giorno lo stesso problema: le aziende comprano computer e stampanti, poi restano sole quando qualcosa si rompe, e pagano il tecnico a chiamata.</p>
+        <p class="lead" style="margin-top:1rem">La risposta è stata il <a href="/">Noleggio Assistito</a>: computer, server, stampanti, backup e assistenza in un unico canone mensile, senza vincolo di durata. Oggi è il cuore di G8A Technology S.r.l. e ne hanno parlato Fortune Italia, Economy, VareseNews e la TV di PMI Stories.</p>
+        <p class="lead" style="margin-top:1rem">Intorno a questo metodo sono nati i brand che trovi qui sotto: ognuno ha il suo sito e il suo mestiere, ma dietro ci sono le stesse persone, gli stessi tecnici e le stesse sedi.</p>
+      </div>
+      <ul class="cs-facts" data-reveal style="--d:.1s">
+        <li><strong>~15</strong><span>anni di lavoro con le imprese</span></li>
+        <li><strong>500+</strong><span>aziende che si sono affidate a noi</span></li>
+        <li><strong>6</strong><span>sedi in Lombardia</span></li>
+        <li><strong>{GOOGLE.voto.toLocaleString('it-IT', { minimumFractionDigits: 1 })}</strong><span>su Google, {GOOGLE.recensioni} recensioni della sede</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="section section--paper" id="fondatori">
+    <div class="wrap">
+      <div class="b-head" data-reveal>
+        <span class="kicker">Le persone</span>
+        <h2 class="h h2">I fondatori</h2>
+      </div>
+      <ul class="cs-people" data-reveal>
+        {FONDATORI.map((f) => (
+          <li><Icon name="briefcase" size={22} /><div><strong>{f.nome}</strong><span>{f.ruolo}</span></div></li>
+        ))}
+      </ul>
+      <p class="lead" style="margin-top:1.4rem;max-width:50rem">Seguono in prima persona la strategia del gruppo e il rapporto con le aziende clienti. Le guide pubblicate su questo sito sono verificate e firmate da loro prima di andare online.</p>
+    </div>
+  </section>
+
+  <section class="section" id="brand">
+    <div class="wrap">
+      <div class="b-head" data-reveal>
+        <span class="kicker">I brand del gruppo</span>
+        <h2 class="h h2">Sei siti, <span class="red">una sola squadra</span></h2>
+        <p class="lead">Ogni brand si occupa di una cosa precisa. Se ti serve altro, ti passiamo al collega giusto, senza ripartire da zero.</p>
+      </div>
+      <ul class="cs-brands">
+        <li data-reveal>
+          <a href="/" class="cs-brand cs-brand--main">
+            <span class="cs-logo"><Image src={g8aLogo} alt="G8A Technology" height={56} densities={[1, 2]} /></span>
+            <strong>G8A Technology</strong>
+            <span class="cs-what">Noleggio Assistito e assistenza informatica per le aziende</span>
+            <span class="cs-desc">Computer, server, stampanti, backup, monitoraggio e assistenza in un canone mensile, per studi e imprese senza un informatico interno.</span>
+            <span class="cs-go">www.g8a.it →</span>
+          </a>
+        </li>
+        {GRUPPO.map((g, i) => (
+          <li data-reveal style={`--d:${(i + 1) * 0.05}s`}>
+            <a href={g.url} class="cs-brand">
+              <span class="cs-logo"><Image src={LOGHI[g.key]} alt={g.name} height={56} densities={[1, 2]} /></span>
+              <strong>{g.name}</strong>
+              <span class="cs-what">{g.what}</span>
+              <span class="cs-desc">{g.desc}</span>
+              <span class="cs-go">{g.url.replace('https://', '')} →</span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <section class="section section--paper" id="sedi">
+    <div class="wrap">
+      <div class="b-head" data-reveal>
+        <span class="kicker">Le sedi</span>
+        <h2 class="h h2">Dove trovarci, <span class="red">per ogni esigenza</span></h2>
+        <p class="lead">In ogni negozio trovi G8A Store, RiparoHero e TonerHero sotto lo stesso tetto; le aziende le seguiamo dalle stesse sedi e dalla sede operativa di {operativa.city}.</p>
+      </div>
+      <div class="cs-sedi">
+        {negozi.map((s) => {
+          const slug = s.negozio!.slug;
+          return (
+            <article class="cs-sede" data-reveal>
+              <h3>{s.city}</h3>
+              <p class="cs-addr"><Icon name="building" size={16} />{s.address}, {s.cap} {s.city} ({s.province})</p>
+              <p class="cs-addr"><Icon name="phone" size={16} /><a href={`tel:${s.negozio!.phoneIntl}`}>{s.negozio!.phone}</a></p>
+              <ul>
+                {conPagina(slug) && <li><a href={`/assistenza-informatica/${slug}`}>Assistenza informatica aziende a {s.city}</a></li>}
+                <li><a href={storeUrl(slug)}>G8A Store {s.city}: PC, notebook e Mac</a></li>
+                <li><a href={GRUPPO.find((g) => g.key === 'riparohero')!.negozio!(slug)}>RiparoHero {s.city}: riparazione smartphone</a></li>
+                <li><a href={GRUPPO.find((g) => g.key === 'tonerhero')!.negozio!(slug)}>TonerHero {s.city}: toner e stampanti</a></li>
+              </ul>
+            </article>
+          );
+        })}
+        <article class="cs-sede cs-sede--hq" data-reveal>
+          <h3>{operativa.city}</h3>
+          <p class="cs-addr"><Icon name="building" size={16} />{operativa.address}, {operativa.cap} {operativa.city} ({operativa.province})</p>
+          <p class="cs-addr"><Icon name="phone" size={16} /><a href={`tel:${SITE.phoneIntl}`}>{SITE.phone}</a></p>
+          <ul>
+            <li>Sede operativa e legale di {SITE.company}</li>
+            <li><a href="/assistenza-business">Contatti e assistenza clienti</a></li>
+            <li><a href={GOOGLE.leggi} target="_blank" rel="noopener">Scheda Google e recensioni</a></li>
+          </ul>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <InTv />
+  <Rassegna paper />
+
+  <section class="section">
+    <div class="wrap cs-legal" data-reveal>
+      <h2 class="h" style="font-size:1.4rem">Dati societari</h2>
+      <p>{SITE.company} · P.IVA {SITE.vat} · REA {SITE.rea} · Capitale sociale {SITE.capital} · Sede legale {SITE.legalAddress} · <a href={`mailto:${SITE.email}`}>{SITE.email}</a></p>
+    </div>
+  </section>
+
+  <Cta lead="Che tu sia un'azienda, un professionista o un privato, c'è una persona del gruppo pronta a risponderti." waText={wa}>Parliamo della <span class="red">tua tecnologia</span></Cta>
+</Base>
+
+<style>
+  .cs-story { display: grid; grid-template-columns: 1.4fr 1fr; gap: clamp(2rem, 5vw, 4rem); align-items: center; }
+  .cs-story .lead { max-width: none; }
+  .cs-story a { color: var(--ink); font-weight: 700; }
+  .cs-facts { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .cs-facts li { padding: 1.4rem; border-radius: 18px; background: var(--paper); border: 1px solid var(--line); }
+  .cs-facts strong { display: block; font-weight: 900; font-size: 2.6rem; line-height: 1; background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .cs-facts span { display: block; margin-top: .4rem; font-weight: 600; color: var(--muted); }
+  .cs-people { list-style: none; margin: 1.8rem 0 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr)); gap: 1rem; }
+  .cs-people li { display: flex; gap: 1rem; align-items: center; padding: 1.2rem 1.4rem; border-radius: 16px; background: #fff; border: 1px solid var(--line); }
+  .cs-people :global(svg) { color: var(--red); flex: none; }
+  .cs-people strong { display: block; font-size: 1.15rem; }
+  .cs-people span { color: var(--muted); }
+  .cs-brands { list-style: none; margin: 2rem 0 0; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.2rem; }
+  @media (max-width: 1000px) { .cs-brands { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 640px) { .cs-brands { grid-template-columns: 1fr; } }
+  .cs-brand { height: 100%; display: flex; flex-direction: column; gap: .5rem; padding: 1.6rem; border-radius: 20px; background: #fff; border: 1px solid var(--line); box-shadow: 0 10px 30px rgba(11, 11, 13, .05); color: var(--ink); text-decoration: none; transition: transform .15s, box-shadow .15s; }
+  .cs-brand:hover { transform: translateY(-3px); box-shadow: 0 18px 40px rgba(11, 11, 13, .12); }
+  .cs-brand--main { border: 2px solid var(--red); }
+  .cs-logo { height: 64px; display: flex; align-items: center; }
+  .cs-logo :global(img) { height: 56px; width: auto; max-width: 100%; object-fit: contain; }
+  .cs-brand strong { font-size: 1.3rem; margin-top: .4rem; }
+  .cs-what { font-weight: 700; color: var(--red); }
+  .cs-desc { color: var(--muted); flex: 1; }
+  .cs-go { font-weight: 800; }
+  .cs-sedi { margin-top: 2rem; display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.2rem; }
+  @media (max-width: 1000px) { .cs-sedi { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 640px) { .cs-sedi { grid-template-columns: 1fr; } }
+  .cs-sede { padding: 1.5rem; border-radius: 18px; background: #fff; border: 1px solid var(--line); }
+  .cs-sede--hq { background: var(--ink); color: #fff; border-color: var(--ink); }
+  .cs-sede h3 { font-size: 1.35rem; font-weight: 900; }
+  .cs-addr { display: flex; gap: .5rem; align-items: center; margin-top: .4rem; color: var(--muted); font-size: .95rem; }
+  .cs-sede--hq .cs-addr { color: #c3c6cd; }
+  .cs-addr a { color: inherit; }
+  .cs-sede ul { margin: 1rem 0 0; padding: 0 0 0 1.1rem; display: grid; gap: .4rem; }
+  .cs-sede ul a { color: var(--ink); font-weight: 700; }
+  .cs-sede--hq ul a { color: #fff; }
+  .cs-legal p { margin-top: .6rem; color: var(--muted); }
+  .cs-legal a { color: var(--ink); }
+  @media (max-width: 900px) { .cs-story { grid-template-columns: 1fr; } }
+</style>

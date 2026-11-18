@@ -35,6 +35,7 @@ Le pagine hanno **gli stessi indirizzi del vecchio sito**, così Google non perd
 | `/prezzi` | Listino del Noleggio Assistito (prezzi in `src/data/listino.ts`) | `src/pages/prezzi.astro` |
 | `/assistenza-informatica/<comune>` | Pagine delle 5 sedi (`src/data/citta.ts`) e dei comuni principali (`src/data/zone.ts`) | `src/components/pages/` |
 | `/testimonianze-casistudio` | Casi studio e testimonianze | `src/pages/testimonianze-casistudio.astro` |
+| `/chi-siamo` | Chi siamo: storia, fondatori, i brand del gruppo (`GRUPPO` in `src/data/site.ts`) e i link di ogni sede a G8A Store, RiparoHero e TonerHero | `src/pages/chi-siamo.astro` |
 | `/assistenza-business` | Contatti | `src/pages/assistenza-business.astro` |
 | `/guidagratuitai7errori-3556` | reindirizza a `/` (guida sospesa) | `vercel.json` |
 | `/homepage` | reindirizza a `/` | `vercel.json` |
@@ -54,6 +55,8 @@ Il sito non si indicizza finché non lo dici tu: tutto passa da due variabili su
 | `PUBLIC_GSC_VERIFICATION` | il codice `content` del meta tag di Google Search Console | verifica del sito in Search Console (se non si usa il DNS) |
 | `PUBLIC_BING_VERIFICATION` | il codice `content` del meta tag `msvalidate.01` | verifica in Bing Webmaster Tools (serve anche per Copilot) |
 | `PUBLIC_GOOGLE_MAPS_KEY` | chiave API Google Maps (Places API New), limitata ai domini del sito | voto, numero e ultime recensioni della scheda Google della sede caricati dal vivo |
+
+Le recensioni nell'HTML: tutte solo su `/testimonianze-casistudio`; le altre pagine ne mostrano poche, partendo da un punto diverso della lista (prop `offset`/percorso) con il link a tutte, così le pagine non si somigliano. I profili social ufficiali vanno in `SITE.social` (`src/data/site.ts`): finiscono nello schema come sameAs.
 
 Le recensioni Google si possono anche inserire a mano in `src/data/recensioni.ts`, **copiate parola per parola** da Google (nome, stelle, data, testo; eventuale risposta di G8A). Se il file ne contiene, il sito mostra tutte quelle e non chiama l'API. Non vanno mai modificate o scritte da noi.
 
