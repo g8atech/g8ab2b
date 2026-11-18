@@ -24,10 +24,20 @@ export const SITE = {
   social: [] as string[],
 };
 
+// Fondatori: profili personali pubblici (sameAs della persona, non dell'azienda).
 export const FONDATORI = [
-  { nome: 'Giuseppe Arrigo', ruolo: 'Co-fondatore di G8A Technology' },
-  { nome: 'Antonio Arrigo', ruolo: 'Co-fondatore e amministratore delegato di G8A Technology' },
+  { nome: 'Giuseppe Arrigo', slug: 'giuseppe-arrigo', ruolo: 'Co-fondatore di G8A Technology', profili: [] as { nome: string; url: string }[] },
+  { nome: 'Antonio Arrigo', slug: 'antonio-arrigo', ruolo: 'Co-fondatore e amministratore delegato di G8A Technology', profili: [
+    { nome: 'LinkedIn', url: 'https://it.linkedin.com/in/antonio-arrigo-029b4ba6' },
+    { nome: 'BNI Varese', url: 'https://bni-varese.it/it/memberdetails?encryptedMemberId=TcjNzIJFOSmH9W6%2FpTvAJQ%3D%3D&name=Antonio+Arrigo' },
+  ] },
 ];
+// Schema Person di un fondatore, con @id stabile sulla pagina Chi siamo.
+export const personaLd = (nome: string) => {
+  const f = FONDATORI.find((x) => x.nome === nome);
+  if (!f) return { '@type': 'Person', name: nome };
+  return { '@type': 'Person', '@id': `https://www.g8a.it/chi-siamo#${f.slug}`, name: f.nome, jobTitle: f.ruolo, worksFor: { '@id': 'https://www.g8a.it/#organization' }, url: `https://www.g8a.it/chi-siamo#${f.slug}`, ...(f.profili.length ? { sameAs: f.profili.map((p) => p.url) } : {}) };
+};
 
 // Negozi G8A Store: sito a parte (progetto g8astore) su www.g8astore.it/<slug>/.
 export type Negozio = { slug: string; phone: string; phoneIntl: string; whatsapp: string; email: string; zona: string; placeId?: string };
