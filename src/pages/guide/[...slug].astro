@@ -43,7 +43,9 @@ const jsonLd = guida
       {
         '@context': 'https://schema.org', '@type': 'Article', headline: guida.h1, ...(guida.copertina?.url ? { image: guida.copertina.url } : {}), description: guida.descrizione, inLanguage: 'it-IT',
         datePublished: guida.pubblicata_il, dateModified: guida.aggiornata_il, mainEntityOfPage: `${BASE}${path}`,
-        author: { '@id': `${BASE}/#organization` }, publisher: { '@id': `${BASE}/#organization` },
+        // Autore: chi ha verificato e firmato la guida in Brain (persona), editore: G8A.
+        author: guida.firmato_da ? { '@type': 'Person', name: guida.firmato_da, ...(RUOLI[guida.firmato_da] ? { jobTitle: RUOLI[guida.firmato_da] } : {}), worksFor: { '@id': `${BASE}/#organization` }, url: `${BASE}/chi-siamo#fondatori` } : { '@id': `${BASE}/#organization` },
+        publisher: { '@id': `${BASE}/#organization` },
       },
       {
         '@context': 'https://schema.org', '@type': 'WebPage', url: `${BASE}${path}`, name: guida.titolo, lastReviewed: guida.aggiornata_il,
@@ -57,7 +59,7 @@ const altre = guida ? guide.filter((g) => g.slug !== guida.slug).slice(0, 4) : g
 ---
 <Base title={guida ? `${guida.titolo} | G8A Technology` : 'Guide di informatica per le aziende | G8A Technology'}
   description={guida ? guida.descrizione : 'Guide pratiche di G8A Technology per piccole e medie imprese: backup, sicurezza, reti, PC e stampanti spiegati in modo semplice, con cosa fare in pratica.'}
-  jsonLd={jsonLd}>
+  jsonLd={jsonLd} ogImage={guida?.copertina?.url} ogAlt={guida?.copertina?.alt}>
   {guida ? (
     <PageHero kicker="Guida per le aziende" crumb="Guide" waText={wa} lead={guida.intro} note={["Tecnici interni", "Da remoto e in sede"]}>
       <Fragment slot="title">{guida.h1}</Fragment>
@@ -71,7 +73,7 @@ const altre = guida ? guide.filter((g) => g.slug !== guida.slug).slice(0, 4) : g
   {guida && (
     <section class="section">
       <div class="wrap guida">
-        <p class="byline">Guida di G8A Technology{guida.firmato_da ? <> · verificata da <b>{guida.firmato_da}</b>{RUOLI[guida.firmato_da] ? `, ${RUOLI[guida.firmato_da]}` : ''}</> : null} · aggiornata il {data(guida.aggiornata_il)}</p>
+        <p class="byline">Guida di G8A Technology{guida.firmato_da ? <> · verificata da <a href="/chi-siamo#fondatori"><b>{guida.firmato_da}</b></a>{RUOLI[guida.firmato_da] ? `, ${RUOLI[guida.firmato_da]}` : ''}</> : null} · aggiornata il {data(guida.aggiornata_il)}</p>
         {guida.copertina?.url && <img class="cover" src={guida.copertina.url} alt={guida.copertina.alt} width="1200" height="800" />}
         {guida.in_breve.length > 0 && (
           <aside class="breve" aria-label="In breve"><b>In breve</b><ul>{guida.in_breve.map((b) => <li>{b}</li>)}</ul></aside>

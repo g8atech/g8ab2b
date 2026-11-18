@@ -15,25 +15,27 @@ import { SEDI, faqLd } from '../../data/site';
 import { offersLd } from '../../data/listino';
 
 const { z } = Astro.props as { z: Zona };
+// "ad Arese", "a Rho": preposizione giusta davanti al nome del comune.
+const aN = /^[Aa]/.test(z.nome) ? 'ad' : 'a';
 const sede = CITTA.find((c) => c.slug === z.sede)!;
 const punto = SEDI.find((s) => s.negozio?.slug === z.sede);
 const path = `/assistenza-informatica/${z.slug}`;
 const prov = z.provincia === 'MI' ? 'Milano' : z.provincia === 'LC' ? 'Lecco' : 'Varese';
-const wa = `Ciao, vi scrivo dal sito g8a.it: vorrei informazioni sull'assistenza informatica per la mia azienda a ${z.nome}.`;
+const wa = `Ciao, vi scrivo dal sito g8a.it: vorrei informazioni sull'assistenza informatica per la mia azienda ${aN} ${z.nome}.`;
 const altre = ZONE.filter((x) => x.sede === z.sede && x.slug !== z.slug);
-const title = `Assistenza informatica aziende a ${z.nome} | G8A Technology`;
-const description = `Assistenza informatica per aziende a ${z.nome} (${z.provincia}): monitoraggio e antivirus da 12 €/mese a PC, computer a noleggio da 45 €. Presa in carico in giornata, punto G8A a ${sede.nome}.`;
+const title = `Assistenza informatica aziende ${aN} ${z.nome} | G8A Technology`;
+const description = `Assistenza informatica per aziende ${aN} ${z.nome} (${z.provincia}): antivirus e monitoraggio da 12 €/mese a PC, PC a noleggio da 45 €, presa in carico in giornata.`;
 const faq = [
-  { q: `Avete una sede vicino a ${z.nome}?`, a: `Sì: il punto G8A di riferimento per ${z.nome} è quello di ${sede.nome}, in ${sede.sede}. I tecnici che vengono in azienda partono da lì o dalla sede operativa di Solbiate Arno.` },
-  { q: `Quanto costa l'assistenza informatica per un'azienda a ${z.nome}?`, a: "Si parte da 12 € al mese a PC per monitoraggio e antivirus, 39 € al mese per la gestione completa di un PC che hai già e 45 € al mese per un computer a noleggio con assistenza inclusa; stampanti da 29 €, NAS e firewall da 39 €. Prezzi di partenza IVA esclusa: il canone esatto lo confermiamo dopo l'analisi gratuita in sede." },
-  { q: `In quanto tempo intervenite a ${z.nome}?`, a: 'Prendiamo in carico ogni richiesta in giornata, nei giorni lavorativi: prima da remoto, così spesso il problema si risolve subito, e se serve con un tecnico in azienda.' },
+  { q: `Avete una sede vicino ${aN} ${z.nome}?`, a: `Sì: il punto G8A di riferimento per ${z.nome} è quello di ${sede.nome}, in ${sede.sede}. I tecnici che vengono in azienda partono da lì o dalla sede operativa di Solbiate Arno.` },
+  { q: `Quanto costa l'assistenza informatica per un'azienda ${aN} ${z.nome}?`, a: "Si parte da 12 € al mese a PC per monitoraggio e antivirus, 39 € al mese per la gestione completa di un PC che hai già e 45 € al mese per un computer a noleggio con assistenza inclusa; stampanti da 29 €, NAS e firewall da 39 €. Prezzi di partenza IVA esclusa: il canone esatto lo confermiamo dopo l'analisi gratuita in sede." },
+  { q: `In quanto tempo intervenite ${aN} ${z.nome}?`, a: 'Prendiamo in carico ogni richiesta in giornata, nei giorni lavorativi: prima da remoto, così spesso il problema si risolve subito, e se serve con un tecnico in azienda.' },
   { q: `Seguite anche ${z.focus} con pochi computer?`, a: 'Sì. Il canone si costruisce sulle postazioni che hai, senza minimi: molti nostri clienti hanno da 2 a 10 computer e nessun informatico interno.' },
   { q: "C'è un vincolo di durata?", a: 'No, nessun vincolo: la disdetta è libera. E nei primi 30 giorni, se non sei soddisfatto, ti rimborsiamo.' },
 ];
 const serviceLd = {
   '@context': 'https://schema.org',
   '@type': 'Service',
-  name: `Assistenza informatica per aziende a ${z.nome}`,
+  name: `Assistenza informatica per aziende ${aN} ${z.nome}`,
   serviceType: 'Assistenza informatica e noleggio computer per aziende',
   description,
   url: `https://www.g8a.it${path}`,
@@ -52,11 +54,11 @@ const crumbsLd = {
 };
 ---
 <Base title={title} description={description} jsonLd={[serviceLd, crumbsLd, faqLd(faq)]}>
-  <PageHero kicker={`Assistenza informatica · ${z.nome} (${z.provincia})`} crumb={`Assistenza informatica a ${z.nome}`} waText={wa}
+  <PageHero kicker={`Assistenza informatica · ${z.nome} (${z.provincia})`} crumb={`Assistenza informatica ${aN} ${z.nome}`} waText={wa}
     price="Da 12 €/mese a computer"
     lead={`Per le aziende di ${z.nome}: computer, server, backup e stampanti gestiti da noi in un unico canone, con assistenza da remoto e in sede e presa in carico in giornata.`}
     chips={['Presa in carico in giornata', 'Un canone, tutto incluso', `Punto G8A a ${sede.nome}`]}>
-    <Fragment slot="title">Assistenza informatica per aziende <span class="red">a {z.nome}</span></Fragment>
+    <Fragment slot="title">Assistenza informatica per aziende <span class="red">{aN} {z.nome}</span></Fragment>
     <div slot="visual" class="zn" aria-hidden="true">
       <div class="zn__box">
         <p class="zn__k">Il punto G8A più vicino</p>
@@ -79,7 +81,7 @@ const crumbsLd = {
       <ol class="zn-how" data-reveal style="--d:.1s">
         <li><b><Icon name="wa" size={18} /></b><div><strong>Ci scrivi o ci chiami</strong><span>Su WhatsApp o al telefono, ti risponde una persona del team.</span></div></li>
         <li><b><Icon name="laptop" size={18} /></b><div><strong>Presa in carico in giornata</strong><span>Un tecnico si collega da remoto e spesso risolve subito.</span></div></li>
-        <li><b><Icon name="wrench" size={18} /></b><div><strong>Se serve, veniamo a {z.nome}</strong><span>Dal punto G8A di {sede.nome} o dalla sede operativa di Solbiate Arno.</span></div></li>
+        <li><b><Icon name="wrench" size={18} /></b><div><strong>Se serve, veniamo {aN} {z.nome}</strong><span>Dal punto G8A di {sede.nome} o dalla sede operativa di Solbiate Arno.</span></div></li>
         <li><b><Icon name="refresh" size={18} /></b><div><strong>Se si guasta, lo cambiamo</strong><span>Con il Noleggio Assistito la sostituzione è nel canone.</span></div></li>
       </ol>
     </div>
@@ -97,7 +99,7 @@ const crumbsLd = {
   </section>
 
   <Quotes ids={sede.recensioni ?? ['milani', 'testa', 'vallerini']}>Chi lavora già <span class="red">con noi</span></Quotes>
-  <GoogleReviews paper />
+  <GoogleReviews paper show={4} offset={6 + ZONE.findIndex((x) => x.slug === z.slug) * 4} />
 
   <section class="section">
     <div class="wrap b-split">
@@ -114,9 +116,9 @@ const crumbsLd = {
     </div>
   </section>
 
-  <Faq items={faq}>Assistenza informatica a {z.nome}: <span class="red">domande frequenti</span></Faq>
+  <Faq items={faq}>Assistenza informatica {aN} {z.nome}: <span class="red">domande frequenti</span></Faq>
 
-  <Cta lead={`Raccontaci quanti computer avete a ${z.nome}: ti diciamo cosa serve e quanto costa, senza impegno.`} waText={wa}>La tua azienda a {z.nome}, <span class="red">senza pensieri IT</span></Cta>
+  <Cta lead={`Raccontaci quanti computer avete ${aN} ${z.nome}: ti diciamo cosa serve e quanto costa, senza impegno.`} waText={wa}>La tua azienda {aN} {z.nome}, <span class="red">senza pensieri IT</span></Cta>
 </Base>
 
 <style>
