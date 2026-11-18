@@ -1,55 +1,79 @@
 ---
-// Chi siamo: il gruppo G8A. Storia, fondatori, i brand con i loro siti e, per ogni sede,
-// i collegamenti a tutte le pagine del gruppo (aziende, G8A Store, RiparoHero, TonerHero).
-// Solo fatti veri: niente date, numeri o clienti inventati.
-import { Image } from 'astro:assets';
+// Chi siamo: il gruppo G8A. Apertura con i fondatori in armatura robotica, storia a tappe,
+// numeri, i brand con i loro siti, la rete delle sedi (mappa animata) e, per ogni sede,
+// i collegamenti a tutte le pagine del gruppo. Solo fatti veri: niente date o numeri inventati.
+// Le animazioni sono solo decorative: il testo è tutto nell'HTML; con "riduci movimento" resta fermo.
+import { Image, getImage } from 'astro:assets';
 import Base from '../layouts/Base.astro';
-import PageHero from '../components/blocks/PageHero.astro';
 import Rassegna from '../components/blocks/Rassegna.astro';
 import InTv from '../components/blocks/InTv.astro';
 import Icon from '../components/Icon.astro';
 import Cta from '../components/blocks/Cta.astro';
-import fondatori from '../assets/fondatori.png';
+import CircuitCanvas from '../components/CircuitCanvas.astro';
+import robotHero from '../assets/robot-hero.png';
+import robotCoppia from '../assets/robot-coppia.jpg';
+import mark from '../assets/g8a-mark.png';
 import g8aLogo from '../assets/logo-g8a.png';
 import g8astore from '../assets/brand/g8astore.png';
 import riparohero from '../assets/brand/riparohero.png';
 import tonerhero from '../assets/brand/tonerhero.png';
 import fibrahero from '../assets/brand/fibrahero.png';
 import superpmi from '../assets/brand/superpmi.png';
-import { SITE, SEDI, GRUPPO, GOOGLE, FONDATORI, storeUrl } from '../data/site';
+import { SITE, SEDI, GRUPPO, GOOGLE, FONDATORI, storeUrl, waLink, telLink } from '../data/site';
 import { CITTA } from '../data/citta';
+import { STAMPA } from '../data/stampa';
 
+const shineMask = await getImage({ src: robotHero, format: 'webp', width: 800 });
 const LOGHI: Record<string, ImageMetadata> = { g8astore, riparohero, tonerhero, fibrahero, superpmi };
 const wa = 'Ciao, vi scrivo dalla pagina Chi siamo di g8a.it: vorrei parlare con voi della mia azienda.';
 const negozi = SEDI.filter((s) => s.negozio);
 const operativa = SEDI.find((s) => s.operativa)!;
 const conPagina = (slug: string) => CITTA.some((c) => c.slug === slug);
-const title = 'Chi siamo: il gruppo G8A e i suoi brand | G8A Technology';
-const description = "G8A Technology e il suo gruppo: Noleggio Assistito per le aziende, negozi G8A Store, RiparoHero, TonerHero, FibraHero e SuperPMI. Fondata da Giuseppe e Antonio Arrigo, sei sedi in Lombardia.";
-const BASE = SITE.url;
+const rh = GRUPPO.find((g) => g.key === 'riparohero')!;
+const th = GRUPPO.find((g) => g.key === 'tonerhero')!;
+const voto = GOOGLE.voto.toLocaleString('it-IT', { minimumFractionDigits: 1 });
 
+// Mappa delle sedi: coordinate reali proiettate su un riquadro 800×480 (lon 8,55–9,50; lat 45,50–45,90).
+const proj = (lat: number, lon: number) => ({ x: Math.round(((lon - 8.55) / 0.95) * 640 + 60), y: Math.round(((45.9 - lat) / 0.4) * 400 + 40) });
+const NODI = [
+  { city: 'Solbiate Arno', ...proj(45.717, 8.815), lab: 'r', hq: true },
+  { city: 'Jerago con Orago', ...proj(45.707, 8.796), lab: 'l' },
+  { city: 'Gallarate', ...proj(45.66, 8.792), lab: 'l' },
+  { city: 'Busto Arsizio', ...proj(45.611, 8.851), lab: 'r' },
+  { city: 'Bollate', ...proj(45.546, 9.118), lab: 'r' },
+  { city: 'Lecco', ...proj(45.856, 9.397), lab: 'r' },
+];
+const hub = NODI[0];
+const rami = NODI.slice(1).map((n) => {
+  const mx = (hub.x + n.x) / 2, my = (hub.y + n.y) / 2 - Math.abs(n.x - hub.x) * 0.18 - 10;
+  return { ...n, d: `M${hub.x},${hub.y} Q${Math.round(mx)},${Math.round(my)} ${n.x},${n.y}` };
+});
+
+const TAPPE = [
+  { k: "L'inizio", t: 'Una ditta individuale in provincia di Varese', d: 'Giuseppe e Antonio partono da soli, da un garage, con tanta assistenza tecnica fatta di persona. Vedono ogni giorno lo stesso problema: le aziende comprano computer e poi restano sole quando qualcosa si rompe.' },
+  { k: 'Il metodo', t: 'Nasce il Noleggio Assistito', d: 'Computer, server, stampanti, backup e assistenza in un unico canone mensile, senza vincolo di durata. Le macchine le controlliamo noi e, se si guastano, le sostituiamo noi.' },
+  { k: 'Le sedi', t: 'Cinque negozi e una sede operativa', d: 'Gallarate, Busto Arsizio, Bollate, Jerago con Orago e Lecco, più la sede operativa di Solbiate Arno: tecnici interni vicini alle aziende e alle famiglie che seguiamo.' },
+  { k: 'Il gruppo', t: 'Un brand per ogni mestiere', d: 'Dal metodo nascono G8A Store, RiparoHero, TonerHero, FibraHero e SuperPMI: siti e specialità diverse, stesse persone e stesse sedi.' },
+  { k: 'Oggi', t: 'Ne parlano giornali e TV', d: `Fortune Italia, Economy, Corriere dell'Economia, VareseNews e PMI Stories su Value 24 hanno raccontato il Noleggio Assistito: ${STAMPA.length} uscite in rassegna.` },
+];
+
+const title = 'Chi siamo: il gruppo G8A e i suoi brand | G8A Technology';
+const description = 'G8A Technology e il suo gruppo: Noleggio Assistito per le aziende, negozi G8A Store, RiparoHero, TonerHero, FibraHero e SuperPMI. Fondata da Giuseppe e Antonio Arrigo.';
+const BASE = SITE.url;
 const aboutLd = {
-  '@context': 'https://schema.org',
-  '@type': 'AboutPage',
-  name: 'Chi siamo: il gruppo G8A',
-  url: `${BASE}/chi-siamo`,
-  description,
-  inLanguage: 'it-IT',
-  mainEntity: { '@id': `${BASE}/#organization` },
-  about: { '@id': `${BASE}/#organization` },
+  '@context': 'https://schema.org', '@type': 'AboutPage', name: 'Chi siamo: il gruppo G8A', url: `${BASE}/chi-siamo`, description, inLanguage: 'it-IT',
+  mainEntity: { '@id': `${BASE}/#organization` }, about: { '@id': `${BASE}/#organization` },
+  primaryImageOfPage: { '@type': 'ImageObject', url: `${BASE}${shineMask.src}`, caption: 'Giuseppe e Antonio Arrigo, fondatori di G8A, in armatura robotica' },
 };
 const brandsLd = {
-  '@context': 'https://schema.org',
-  '@type': 'ItemList',
-  name: 'I brand del gruppo G8A',
+  '@context': 'https://schema.org', '@type': 'ItemList', name: 'I brand del gruppo G8A',
   itemListElement: [
     { '@type': 'ListItem', position: 1, item: { '@type': 'Organization', name: SITE.name, url: BASE, description: 'Noleggio Assistito e assistenza informatica per le aziende' } },
     ...GRUPPO.map((g, i) => ({ '@type': 'ListItem', position: i + 2, item: { '@type': 'Organization', name: g.name, url: g.url, description: g.desc, parentOrganization: { '@id': `${BASE}/#organization` } } })),
   ],
 };
 const crumbsLd = {
-  '@context': 'https://schema.org',
-  '@type': 'BreadcrumbList',
+  '@context': 'https://schema.org', '@type': 'BreadcrumbList',
   itemListElement: [
     { '@type': 'ListItem', position: 1, name: 'Home', item: `${BASE}/` },
     { '@type': 'ListItem', position: 2, name: 'Chi siamo', item: `${BASE}/chi-siamo` },
@@ -57,70 +81,84 @@ const crumbsLd = {
 };
 ---
 <Base title={title} description={description} jsonLd={[aboutLd, brandsLd, crumbsLd]}>
-  <PageHero kicker="Chi siamo · il gruppo G8A" crumb="Chi siamo" waText={wa} image={fondatori} imageAlt="Giuseppe e Antonio Arrigo, fondatori di G8A Technology"
-    note={['Sei sedi in Lombardia', 'Tecnici interni', '4,9 su Google']}
-    lead="G8A è nata circa quindici anni fa da un'idea di due fratelli, Giuseppe e Antonio Arrigo: dare alle piccole e medie imprese un reparto informatico vero, senza doverlo assumere. Da lì è cresciuto un gruppo che segue aziende, negozi e famiglie tra Varese, Milano e Lecco.">
-    <Fragment slot="title">Un gruppo, <span class="red">tanti modi di aiutarti con la tecnologia</span></Fragment>
-  </PageHero>
-
-  <section class="section">
-    <div class="wrap cs-story">
-      <div data-reveal>
-        <span class="kicker">La nostra storia</span>
-        <h2 class="h h2" style="margin-top:.8rem">Dal garage <span class="red">al Noleggio Assistito</span></h2>
-        <p class="lead" style="margin-top:1.2rem">G8A è partita come piccola ditta individuale, in provincia di Varese. Giuseppe e Antonio hanno visto ogni giorno lo stesso problema: le aziende comprano computer e stampanti, poi restano sole quando qualcosa si rompe, e pagano il tecnico a chiamata.</p>
-        <p class="lead" style="margin-top:1rem">La risposta è stata il <a href="/">Noleggio Assistito</a>: computer, server, stampanti, backup e assistenza in un unico canone mensile, senza vincolo di durata. Oggi è il cuore di G8A Technology S.r.l. e ne hanno parlato Fortune Italia, Economy, VareseNews e la TV di PMI Stories.</p>
-        <p class="lead" style="margin-top:1rem">Intorno a questo metodo sono nati i brand che trovi qui sotto: ognuno ha il suo sito e il suo mestiere, ma dietro ci sono le stesse persone, gli stessi tecnici e le stesse sedi.</p>
+  <!-- APERTURA -->
+  <section class="csh">
+    <CircuitCanvas />
+    <div class="wrap csh__row">
+      <div class="csh__copy">
+        <ol class="b-crumbs csh__crumbs" aria-label="Percorso"><li><a href="/">Home</a></li><li aria-current="page">Chi siamo</li></ol>
+        <h1 class="h csh__h1"><span class="kicker csh__tag">Chi siamo · il gruppo G8A</span> Due fratelli, <span class="red">un gruppo di supereroi della tecnologia</span></h1>
+        <p class="lead csh__lead">G8A è nata circa quindici anni fa da un'idea di Giuseppe e Antonio Arrigo: dare alle piccole e medie imprese un reparto informatico vero, senza doverlo assumere. Da lì è cresciuto un gruppo che segue aziende, negozi e famiglie tra Varese, Milano e Lecco.</p>
+        <div class="b-actions csh__actions">
+          <a class="btn btn--red" href={telLink}><Icon name="phone" />Chiama {SITE.phone}</a>
+          <a class="btn btn--wa" href={waLink(wa)}><Icon name="wa" />Scrivici su WhatsApp</a>
+        </div>
+        <p class="csh__jump"><a href="#brand">I brand</a><span aria-hidden="true">·</span><a href="#storia">La storia</a><span aria-hidden="true">·</span><a href="#sedi">Le sedi</a><span aria-hidden="true">·</span><a href="#fondatori">I fondatori</a></p>
       </div>
-      <ul class="cs-facts" data-reveal style="--d:.1s">
-        <li><strong>~15</strong><span>anni di lavoro con le imprese</span></li>
-        <li><strong>500+</strong><span>aziende che si sono affidate a noi</span></li>
-        <li><strong>6</strong><span>sedi in Lombardia</span></li>
-        <li><strong>{GOOGLE.voto.toLocaleString('it-IT', { minimumFractionDigits: 1 })}</strong><span>su Google, {GOOGLE.recensioni} recensioni della sede</span></li>
+      <div class="csh__visual" data-tilt>
+        <div class="stage" aria-hidden="true">
+          <span class="stage__glow"></span>
+          <span class="stage__ring"></span>
+          <span class="stage__ring stage__ring--2"></span>
+          <span class="stage__mark"><Image src={mark} alt="" width={520} densities={[1, 2]} loading="eager" /></span>
+          <span class="stage__floor"></span>
+          {Array.from({ length: 16 }, (_, i) => <i class="spark" style={`--x:${(i * 37) % 100}%;--t:${3 + (i % 5) * 0.7}s;--dl:${(i * 0.43) % 4}s;--s:${3 + (i % 3) * 2}px`}></i>)}
+        </div>
+        <div class="robots">
+          <div class="robots__fx"><Image class="robots__img" src={robotHero} alt="Giuseppe e Antonio Arrigo, fondatori di G8A, in armatura robotica" widths={[480, 800, 1152]} sizes="(max-width: 900px) 100vw, 640px" loading="eager" fetchpriority="high" /></div>
+          <span class="robots__shine" aria-hidden="true" style={`--src:url(${shineMask.src})`}></span>
+        </div>
+        <ul class="orbit" aria-hidden="true">
+          {GRUPPO.map((g, i) => <li style={`--i:${i};--n:${GRUPPO.length}`}><span><Image src={LOGHI[g.key]} alt="" height={46} densities={[1, 2]} loading="eager" /></span></li>)}
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- NASTRO DEI BRAND -->
+  <div class="tkb" aria-hidden="true">
+    <div class="tkb__track">{[0, 1].map(() => <>{['G8A Technology', ...GRUPPO.map((g) => g.name)].map((n) => <span>{n}</span>)}</>)}</div>
+  </div>
+
+  <!-- NUMERI -->
+  <section class="section cs-num">
+    <div class="wrap">
+      <ul class="cs-stats">
+        <li data-reveal><span class="cs-stats__n" data-count="15" data-pre="~">~15</span><span class="cs-stats__l">anni di informatica per le imprese</span></li>
+        <li data-reveal style="--d:.08s"><span class="cs-stats__n" data-count="500" data-post="+">500+</span><span class="cs-stats__l">aziende e professionisti che si sono affidati a noi</span></li>
+        <li data-reveal style="--d:.16s"><span class="cs-stats__n" data-count="6">6</span><span class="cs-stats__l">brand, sei siti, una sola squadra</span></li>
+        <li data-reveal style="--d:.24s"><span class="cs-stats__n">{voto}★</span><span class="cs-stats__l">su Google, {GOOGLE.recensioni} recensioni della sede</span></li>
       </ul>
     </div>
   </section>
 
-  <section class="section section--paper" id="fondatori">
+  <!-- BRAND -->
+  <section class="section section--ink cs-brand-sec" id="brand">
+    <div class="cs-grid-bg" aria-hidden="true"></div>
     <div class="wrap">
-      <div class="b-head" data-reveal>
-        <span class="kicker">Le persone</span>
-        <h2 class="h h2">I fondatori</h2>
-      </div>
-      <ul class="cs-people" data-reveal>
-        {FONDATORI.map((f) => (
-          <li id={f.slug}><Icon name="briefcase" size={22} /><div><strong>{f.nome}</strong><span>{f.ruolo}</span>{f.profili.length > 0 && <span class="cs-prof">{f.profili.map((p) => <a href={p.url} target="_blank" rel="noopener">{p.nome}</a>)}</span>}</div></li>
-        ))}
-      </ul>
-      <p class="lead" style="margin-top:1.4rem;max-width:50rem">Seguono in prima persona la strategia del gruppo e il rapporto con le aziende clienti. Le guide pubblicate su questo sito sono verificate e firmate da loro prima di andare online.</p>
-    </div>
-  </section>
-
-  <section class="section" id="brand">
-    <div class="wrap">
-      <div class="b-head" data-reveal>
+      <div class="b-head b-head--center" data-reveal>
         <span class="kicker">I brand del gruppo</span>
         <h2 class="h h2">Sei siti, <span class="red">una sola squadra</span></h2>
         <p class="lead">Ogni brand si occupa di una cosa precisa. Se ti serve altro, ti passiamo al collega giusto, senza ripartire da zero.</p>
       </div>
       <ul class="cs-brands">
-        <li data-reveal>
+        <li class="cs-brands__main" data-reveal>
           <a href="/" class="cs-brand cs-brand--main">
-            <span class="cs-logo"><Image src={g8aLogo} alt="G8A Technology" height={56} densities={[1, 2]} /></span>
-            <strong>G8A Technology</strong>
+            <span class="cs-logo"><Image src={g8aLogo} alt="G8A Technology" height={110} densities={[1, 2]} /></span>
+            <span class="cs-body"><strong>G8A Technology</strong>
             <span class="cs-what">Noleggio Assistito e assistenza informatica per le aziende</span>
-            <span class="cs-desc">Computer, server, stampanti, backup, monitoraggio e assistenza in un canone mensile, per studi e imprese senza un informatico interno.</span>
-            <span class="cs-go">www.g8a.it →</span>
+            <span class="cs-desc">Computer, server, stampanti, backup, monitoraggio e assistenza in un canone mensile, per studi e imprese senza un informatico interno. È il cuore del gruppo.</span>
+            <span class="cs-go">www.g8a.it <i>→</i></span></span>
           </a>
         </li>
         {GRUPPO.map((g, i) => (
-          <li data-reveal style={`--d:${(i + 1) * 0.05}s`}>
+          <li data-reveal style={`--d:${(i + 1) * 0.06}s`}>
             <a href={g.url} class="cs-brand">
-              <span class="cs-logo"><Image src={LOGHI[g.key]} alt={g.name} height={56} densities={[1, 2]} /></span>
-              <strong>{g.name}</strong>
+              <span class="cs-logo"><Image src={LOGHI[g.key]} alt={g.name} height={76} densities={[1, 2]} /></span>
+              <span class="cs-body"><strong>{g.name}</strong>
               <span class="cs-what">{g.what}</span>
               <span class="cs-desc">{g.desc}</span>
-              <span class="cs-go">{g.url.replace('https://', '')} →</span>
+              <span class="cs-go">{g.url.replace('https://', '')} <i>→</i></span></span>
             </a>
           </li>
         ))}
@@ -128,34 +166,110 @@ const crumbsLd = {
     </div>
   </section>
 
-  <section class="section section--paper" id="sedi">
+  <!-- STORIA -->
+  <section class="section" id="storia">
     <div class="wrap">
       <div class="b-head" data-reveal>
-        <span class="kicker">Le sedi</span>
-        <h2 class="h h2">Dove trovarci, <span class="red">per ogni esigenza</span></h2>
-        <p class="lead">In ogni negozio trovi G8A Store, RiparoHero e TonerHero sotto lo stesso tetto; le aziende le seguiamo dalle stesse sedi e dalla sede operativa di {operativa.city}.</p>
+        <span class="kicker">La nostra storia</span>
+        <h2 class="h h2">Dal garage <span class="red">al Noleggio Assistito</span></h2>
       </div>
+      <div class="tl" data-reveal>
+        <span class="tl__line" aria-hidden="true"><span class="tl__fill"></span></span>
+        <ol class="tl__list">
+          {TAPPE.map((t, i) => (
+            <li class="tl__step">
+              <span class="tl__dot" aria-hidden="true">{i + 1}</span>
+              <div class="tl__card">
+                <span class="tl__k">{t.k}</span>
+                <h3>{t.t}</h3>
+                <p>{t.d}</p>
+              </div>
+            </li>
+          ))}
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <!-- FONDATORI -->
+  <section class="section section--ink cs-found" id="fondatori">
+    <div class="wrap cs-found__row">
+      <div class="cs-found__img" data-reveal>
+        <Image src={robotCoppia} alt="Giuseppe e Antonio Arrigo in armatura robotica" widths={[560, 900, 1314]} sizes="(max-width: 900px) 100vw, 640px" />
+        <span class="cs-found__scan" aria-hidden="true"></span>
+      </div>
+      <div data-reveal style="--d:.1s">
+        <span class="kicker">Le persone</span>
+        <h2 class="h h2" style="margin-top:.8rem">I fondatori</h2>
+        <p class="lead" style="margin-top:1rem">Seguono in prima persona la strategia del gruppo e il rapporto con le aziende clienti. Le guide pubblicate su questo sito sono verificate e firmate da loro prima di andare online.</p>
+        <ul class="cs-people">
+          {FONDATORI.map((f) => (
+            <li id={f.slug}>
+              <span class="cs-people__ic"><Icon name="briefcase" size={20} stroke="#fff" /></span>
+              <div><strong>{f.nome}</strong><span>{f.ruolo}</span>{f.profili.length > 0 && <span class="cs-prof">{f.profili.map((p) => <a href={p.url} target="_blank" rel="noopener">{p.nome}</a>)}</span>}</div>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- SEDI -->
+  <section class="section section--paper" id="sedi">
+    <div class="wrap">
+      <div class="cs-map-row">
+        <div class="b-head" data-reveal>
+          <span class="kicker">Le sedi</span>
+          <h2 class="h h2">Una rete, <span class="red">sei punti in Lombardia</span></h2>
+          <p class="lead">In ogni negozio trovi G8A Store, RiparoHero e TonerHero sotto lo stesso tetto; le aziende le seguiamo dalle stesse sedi e dalla sede operativa di {operativa.city}.</p>
+        </div>
+        <figure class="cs-map" data-reveal style="--d:.1s">
+          <svg viewBox="0 0 800 480" role="img" aria-labelledby="mappa-t">
+            <title id="mappa-t">Le sedi G8A: Solbiate Arno, Jerago con Orago, Gallarate, Busto Arsizio, Bollate e Lecco</title>
+            <defs>
+              <radialGradient id="mg" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#ff1a1a" stop-opacity=".35" /><stop offset="1" stop-color="#ff1a1a" stop-opacity="0" /></radialGradient>
+              <pattern id="dots" width="18" height="18" patternUnits="userSpaceOnUse"><circle cx="1.5" cy="1.5" r="1.2" fill="#0b0b0d" opacity=".12" /></pattern>
+            </defs>
+            <rect width="800" height="480" fill="url(#dots)" />
+            {rami.map((r, i) => (
+              <g>
+                <path class="map__path" d={r.d} style={`--i:${i}`} pathLength="1" />
+                <circle class="map__pulse" r="4"><animateMotion dur={`${2.6 + i * 0.4}s`} repeatCount="indefinite" path={r.d} begin={`${i * 0.5}s`} /></circle>
+              </g>
+            ))}
+            {NODI.map((n) => (
+              <g class:list={['map__node', { 'map__node--hq': n.hq }]}>
+                <circle cx={n.x} cy={n.y} r="34" fill="url(#mg)" class="map__halo" />
+                <circle cx={n.x} cy={n.y} r={n.hq ? 9 : 7} class="map__dot" />
+                <text x={n.lab === 'r' ? n.x + 16 : n.x - 16} y={n.y + 5} text-anchor={n.lab === 'r' ? 'start' : 'end'} class="map__lab">{n.city}</text>
+              </g>
+            ))}
+          </svg>
+          <figcaption>Posizione reale delle sedi. In rosso la sede operativa di Solbiate Arno, da cui partono anche i tecnici per le aziende.</figcaption>
+        </figure>
+      </div>
+
       <div class="cs-sedi">
-        {negozi.map((s) => {
+        {negozi.map((s, i) => {
           const slug = s.negozio!.slug;
           return (
-            <article class="cs-sede" data-reveal>
+            <article class="cs-sede" data-reveal style={`--d:${i * 0.05}s`}>
               <h3>{s.city}</h3>
               <p class="cs-addr"><Icon name="building" size={16} />{s.address}, {s.cap} {s.city} ({s.province})</p>
               <p class="cs-addr"><Icon name="phone" size={16} /><a href={`tel:${s.negozio!.phoneIntl}`}>{s.negozio!.phone}</a></p>
               <ul>
-                {conPagina(slug) && <li><a href={`/assistenza-informatica/${slug}`}>Assistenza informatica aziende a {s.city}</a></li>}
-                <li><a href={storeUrl(slug)}>G8A Store {s.city}: PC, notebook e Mac</a></li>
-                <li><a href={GRUPPO.find((g) => g.key === 'riparohero')!.negozio!(slug)}>RiparoHero {s.city}: riparazione smartphone</a></li>
-                <li><a href={GRUPPO.find((g) => g.key === 'tonerhero')!.negozio!(slug)}>TonerHero {s.city}: toner e stampanti</a></li>
+                {conPagina(slug) && <li><a href={`/assistenza-informatica/${slug}`}><b>G8A</b> Assistenza informatica aziende a {s.city}</a></li>}
+                <li><a href={storeUrl(slug)}><b>G8A Store</b> PC, notebook e Mac a {s.city}</a></li>
+                <li><a href={rh.negozio!(slug)}><b>RiparoHero</b> Riparazione smartphone a {s.city}</a></li>
+                <li><a href={th.negozio!(slug)}><b>TonerHero</b> Toner e stampanti a {s.city}</a></li>
               </ul>
             </article>
           );
         })}
-        <article class="cs-sede cs-sede--hq" data-reveal>
+        <article class="cs-sede cs-sede--hq" data-reveal style="--d:.25s">
           <h3>{operativa.city}</h3>
           <p class="cs-addr"><Icon name="building" size={16} />{operativa.address}, {operativa.cap} {operativa.city} ({operativa.province})</p>
-          <p class="cs-addr"><Icon name="phone" size={16} /><a href={`tel:${SITE.phoneIntl}`}>{SITE.phone}</a></p>
+          <p class="cs-addr"><Icon name="phone" size={16} /><a href={telLink}>{SITE.phone}</a></p>
           <ul>
             <li>Sede operativa e legale di {SITE.company}</li>
             <li><a href="/assistenza-business">Contatti e assistenza clienti</a></li>
@@ -169,9 +283,9 @@ const crumbsLd = {
   <InTv />
   <Rassegna paper />
 
-  <section class="section">
+  <section class="section cs-legal-sec">
     <div class="wrap cs-legal" data-reveal>
-      <h2 class="h" style="font-size:1.4rem">Dati societari</h2>
+      <h2 class="h" data-nosplit style="font-size:1.4rem">Dati societari</h2>
       <p>{SITE.company} · P.IVA {SITE.vat} · REA {SITE.rea} · Capitale sociale {SITE.capital} · Sede legale {SITE.legalAddress} · <a href={`mailto:${SITE.email}`}>{SITE.email}</a></p>
     </div>
   </section>
@@ -179,46 +293,230 @@ const crumbsLd = {
   <Cta lead="Che tu sia un'azienda, un professionista o un privato, c'è una persona del gruppo pronta a risponderti." waText={wa}>Parliamo della <span class="red">tua tecnologia</span></Cta>
 </Base>
 
+<script>
+  // Animazioni della pagina: apertura, linea della storia, mappa che si disegna, card che si inclinano.
+  import { gsap } from 'gsap';
+  import { ScrollTrigger } from 'gsap/ScrollTrigger';
+  gsap.registerPlugin(ScrollTrigger);
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const fine = matchMedia('(hover: hover) and (pointer: fine)').matches;
+  const map = document.querySelector<HTMLElement>('.cs-map');
+
+  if (reduce) {
+    map?.classList.add('is-drawn');
+  } else {
+    const hero = document.querySelector<HTMLElement>('.csh');
+    if (hero) {
+      const tl = gsap.timeline({ defaults: { ease: 'expo.out' } });
+      tl.from(hero.querySelectorAll('.csh__crumbs, .csh__tag'), { y: 14, opacity: 0, duration: 0.6, stagger: 0.08 })
+        .from(hero.querySelector('.csh__h1'), { y: 40, opacity: 0, duration: 1.1 }, 0.05)
+        .from(hero.querySelectorAll('.csh__lead, .csh__actions, .csh__jump'), { y: 24, opacity: 0, duration: 0.8, stagger: 0.08 }, 0.35)
+        .from(hero.querySelector('.robots'), { y: 70, scale: 0.9, opacity: 0, duration: 1.3 }, 0.1)
+        .from(hero.querySelectorAll('.stage__ring, .stage__mark'), { scale: 0.5, opacity: 0, duration: 1.4, stagger: 0.1 }, 0)
+        .from(hero.querySelectorAll('.orbit li > span'), { opacity: 0, duration: 0.8, stagger: 0.12 }, 0.8);
+      gsap.to(hero.querySelector('.csh__visual'), { yPercent: -12, ease: 'none', scrollTrigger: { trigger: hero, start: 'top top', end: 'bottom top', scrub: true } });
+    }
+
+    // Storia: la linea si riempie e le tappe si accendono scorrendo.
+    const tlSec = document.querySelector<HTMLElement>('.tl');
+    if (tlSec) {
+      const steps = tlSec.querySelectorAll<HTMLElement>('.tl__step');
+      tlSec.style.setProperty('--fill', '0');
+      steps.forEach((s) => s.classList.add('tl__step--off'));
+      ScrollTrigger.create({
+        trigger: tlSec, start: 'top 75%', end: 'bottom 55%', scrub: true,
+        onUpdate: (st) => {
+          tlSec.style.setProperty('--fill', st.progress.toFixed(3));
+          steps.forEach((s, i) => s.classList.toggle('tl__step--off', st.progress < i / steps.length));
+        },
+      });
+    }
+
+    // Mappa: i collegamenti si disegnano quando entra a schermo.
+    if (map) ScrollTrigger.create({ trigger: map, start: 'top 80%', once: true, onEnter: () => map.classList.add('is-drawn') });
+
+    // Brand: card che si inclinano verso il cursore.
+    if (fine) document.querySelectorAll<HTMLElement>('.cs-brand').forEach((el) => {
+      gsap.set(el, { transformPerspective: 900 });
+      const rx = gsap.quickTo(el, 'rotationX', { duration: 0.6, ease: 'power3' });
+      const ry = gsap.quickTo(el, 'rotationY', { duration: 0.6, ease: 'power3' });
+      el.addEventListener('pointermove', (e) => {
+        const r = el.getBoundingClientRect();
+        ry(((e.clientX - r.left) / r.width - 0.5) * 10);
+        rx(-((e.clientY - r.top) / r.height - 0.5) * 10);
+      });
+      el.addEventListener('pointerleave', () => { rx(0); ry(0); });
+    });
+  }
+</script>
+
 <style>
-  .cs-story { display: grid; grid-template-columns: 1.4fr 1fr; gap: clamp(2rem, 5vw, 4rem); align-items: center; }
-  .cs-story .lead { max-width: none; }
-  .cs-story a { color: var(--ink); font-weight: 700; }
-  .cs-facts { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
-  .cs-facts li { padding: 1.4rem; border-radius: 18px; background: var(--paper); border: 1px solid var(--line); }
-  .cs-facts strong { display: block; font-weight: 900; font-size: 2.6rem; line-height: 1; background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent; }
-  .cs-facts span { display: block; margin-top: .4rem; font-weight: 600; color: var(--muted); }
-  .cs-people { list-style: none; margin: 1.8rem 0 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr)); gap: 1rem; }
-  .cs-people li { display: flex; gap: 1rem; align-items: center; padding: 1.2rem 1.4rem; border-radius: 16px; background: #fff; border: 1px solid var(--line); }
-  .cs-people :global(svg) { color: var(--red); flex: none; }
-  .cs-people strong { display: block; font-size: 1.15rem; }
-  .cs-people span { display: block; color: var(--muted); }
-  .cs-prof { display: flex !important; gap: .9rem; margin-top: .35rem; }
-  .cs-prof a { color: var(--ink); font-weight: 700; font-size: .9rem; }
-  .cs-brands { list-style: none; margin: 2rem 0 0; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.2rem; }
-  @media (max-width: 1000px) { .cs-brands { grid-template-columns: repeat(2, 1fr); } }
-  @media (max-width: 640px) { .cs-brands { grid-template-columns: 1fr; } }
-  .cs-brand { height: 100%; display: flex; flex-direction: column; gap: .5rem; padding: 1.6rem; border-radius: 20px; background: #fff; border: 1px solid var(--line); box-shadow: 0 10px 30px rgba(11, 11, 13, .05); color: var(--ink); text-decoration: none; transition: transform .15s, box-shadow .15s; }
-  .cs-brand:hover { transform: translateY(-3px); box-shadow: 0 18px 40px rgba(11, 11, 13, .12); }
-  .cs-brand--main { border: 2px solid var(--red); }
-  .cs-logo { height: 64px; display: flex; align-items: center; }
-  .cs-logo :global(img) { height: 56px; width: auto; max-width: 100%; object-fit: contain; }
-  .cs-brand strong { font-size: 1.3rem; margin-top: .4rem; }
+  /* Apertura scura con i robot */
+  .csh { position: relative; overflow: hidden; background: radial-gradient(55% 70% at 78% 40%, rgba(255, 26, 26, .28), transparent 70%), radial-gradient(40% 50% at 10% 90%, rgba(150, 29, 34, .35), transparent 70%), #0b0b0d; color: #fff; padding-block: clamp(1.2rem, 3vw, 2.5rem) clamp(2rem, 5vw, 4rem); }
+  .csh::before { content: ''; position: absolute; inset: 0; pointer-events: none; background-image: radial-gradient(rgba(255, 255, 255, .09) 1px, transparent 1.2px); background-size: 22px 22px; -webkit-mask-image: radial-gradient(70% 80% at 70% 40%, #000, transparent 80%); mask-image: radial-gradient(70% 80% at 70% 40%, #000, transparent 80%); }
+  .csh__row { position: relative; z-index: 1; display: grid; grid-template-columns: 1fr 1.05fr; gap: clamp(1.5rem, 4vw, 3.5rem); align-items: center; }
+  .csh__crumbs, .csh__crumbs :global(a) { color: #9a9aa5; }
+  .csh__h1 { margin-top: .8rem; font-size: clamp(2.3rem, 4.6vw, 4.2rem); line-height: 1; color: #fff; }
+  .csh__tag { display: flex; margin-bottom: .9rem; font-size: .85rem; line-height: 1.4; letter-spacing: .14em; }
+  .csh__lead { margin-top: 1.2rem; color: #c9c9d0; max-width: 34rem; }
+  .csh__actions { margin-top: 1.6rem; }
+  .csh__jump { display: flex; flex-wrap: wrap; gap: .4rem .8rem; margin-top: 1.2rem; font-weight: 700; color: #6b6b75; }
+  .csh__jump a { color: #fff; text-decoration: none; border-bottom: 2px solid rgba(255, 26, 26, .6); }
+  .csh__jump a:hover { color: #ff6b6b; }
+
+  .csh__visual { position: relative; padding-block: 2.5rem 1.5rem; perspective: 1200px; }
+  .stage { position: absolute; inset: -6% -8% 6% -8%; pointer-events: none; }
+  .stage__glow { position: absolute; left: 50%; top: 46%; width: 80%; aspect-ratio: 1; transform: translate(-50%, -50%); border-radius: 50%; background: radial-gradient(circle, rgba(255, 26, 26, .6) 0%, rgba(227, 6, 19, .25) 35%, transparent 68%); filter: blur(18px); animation: glow 4s ease-in-out infinite; }
+  @keyframes glow { 50% { opacity: .65; transform: translate(-50%, -50%) scale(1.08); } }
+  .stage__ring { position: absolute; left: 50%; top: 46%; width: 86%; aspect-ratio: 1; transform: translate(-50%, -50%); border-radius: 50%; background: conic-gradient(from 0deg, transparent 0 55%, #ff1a1a 75%, #961d22 88%, transparent 100%); -webkit-mask: radial-gradient(closest-side, transparent 94%, #000 95.5%); mask: radial-gradient(closest-side, transparent 94%, #000 95.5%); animation: ring 6s linear infinite; }
+  .stage__ring--2 { width: 66%; opacity: .7; animation-duration: 9s; animation-direction: reverse; background: conic-gradient(from 90deg, transparent 0 60%, #fff 80%, transparent 95%); }
+  @keyframes ring { to { transform: translate(-50%, -50%) rotate(360deg); } }
+  .stage__mark { position: absolute; left: 50%; top: 44%; width: 62%; transform: translate(-50%, -50%); opacity: .1; filter: invert(1); animation: mfloat 9s ease-in-out infinite; }
+  .stage__mark :global(img) { width: 100%; }
+  @keyframes mfloat { 0%, to { transform: translate(-50%, -50%); } 50% { transform: translate(-50%, calc(-50% - 14px)); } }
+  .stage__floor { position: absolute; left: 8%; right: 8%; bottom: 2%; height: 28%; background-image: linear-gradient(rgba(255, 26, 26, .45) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 26, 26, .45) 1px, transparent 1px); background-size: 34px 34px; transform: perspective(380px) rotateX(62deg); transform-origin: 50% 100%; -webkit-mask-image: radial-gradient(60% 100% at 50% 100%, #000, transparent 80%); mask-image: radial-gradient(60% 100% at 50% 100%, #000, transparent 80%); animation: floor 3s linear infinite; }
+  @keyframes floor { to { background-position: 0 34px, 0 0; } }
+  .spark { position: absolute; left: var(--x); bottom: 12%; width: var(--s); height: var(--s); border-radius: 50%; background: #ff1a1a; box-shadow: 0 0 8px #ff1a1a, 0 0 16px rgba(255, 26, 26, .6); opacity: 0; animation: rise var(--t) ease-in infinite; animation-delay: var(--dl); }
+  @keyframes rise { 0% { opacity: 0; transform: translateY(0) scale(1); } 15% { opacity: 1; } 100% { opacity: 0; transform: translateY(-360px) scale(.3); } }
+  .robots { position: relative; z-index: 1; transform: translate3d(var(--mx, 0), var(--my, 0), 0) rotateY(var(--ry, 0deg)) rotateX(var(--rx, 0deg)); transition: transform .25s ease-out; }
+  .robots :global(.robots__img) { width: 100%; height: auto; -webkit-mask-image: linear-gradient(#000 82%, transparent 99%); mask-image: linear-gradient(#000 82%, transparent 99%); }
+  .robots__fx { position: relative; filter: drop-shadow(0 24px 30px rgba(0, 0, 0, .5)) drop-shadow(0 0 26px rgba(255, 26, 26, .35)); }
+  .robots__shine { position: absolute; inset: 0; pointer-events: none; background: linear-gradient(105deg, transparent 38%, rgba(255, 255, 255, .75) 48%, rgba(255, 120, 120, .4) 52%, transparent 62%) 160% 0 / 250% 100% no-repeat; -webkit-mask: var(--src) center / 100% 100% no-repeat; mask: var(--src) center / 100% 100% no-repeat; mix-blend-mode: overlay; animation: shine 5s ease-in-out 1.6s infinite; }
+  @keyframes shine { 0% { background-position: 160% 0; } 40%, to { background-position: -80% 0; } }
+
+  /* Loghi dei brand che girano in un'ellisse intorno ai robot */
+  .orbit { list-style: none; margin: 0; padding: 0; position: absolute; left: -4%; right: -4%; top: 2%; bottom: 4%; z-index: 2; pointer-events: none; }
+  .orbit li { position: absolute; inset: 0; }
+  .orbit li > span { position: absolute; top: 0; left: 0; display: grid; place-items: center; width: 150px; height: 56px; padding: .45rem .9rem; border-radius: 999px; background: rgba(255, 255, 255, .96); box-shadow: 0 10px 30px rgba(0, 0, 0, .35), 0 0 18px rgba(255, 26, 26, .25); offset-path: ellipse(50% 50% at 50% 50%); offset-rotate: 0deg; animation: orbit 36s linear infinite; animation-delay: calc(var(--i) / var(--n) * -36s); }
+  .orbit li > span :global(img) { width: auto; height: auto; max-width: 100%; max-height: 100%; object-fit: contain; }
+  @keyframes orbit { from { offset-distance: 0%; } to { offset-distance: 100%; } }
+
+  /* Nastro dei brand */
+  .tkb { overflow: hidden; background: var(--grad); color: #fff; padding-block: .9rem; }
+  .tkb__track { display: flex; width: max-content; animation: tkb 30s linear infinite; }
+  .tkb__track span { display: inline-flex; align-items: center; gap: 2.25rem; padding-right: 2.25rem; white-space: nowrap; text-transform: uppercase; letter-spacing: .06em; font-weight: 900; font-size: 1.15rem; }
+  .tkb__track span::after { content: ''; width: .55rem; height: .55rem; background: #fff; transform: rotate(45deg); }
+  @keyframes tkb { to { transform: translateX(-50%); } }
+
+  /* Numeri */
+  .cs-num { padding-block: clamp(2.5rem, 5vw, 4rem); }
+  .cs-stats { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; }
+  .cs-stats li { position: relative; padding: 1.6rem 1.4rem; border-radius: 20px; background: var(--paper); border: 1px solid var(--line); overflow: hidden; }
+  .cs-stats li::after { content: ''; position: absolute; left: 0; bottom: 0; height: 4px; width: 100%; background: var(--grad); transform-origin: left; transform: scaleX(.25); transition: transform .6s; }
+  .cs-stats li:hover::after { transform: scaleX(1); }
+  .cs-stats__n { display: block; font-weight: 900; font-size: clamp(2.4rem, 4vw, 3.4rem); line-height: 1; background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .cs-stats__l { display: block; margin-top: .5rem; font-weight: 600; color: var(--muted); }
+
+  /* Brand */
+  .cs-brand-sec { position: relative; overflow: hidden; }
+  .cs-grid-bg { position: absolute; inset: 0; background-image: linear-gradient(rgba(255, 255, 255, .05) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, .05) 1px, transparent 1px); background-size: 48px 48px; -webkit-mask-image: radial-gradient(70% 60% at 50% 40%, #000, transparent 85%); mask-image: radial-gradient(70% 60% at 50% 40%, #000, transparent 85%); animation: grid 12s linear infinite; }
+  @keyframes grid { to { background-position: 0 48px, 48px 0; } }
+  .cs-brand-sec .wrap { position: relative; }
+  .cs-brands { list-style: none; margin: 2.4rem 0 0; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.2rem; }
+  .cs-brands__main { grid-column: 1 / -1; }
+  .cs-brand { position: relative; height: 100%; display: flex; flex-direction: column; gap: 1rem; padding: 1.6rem; border-radius: 22px; background: #fff; color: var(--ink); text-decoration: none; box-shadow: 0 20px 50px rgba(0, 0, 0, .35); transition: box-shadow .2s; will-change: transform; }
+  .cs-brand::before { content: ''; position: absolute; inset: 0; padding: 2px; border-radius: inherit; background: conic-gradient(from var(--a, 0deg), transparent 0 70%, #ff1a1a 85%, transparent); -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask-composite: exclude; opacity: 0; transition: opacity .3s; pointer-events: none; }
+  .cs-brand:hover::before { opacity: 1; animation: spin 2.5s linear infinite; }
+  @property --a { syntax: '<angle>'; initial-value: 0deg; inherits: false; }
+  @keyframes spin { to { --a: 360deg; } }
+  .cs-brand:hover { box-shadow: 0 30px 70px rgba(255, 26, 26, .3); }
+  .cs-brand--main { flex-direction: row; align-items: center; gap: 2rem; padding: 2rem 2.2rem; background: linear-gradient(120deg, #fff 55%, #ffecec); }
+  .cs-brand--main .cs-logo { flex: none; width: 12rem; justify-content: center; }
+  .cs-brand--main .cs-logo { height: 110px; }
+  .cs-brand--main .cs-logo :global(img) { max-height: 110px; }
+  .cs-logo { height: 76px; display: flex; align-items: center; }
+  .cs-logo :global(img) { height: auto; width: auto; max-height: 76px; max-width: 100%; object-fit: contain; transition: transform .3s; }
+  .cs-brand:hover .cs-logo :global(img) { transform: scale(1.06); }
+  .cs-body { display: flex; flex-direction: column; gap: .45rem; flex: 1; }
+  .cs-brand strong { font-size: 1.35rem; }
   .cs-what { font-weight: 700; color: var(--red); }
   .cs-desc { color: var(--muted); flex: 1; }
-  .cs-go { font-weight: 800; }
-  .cs-sedi { margin-top: 2rem; display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.2rem; }
-  @media (max-width: 1000px) { .cs-sedi { grid-template-columns: repeat(2, 1fr); } }
-  @media (max-width: 640px) { .cs-sedi { grid-template-columns: 1fr; } }
-  .cs-sede { padding: 1.5rem; border-radius: 18px; background: #fff; border: 1px solid var(--line); }
+  .cs-go { font-weight: 800; margin-top: .3rem; }
+  .cs-go i { display: inline-block; font-style: normal; transition: transform .2s; }
+  .cs-brand:hover .cs-go i { transform: translateX(6px); }
+
+  /* Storia */
+  .tl { position: relative; margin-top: 2.5rem; --fill: 1; }
+  .tl__list { list-style: none; margin: 0; padding: 0; display: grid; gap: 1.4rem; }
+  .tl__line { position: absolute; left: calc(1.4rem - 1.5px); top: 1rem; bottom: 1rem; width: 3px; border-radius: 3px; background: var(--line); }
+  .tl__fill { position: absolute; inset: 0; border-radius: inherit; background: var(--grad); transform-origin: top; transform: scaleY(var(--fill)); box-shadow: 0 0 14px rgba(255, 26, 26, .6); }
+  .tl__step { position: relative; display: grid; grid-template-columns: 2.8rem 1fr; gap: 1.4rem; align-items: start; transition: opacity .5s, transform .5s; }
+  .tl__step--off { opacity: .35; transform: translateX(10px); }
+  .tl__dot { position: relative; z-index: 1; display: grid; place-items: center; width: 2.8rem; height: 2.8rem; border-radius: 50%; background: var(--grad); color: #fff; font-weight: 900; box-shadow: 0 0 0 6px #fff, 0 8px 20px rgba(227, 6, 19, .35); }
+  .tl__step--off .tl__dot { background: #c3c6cd; box-shadow: 0 0 0 6px #fff; }
+  .tl__card { padding: 1.3rem 1.5rem; border-radius: 18px; background: var(--paper); border: 1px solid var(--line); }
+  .tl__k { font-weight: 800; font-size: .8rem; letter-spacing: .14em; text-transform: uppercase; color: var(--red); }
+  .tl__card h3 { margin-top: .3rem; font-size: 1.3rem; font-weight: 900; }
+  .tl__card p { margin-top: .4rem; color: var(--muted); }
+
+  /* Fondatori */
+  .cs-found__row { display: grid; grid-template-columns: 1.1fr 1fr; gap: clamp(2rem, 5vw, 4rem); align-items: center; }
+  .cs-found__img { position: relative; border-radius: 24px; overflow: hidden; box-shadow: 0 30px 80px rgba(255, 26, 26, .25); }
+  .cs-found__img :global(img) { display: block; width: 100%; height: auto; }
+  .cs-found__scan { position: absolute; inset: 0; background: linear-gradient(180deg, transparent 0, rgba(255, 26, 26, .22) 50%, transparent 52%); background-size: 100% 220%; mix-blend-mode: screen; animation: scan 4.5s ease-in-out infinite; pointer-events: none; }
+  @keyframes scan { 0% { background-position: 0 120%; } 60%, to { background-position: 0 -120%; } }
+  .cs-people { list-style: none; margin: 1.6rem 0 0; padding: 0; display: grid; gap: .9rem; }
+  .cs-people li { display: flex; gap: 1rem; align-items: center; padding: 1.1rem 1.3rem; border-radius: 16px; background: rgba(255, 255, 255, .06); border: 1px solid rgba(255, 255, 255, .12); scroll-margin-top: 120px; }
+  .cs-people__ic { display: grid; place-items: center; width: 2.6rem; height: 2.6rem; border-radius: 12px; background: var(--grad); flex: none; }
+  .cs-people strong { display: block; font-size: 1.15rem; color: #fff; }
+  .cs-people li span:not(.cs-people__ic) { display: block; color: #c3c6cd; }
+  .cs-people li span.cs-prof { display: flex; gap: 1.1rem; margin-top: .35rem; }
+  .cs-prof a { color: #ff8a8a; font-weight: 700; font-size: .9rem; }
+
+  /* Mappa e sedi */
+  .cs-map-row { display: grid; grid-template-columns: 1fr 1.3fr; gap: clamp(1.5rem, 4vw, 3rem); align-items: center; }
+  .cs-map { margin: 0; padding: 1rem; border-radius: 24px; background: #fff; border: 1px solid var(--line); box-shadow: 0 20px 50px rgba(11, 11, 13, .08); }
+  .cs-map svg { display: block; width: 100%; height: auto; }
+  .cs-map figcaption { margin-top: .4rem; font-size: .85rem; color: var(--muted); }
+  .map__path { fill: none; stroke: #ff1a1a; stroke-width: 2.5; stroke-linecap: round; stroke-dasharray: 1; stroke-dashoffset: 1; opacity: .85; transition: stroke-dashoffset 1.4s cubic-bezier(.2, .8, .2, 1); transition-delay: calc(var(--i) * .18s); }
+  .is-drawn .map__path { stroke-dashoffset: 0; }
+  .map__pulse { fill: #fff; stroke: #ff1a1a; stroke-width: 2; opacity: 0; transition: opacity .4s 1.6s; }
+  .is-drawn .map__pulse { opacity: 1; }
+  .map__dot { fill: #0b0b0d; stroke: #fff; stroke-width: 3; }
+  .map__node--hq .map__dot { fill: #e30613; }
+  .map__halo { transform-box: fill-box; transform-origin: center; animation: halo 2.6s ease-in-out infinite; }
+  @keyframes halo { 50% { transform: scale(1.35); opacity: .5; } }
+  .map__lab { font-weight: 800; font-size: 17px; fill: #0b0b0d; paint-order: stroke; stroke: #fff; stroke-width: 5px; }
+  .cs-sedi { margin-top: 2.4rem; display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.2rem; }
+  .cs-sede { padding: 1.5rem; border-radius: 20px; background: #fff; border: 1px solid var(--line); transition: transform .2s, box-shadow .2s; }
+  .cs-sede:hover { transform: translateY(-4px); box-shadow: 0 20px 40px rgba(11, 11, 13, .1); }
   .cs-sede--hq { background: var(--ink); color: #fff; border-color: var(--ink); }
-  .cs-sede h3 { font-size: 1.35rem; font-weight: 900; }
+  .cs-sede h3 { font-size: 1.4rem; font-weight: 900; }
   .cs-addr { display: flex; gap: .5rem; align-items: center; margin-top: .4rem; color: var(--muted); font-size: .95rem; }
   .cs-sede--hq .cs-addr { color: #c3c6cd; }
   .cs-addr a { color: inherit; }
-  .cs-sede ul { margin: 1rem 0 0; padding: 0 0 0 1.1rem; display: grid; gap: .4rem; }
-  .cs-sede ul a { color: var(--ink); font-weight: 700; }
-  .cs-sede--hq ul a { color: #fff; }
+  .cs-sede ul { list-style: none; margin: 1rem 0 0; padding: 0; display: grid; gap: .45rem; }
+  .cs-sede ul a { display: block; padding: .55rem .8rem; border-radius: 10px; background: var(--paper); color: var(--ink); text-decoration: none; font-size: .93rem; transition: background .15s, transform .15s; }
+  .cs-sede ul a:hover { background: #ffecec; transform: translateX(4px); }
+  .cs-sede ul a b { display: block; font-size: .75rem; letter-spacing: .1em; text-transform: uppercase; color: var(--red); }
+  .cs-sede--hq ul li { color: #c3c6cd; }
+  .cs-sede--hq ul a { background: rgba(255, 255, 255, .08); color: #fff; }
+  .cs-sede--hq ul a:hover { background: rgba(255, 255, 255, .16); }
+  .cs-legal-sec { padding-block: 2.5rem; }
   .cs-legal p { margin-top: .6rem; color: var(--muted); }
   .cs-legal a { color: var(--ink); }
-  @media (max-width: 900px) { .cs-story { grid-template-columns: 1fr; } }
+
+  @media (max-width: 1000px) {
+    .cs-brands, .cs-sedi { grid-template-columns: repeat(2, 1fr); }
+    .cs-stats { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 900px) {
+    .csh__row, .cs-found__row, .cs-map-row { grid-template-columns: 1fr; }
+    .csh__visual { max-width: 560px; width: 100%; margin-inline: auto; }
+    .cs-brand--main { flex-direction: column; align-items: flex-start; }
+    .cs-brand--main .cs-logo { width: auto; }
+  }
+  @media (max-width: 640px) {
+    .cs-brands, .cs-sedi { grid-template-columns: 1fr; }
+    .cs-brand--main .cs-logo { height: 76px; }
+    .cs-brand--main .cs-logo :global(img) { max-height: 76px; }
+    .map__lab { font-size: 28px; stroke-width: 7px; }
+    .map__dot { r: 10; }
+    .orbit { left: 6%; right: 6%; }
+    .orbit li > span { width: 96px; height: 38px; padding: .3rem .55rem; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .stage__glow, .stage__ring, .stage__mark, .stage__floor, .spark, .robots__shine, .orbit li > span, .tkb__track, .cs-grid-bg, .cs-found__scan, .map__halo { animation: none !important; }
+    .map__path { transition: none; }
+  }
 </style>
