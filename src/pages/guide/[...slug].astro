@@ -7,7 +7,7 @@ import PageHero from '../../components/blocks/PageHero.astro';
 import Faq from '../../components/blocks/Faq.astro';
 import Cta from '../../components/blocks/Cta.astro';
 import { GUIDE_NINA } from '../../data/guideNina';
-import { faqLd } from '../../data/site';
+import { faqLd, personaLd } from '../../data/site';
 
 type Img = { url: string; alt: string; didascalia?: string };
 type Sezione = { titolo: string; paragrafi?: string[]; punti?: string[]; immagine?: Img | null };
@@ -44,7 +44,7 @@ const jsonLd = guida
         '@context': 'https://schema.org', '@type': 'Article', headline: guida.h1, ...(guida.copertina?.url ? { image: guida.copertina.url } : {}), description: guida.descrizione, inLanguage: 'it-IT',
         datePublished: guida.pubblicata_il, dateModified: guida.aggiornata_il, mainEntityOfPage: `${BASE}${path}`,
         // Autore: chi ha verificato e firmato la guida in Brain (persona), editore: G8A.
-        author: guida.firmato_da ? { '@type': 'Person', name: guida.firmato_da, ...(RUOLI[guida.firmato_da] ? { jobTitle: RUOLI[guida.firmato_da] } : {}), worksFor: { '@id': `${BASE}/#organization` }, url: `${BASE}/chi-siamo#fondatori` } : { '@id': `${BASE}/#organization` },
+        author: guida.firmato_da ? personaLd(guida.firmato_da) : { '@id': `${BASE}/#organization` },
         publisher: { '@id': `${BASE}/#organization` },
       },
       {
@@ -73,7 +73,7 @@ const altre = guida ? guide.filter((g) => g.slug !== guida.slug).slice(0, 4) : g
   {guida && (
     <section class="section">
       <div class="wrap guida">
-        <p class="byline">Guida di G8A Technology{guida.firmato_da ? <> · verificata da <a href="/chi-siamo#fondatori"><b>{guida.firmato_da}</b></a>{RUOLI[guida.firmato_da] ? `, ${RUOLI[guida.firmato_da]}` : ''}</> : null} · aggiornata il {data(guida.aggiornata_il)}</p>
+        <p class="byline">Guida di G8A Technology{guida.firmato_da ? <> · verificata da <a href={`/chi-siamo#${guida.firmato_da.toLowerCase().replace(/\s+/g, "-")}`}><b>{guida.firmato_da}</b></a>{RUOLI[guida.firmato_da] ? `, ${RUOLI[guida.firmato_da]}` : ''}</> : null} · aggiornata il {data(guida.aggiornata_il)}</p>
         {guida.copertina?.url && <img class="cover" src={guida.copertina.url} alt={guida.copertina.alt} width="1200" height="800" />}
         {guida.in_breve.length > 0 && (
           <aside class="breve" aria-label="In breve"><b>In breve</b><ul>{guida.in_breve.map((b) => <li>{b}</li>)}</ul></aside>

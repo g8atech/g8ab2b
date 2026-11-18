@@ -89,7 +89,7 @@ const crumbsLd = {
       </div>
       <ul class="cs-people" data-reveal>
         {FONDATORI.map((f) => (
-          <li><Icon name="briefcase" size={22} /><div><strong>{f.nome}</strong><span>{f.ruolo}</span></div></li>
+          <li id={f.slug}><Icon name="briefcase" size={22} /><div><strong>{f.nome}</strong><span>{f.ruolo}</span>{f.profili.length > 0 && <span class="cs-prof">{f.profili.map((p) => <a href={p.url} target="_blank" rel="noopener">{p.nome}</a>)}</span>}</div></li>
         ))}
       </ul>
       <p class="lead" style="margin-top:1.4rem;max-width:50rem">Seguono in prima persona la strategia del gruppo e il rapporto con le aziende clienti. Le guide pubblicate su questo sito sono verificate e firmate da loro prima di andare online.</p>
@@ -191,7 +191,9 @@ const crumbsLd = {
   .cs-people li { display: flex; gap: 1rem; align-items: center; padding: 1.2rem 1.4rem; border-radius: 16px; background: #fff; border: 1px solid var(--line); }
   .cs-people :global(svg) { color: var(--red); flex: none; }
   .cs-people strong { display: block; font-size: 1.15rem; }
-  .cs-people span { color: var(--muted); }
+  .cs-people span { display: block; color: var(--muted); }
+  .cs-prof { display: flex !important; gap: .9rem; margin-top: .35rem; }
+  .cs-prof a { color: var(--ink); font-weight: 700; font-size: .9rem; }
   .cs-brands { list-style: none; margin: 2rem 0 0; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.2rem; }
   @media (max-width: 1000px) { .cs-brands { grid-template-columns: repeat(2, 1fr); } }
   @media (max-width: 640px) { .cs-brands { grid-template-columns: 1fr; } }

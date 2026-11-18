@@ -11,7 +11,7 @@ import ConsentHead from '../components/ConsentHead.astro';
 import ConsentBanner from '../components/ConsentBanner.astro';
 import logoWhite from '../assets/logo-g8a-bianco.png';
 import logoColor from '../assets/logo-g8a.png';
-import { SITE, SEDI, GRUPPO, GOOGLE, FONDATORI, waLink, telLink, storeUrl } from '../data/site';
+import { SITE, SEDI, GRUPPO, GOOGLE, FONDATORI, personaLd, waLink, telLink, storeUrl } from '../data/site';
 import { STAMPA } from '../data/stampa';
 import { TV } from '../data/tv';
 
@@ -64,7 +64,7 @@ const organization = {
   areaServed: ['Provincia di Varese', 'Città metropolitana di Milano', 'Provincia di Lecco'],
   address: { '@type': 'PostalAddress', streetAddress: 'Via Caronno Varesino 33', postalCode: '21048', addressLocality: 'Solbiate Arno', addressRegion: 'VA', addressCountry: 'IT' },
   description: 'Azienda IT lombarda che offre alle imprese il Noleggio Assistito: computer, stampanti, backup e assistenza tecnica in un unico canone mensile.',
-  founder: FONDATORI.map((f) => ({ '@type': 'Person', name: f.nome, jobTitle: f.ruolo })),
+  founder: FONDATORI.map((f) => personaLd(f.nome)),
   brand: GRUPPO.map((g) => ({ '@type': 'Brand', name: g.name, url: g.url })),
   subOrganization: GRUPPO.map((g) => ({ '@type': 'Organization', name: g.name, url: g.url, description: g.what })),
   knowsAbout: ['Noleggio operativo di computer', 'Assistenza informatica per aziende', 'Backup e NAS', 'Monitoraggio RMM', 'Stampanti multifunzione', 'Sicurezza informatica'],
