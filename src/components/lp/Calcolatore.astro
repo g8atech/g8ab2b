@@ -1,0 +1,225 @@
+---
+// Calcolatore del canone: il visitatore compone il suo ufficio e vede subito il canone mensile.
+// Prezzi da src/data/listino.ts; fibra e linea di backup dal listino FibraHero (qui sotto).
+// Sotto il totale: perché conviene un canone, e il blocco "Volumi grandi? Parliamone".
+import Icon from '../Icon.astro';
+import { SITE, waLink, telLink } from '../../data/site';
+import { voce, euro } from '../../data/listino';
+
+// Listino di partenza FibraHero (nov 2026): fibra da 49 €, linea di backup da 19 €.
+const FIBRA = 49;
+const BACKUP = 19;
+
+type Item = { k: string; t: string; p: number; b: string; inc?: string[]; max?: number; fh?: boolean; icon: string };
+type Sec = { t: string; fh?: boolean; items: Item[] };
+
+const SEZ: Sec[] = [
+  { t: 'Postazioni', items: [
+    { k: 'pc', t: 'PC in noleggio', p: voce('pc').da!, icon: 'pc', b: 'Risparmi su PC guasti e acquisti: se si rompe lo sostituiamo noi.', inc: ['Hardware', 'Kasko', 'Garanzia', 'Antivirus', 'Monitoraggio', 'Tecnico'] },
+    { k: 'gestione', t: 'Gestione del tuo PC', p: voce('gestione').da!, icon: 'activity', b: 'Risparmi sugli interventi a chiamata: il PC resta tuo, il resto lo facciamo noi.', inc: ['Tutto tranne l\'hardware', 'Antivirus', 'Monitoraggio', 'Tecnico'] },
+    { k: 'smartphone', t: 'Tablet o smartphone', p: voce('smartphone').da!, icon: 'laptop', b: 'Configurati e sostituiti in fretta, niente telefoni fermi.' },
+    { k: 'stampanti', t: 'Stampante', p: voce('stampanti').da!, icon: 'printer', b: 'Manutenzione e assistenza comprese, niente stampante ferma.' },
+  ] },
+  { t: 'Connettività FibraHero', fh: true, items: [
+    { k: 'fibra', t: 'Fibra aziendale', p: FIBRA, icon: 'zap', fh: true, max: 1, b: 'Supporto diretto G8A, non un call center.' },
+    { k: 'backup', t: 'Linea di backup', p: BACKUP, icon: 'refresh', fh: true, max: 1, b: 'Se cade la fibra, lavori lo stesso.' },
+    { k: 'firewall', t: 'Firewall', p: voce('firewall').da!, icon: 'shieldok', fh: true, max: 1, b: 'Rete protetta e gestita da remoto.' },
+    { k: 'wifi', t: 'Antenna Wi-Fi', p: voce('wifi').da!, icon: 'wifi', fh: true, b: 'Copertura stabile in tutto l\'ufficio, Wi-Fi ospiti separato.' },
+    { k: 'centralino', t: 'Centralino cloud', p: voce('centralino').da!, icon: 'phone', fh: true, max: 1, b: 'Rispondi ovunque, anche dal cellulare.' },
+  ] },
+  { t: 'Dati ed energia', items: [
+    { k: 'nas', t: 'NAS e backup dati', p: voce('nas').da!, icon: 'server', b: 'I tuoi dati al sicuro, backup controllati da noi.' },
+    { k: 'ups', t: 'UPS', p: voce('ups').da!, icon: 'zap', b: 'Niente danni e dati persi se salta la corrente.' },
+  ] },
+];
+
+// Pacchetti di partenza: il visitatore parte da qui e modifica.
+const PACCHETTI: Record<string, Record<string, number>> = {
+  studio: { pc: 2, fibra: 1, firewall: 1, wifi: 1, nas: 1, stampanti: 1 },
+  ufficio: { pc: 5, fibra: 1, backup: 1, firewall: 1, wifi: 2, centralino: 1, nas: 1, ups: 1, stampanti: 1 },
+};
+const start = PACCHETTI.studio;
+const all = SEZ.flatMap((s) => s.items);
+const tot0 = all.reduce((a, i) => a + i.p * (start[i.k] ?? 0), 0);
+const fh0 = all.filter((i) => i.fh).reduce((a, i) => a + i.p * (start[i.k] ?? 0), 0);
+const fmt = (n: number) => n.toLocaleString('it-IT', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+const PERCHE = [
+  { icon: 'wrench', t: 'Niente fatture a sorpresa', d: 'Interventi, uscite del tecnico e assistenza da remoto sono già nel canone.' },
+  { icon: 'refresh', t: 'PC guasto? Lo sostituiamo noi', d: 'Anche per danni accidentali. Non ricompri niente.' },
+  { icon: 'activity', t: 'Il tuo ufficio non si ferma', d: 'Presa in carico in giornata e linea di backup se cade la fibra.' },
+  { icon: 'shieldok', t: 'Controlliamo prima che si rompa', d: 'Antivirus, monitoraggio e backup verificati ogni giorno.' },
+  { icon: 'check', t: 'Un solo referente', d: 'PC, rete, fibra e centralino: niente rimbalzi tra fornitori.' },
+  { icon: 'briefcase', t: 'Costo fisso e prevedibile', d: 'Nessun investimento iniziale da immobilizzare.' },
+];
+
+const waBase = 'Ciao, ho calcolato il canone sul sito g8a.it.';
+---
+<section class="section section--paper calc" id="calcola" data-calc data-wa={waBase}
+  data-pack={JSON.stringify(PACCHETTI)}>
+  <div class="wrap">
+    <div class="b-head" data-reveal>
+      <span class="kicker">Calcola il tuo canone</span>
+      <h2 class="h h2">Componi il tuo ufficio, <span class="red">tu non pensi a niente</span></h2>
+      <p class="lead">Aggiungi PC, rete e fibra: vedi subito quanto paghi al mese. Assistenza, sostituzioni e tecnico sono già dentro.</p>
+    </div>
+
+    <div class="calc__row">
+      <div class="calc__list" data-reveal>
+        <div class="calc__packs">
+          <button type="button" class="calc__pack is-on" data-pack-k="studio">Studio 2 PC</button>
+          <button type="button" class="calc__pack" data-pack-k="ufficio">Ufficio 5 PC</button>
+          <button type="button" class="calc__pack" data-pack-k="zero">Azzera</button>
+        </div>
+        {SEZ.map((s) => (
+          <div class="calc__sec">
+            <p class={`calc__sh${s.fh ? ' calc__sh--fh' : ''}`}>{s.fh && <Icon name="zap" size={16} />}{s.t}</p>
+            {s.items.map((i) => (
+              <div class="calc__it" data-k={i.k} data-p={i.p} data-max={i.max ?? 10} data-fh={i.fh ? '1' : undefined} data-t={i.t}>
+                <span class="calc__ic"><Icon name={i.icon} size={20} /></span>
+                <div class="calc__tx">
+                  <p class="calc__t">{i.t} <span>da {euro(i.p)}/mese</span></p>
+                  <p class="calc__b">{i.b}</p>
+                  {i.inc && <p class="calc__inc">{i.inc.map((x) => <span>{x}</span>)}</p>}
+                </div>
+                <div class="calc__st">
+                  <button type="button" aria-label={`Togli ${i.t}`} data-d="-1">−</button>
+                  <output aria-live="polite">{start[i.k] ?? 0}</output>
+                  <button type="button" aria-label={`Aggiungi ${i.t}`} data-d="1">+</button>
+                </div>
+              </div>
+            ))}
+          </div>
+        ))}
+      </div>
+
+      <div class="calc__side">
+        <div class="calc__res glow" data-reveal style="--d:.12s">
+          <p class="calc__lbl">Il tuo canone</p>
+          <p class="calc__big">da <b data-o="tot">{fmt(tot0)}</b> €<small>/mese</small></p>
+          <p class="calc__fh" data-o="fh">{fh0 > 0 ? `di cui connettività FibraHero ${fmt(fh0)} €` : ''}</p>
+          <p class="calc__fix">Assistenza, tecnico, sostituzioni e presa in carico in giornata: già compresi.</p>
+          <div class="calc__btns">
+            <a class="btn btn--wa" href={waLink(waBase)} data-calc-wa><Icon name="wa" />Invia la configurazione</a>
+            <a class="btn btn--red" href={telLink}><Icon name="phone" />Chiama {SITE.phone}</a>
+          </div>
+          <p class="calc__note">Prezzi di partenza al mese, IVA esclusa. Il canone definitivo lo confermiamo dopo l'analisi gratuita in sede.</p>
+        </div>
+
+        <div class="calc__big-vol" data-big data-reveal>
+          <p class="calc__bvh"><Icon name="building" size={20} />Volumi grandi? Parliamone</p>
+          <p>Oltre 10 postazioni, più sedi o un server dedicato: progetto su misura e sopralluogo gratuito.</p>
+          <div class="calc__btns">
+            <a class="btn btn--ink" href={telLink}><Icon name="phone" />Chiamaci</a>
+            <a class="btn btn--wa" href={waLink('Ciao, abbiamo più di 10 postazioni e vorremmo un sopralluogo gratuito.')}><Icon name="wa" />Prenota un sopralluogo</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="calc__why">
+      <div class="b-head" data-reveal>
+        <h3 class="h h3">Perché un canone? <span class="red">Noi pensiamo davvero a tutto</span></h3>
+      </div>
+      <ul class="calc__wl">
+        {PERCHE.map((x, n) => (
+          <li data-reveal style={`--d:${(n * 0.05).toFixed(2)}s`}>
+            <span class="calc__wi"><Icon name={x.icon} size={20} /></span>
+            <div><strong>{x.t}</strong><span>{x.d}</span></div>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </div>
+</section>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-calc]').forEach((root) => {
+    const items = [...root.querySelectorAll<HTMLElement>('[data-k]')];
+    const packs = JSON.parse(root.dataset.pack || '{}') as Record<string, Record<string, number>>;
+    const q: Record<string, number> = {};
+    const wa = root.querySelector('[data-calc-wa]') as HTMLAnchorElement;
+    const big = root.querySelector('[data-big]') as HTMLElement;
+    const base = root.dataset.wa || '';
+    const fmt = (n: number) => n.toLocaleString('it-IT', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    items.forEach((el) => (q[el.dataset.k!] = Number(el.querySelector('output')!.textContent)));
+
+    const upd = () => {
+      let tot = 0, fh = 0;
+      const righe: string[] = [];
+      items.forEach((el) => {
+        const k = el.dataset.k!, n = q[k], v = Number(el.dataset.p) * n;
+        el.querySelector('output')!.textContent = String(n);
+        el.classList.toggle('is-on', n > 0);
+        tot += v; if (el.dataset.fh) fh += v;
+        if (n > 0) righe.push(`${n} x ${el.dataset.t}`);
+      });
+      root.querySelector('[data-o="tot"]')!.textContent = fmt(tot);
+      root.querySelector('[data-o="fh"]')!.textContent = fh > 0 ? `di cui connettività FibraHero ${fmt(fh)} €` : '';
+      const txt = righe.length
+        ? `${base}\n${righe.join('\n')}\nTotale: da ${fmt(tot)} €/mese. Potete confermarmelo?`
+        : base;
+      wa.href = wa.href.replace(/text=.*$/, 'text=' + encodeURIComponent(txt));
+      big.classList.toggle('is-hot', (q.pc || 0) + (q.gestione || 0) >= 10);
+    };
+
+    items.forEach((el) => el.querySelectorAll<HTMLButtonElement>('[data-d]').forEach((b) => b.addEventListener('click', () => {
+      const k = el.dataset.k!, max = Number(el.dataset.max);
+      q[k] = Math.max(0, Math.min(max, q[k] + Number(b.dataset.d)));
+      root.querySelectorAll('.calc__pack').forEach((p) => p.classList.remove('is-on'));
+      upd();
+    })));
+    root.querySelectorAll<HTMLButtonElement>('[data-pack-k]').forEach((b) => b.addEventListener('click', () => {
+      const p = packs[b.dataset.packK!] || {};
+      Object.keys(q).forEach((k) => (q[k] = p[k] ?? 0));
+      root.querySelectorAll('.calc__pack').forEach((x) => x.classList.toggle('is-on', x === b));
+      upd();
+    }));
+    upd();
+  });
+</script>
+
+<style>
+  .calc__row { display: grid; grid-template-columns: 1.25fr 1fr; gap: clamp(1.5rem, 4vw, 3rem); align-items: start; margin-top: 2rem; }
+  .calc__packs { display: flex; flex-wrap: wrap; gap: .5rem; margin-bottom: .5rem; }
+  .calc__pack { font: inherit; font-weight: 700; padding: .55rem 1rem; border-radius: 999px; border: 1px solid var(--line); background: #fff; cursor: pointer; }
+  .calc__pack.is-on { background: var(--ink); color: #fff; border-color: var(--ink); }
+  .calc__sec { margin-top: 1.2rem; }
+  .calc__sh { display: flex; align-items: center; gap: .4rem; font-weight: 800; font-size: .8rem; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); margin-bottom: .4rem; }
+  .calc__sh--fh { color: var(--red); }
+  .calc__it { display: grid; grid-template-columns: auto 1fr auto; gap: .9rem; align-items: center; padding: .9rem 1rem; border-radius: 14px; border: 1px solid var(--line); background: #fff; margin-top: .5rem; transition: border-color .2s, box-shadow .2s; }
+  .calc__it.is-on { border-color: rgba(227, 6, 19, .45); box-shadow: 0 8px 22px -14px rgba(227, 6, 19, .5); }
+  .calc__ic { display: grid; place-items: center; width: 2.4rem; height: 2.4rem; border-radius: 10px; background: var(--paper); color: var(--red); }
+  .calc__t { font-weight: 800; }
+  .calc__t span { font-weight: 600; color: var(--muted); font-size: .88rem; margin-left: .3rem; white-space: nowrap; }
+  .calc__b { color: #0f7a48; font-size: .88rem; margin-top: .15rem; }
+  .calc__inc { display: flex; flex-wrap: wrap; gap: .3rem; margin-top: .4rem; }
+  .calc__inc span { font-size: .72rem; font-weight: 700; padding: .15rem .55rem; border-radius: 999px; background: rgba(22, 193, 114, .12); color: #0f7a48; }
+  .calc__st { display: flex; align-items: center; gap: .35rem; }
+  .calc__st button { width: 2.2rem; height: 2.2rem; border-radius: 50%; border: 1px solid var(--line); background: #fff; font: inherit; font-size: 1.2rem; font-weight: 700; cursor: pointer; line-height: 1; }
+  .calc__st button:hover { border-color: var(--red); color: var(--red); }
+  .calc__st output { min-width: 1.6rem; text-align: center; font-weight: 800; font-size: 1.15rem; }
+  .calc__side { position: sticky; top: 6rem; display: grid; gap: 1rem; }
+  .calc__res { padding: clamp(1.5rem, 3vw, 2.2rem); border-radius: 24px; background: var(--ink); color: #fff; box-shadow: 0 30px 70px rgba(11, 11, 13, .25); }
+  .calc__lbl { font-size: .8rem; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; color: #ff8a8a; }
+  .calc__big { margin-top: .3rem; font-weight: 800; font-size: 1.3rem; }
+  .calc__big b { font-stretch: 78%; font-variation-settings: 'wdth' 78; font-size: clamp(3rem, 6vw, 4.6rem); line-height: 1; background: linear-gradient(#fff, #ffb3ad); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .calc__big small { font-size: 1rem; color: #c3c6cd; }
+  .calc__fh { min-height: 1.3em; color: #c3c6cd; font-size: .92rem; margin-top: .3rem; }
+  .calc__fix { margin-top: 1rem; padding: .85rem 1rem; border-radius: 12px; background: rgba(22, 193, 114, .12); border: 1px solid rgba(22, 193, 114, .35); font-weight: 700; }
+  .calc__btns { display: flex; flex-wrap: wrap; gap: .6rem; margin-top: 1.2rem; }
+  .calc__note { margin-top: .9rem; font-size: .8rem; color: #8e929c; }
+  .calc__big-vol { padding: 1.4rem 1.5rem; border-radius: 20px; background: #fff; border: 1px solid rgba(227, 6, 19, .35); transition: box-shadow .25s, border-color .25s; }
+  .calc__big-vol.is-hot { border-color: var(--red); box-shadow: 0 0 0 3px rgba(227, 6, 19, .18); }
+  .calc__bvh { display: flex; align-items: center; gap: .5rem; font-weight: 900; font-size: 1.2rem; color: var(--red); margin-bottom: .3rem; }
+  .calc__big-vol > p:not(.calc__bvh) { color: var(--muted); }
+  .calc__why .h3 { font-size: clamp(1.6rem, 3vw, 2.3rem); }
+  .calc__why { margin-top: clamp(2.5rem, 5vw, 4rem); }
+  .calc__wl { list-style: none; padding: 0; margin: 1.5rem 0 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: .9rem; }
+  .calc__wl li { display: flex; gap: .9rem; padding: 1.1rem 1.2rem; border-radius: 16px; background: var(--paper); }
+  .calc__wi { flex: none; display: grid; place-items: center; width: 2.4rem; height: 2.4rem; border-radius: 50%; background: var(--grad); color: #fff; }
+  .calc__wl strong { display: block; }
+  .calc__wl span { color: var(--muted); font-size: .92rem; }
+  @media (max-width: 960px) { .calc__row { grid-template-columns: 1fr; } .calc__side { position: static; } .calc__wl { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 600px) { .calc__wl { grid-template-columns: 1fr; } .calc__it { grid-template-columns: 1fr auto; } .calc__ic { display: none; } }
+</style>
