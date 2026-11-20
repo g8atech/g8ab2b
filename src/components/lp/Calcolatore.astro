@@ -3,6 +3,7 @@
 // Prezzi da src/data/listino.ts; fibra e linea di backup dal listino FibraHero (qui sotto).
 // Sotto il totale: perché conviene un canone, e il blocco "Volumi grandi? Parliamone".
 import Icon from '../Icon.astro';
+import UfficioScene from './UfficioScene.astro';
 import { SITE, waLink, telLink } from '../../data/site';
 import { voce, euro } from '../../data/listino';
 
@@ -38,7 +39,7 @@ const PACCHETTI: Record<string, Record<string, number>> = {
   studio: { pc: 2, fibra: 1, firewall: 1, wifi: 1, nas: 1, stampanti: 1 },
   ufficio: { pc: 5, fibra: 1, backup: 1, firewall: 1, wifi: 2, centralino: 1, nas: 1, ups: 1, stampanti: 1 },
 };
-const start = PACCHETTI.studio;
+const start: Record<string, number> = {};
 const all = SEZ.flatMap((s) => s.items);
 const tot0 = all.reduce((a, i) => a + i.p * (start[i.k] ?? 0), 0);
 const fh0 = all.filter((i) => i.fh).reduce((a, i) => a + i.p * (start[i.k] ?? 0), 0);
@@ -67,7 +68,7 @@ const waBase = 'Ciao, ho calcolato il canone sul sito g8a.it.';
     <div class="calc__row">
       <div class="calc__list" data-reveal>
         <div class="calc__packs">
-          <button type="button" class="calc__pack is-on" data-pack-k="studio">Studio 2 PC</button>
+          <button type="button" class="calc__pack" data-pack-k="studio">Studio 2 PC</button>
           <button type="button" class="calc__pack" data-pack-k="ufficio">Ufficio 5 PC</button>
           <button type="button" class="calc__pack" data-pack-k="zero">Azzera</button>
         </div>
@@ -94,7 +95,8 @@ const waBase = 'Ciao, ho calcolato il canone sul sito g8a.it.';
       </div>
 
       <div class="calc__side">
-        <div class="calc__res glow" data-reveal style="--d:.12s">
+        <div class="calc__stage"><UfficioScene /></div>
+        <div class="calc__res">
           <p class="calc__lbl">Il tuo canone</p>
           <p class="calc__big">da <b data-o="tot">{fmt(tot0)}</b> €<small>/mese</small></p>
           <p class="calc__fh" data-o="fh">{fh0 > 0 ? `di cui connettività FibraHero ${fmt(fh0)} €` : ''}</p>
@@ -105,15 +107,15 @@ const waBase = 'Ciao, ho calcolato il canone sul sito g8a.it.';
           </div>
           <p class="calc__note">Prezzi di partenza al mese, IVA esclusa. Il canone definitivo lo confermiamo dopo l'analisi gratuita in sede.</p>
         </div>
+      </div>
 
-        <div class="calc__big-vol" data-big data-reveal>
+      <div class="calc__big-vol" data-big data-reveal>
           <p class="calc__bvh"><Icon name="building" size={20} />Volumi grandi? Parliamone</p>
           <p>Oltre 10 postazioni, più sedi o un server dedicato: progetto su misura e sopralluogo gratuito.</p>
           <div class="calc__btns">
             <a class="btn btn--ink" href={telLink}><Icon name="phone" />Chiamaci</a>
             <a class="btn btn--wa" href={waLink('Ciao, abbiamo più di 10 postazioni e vorremmo un sopralluogo gratuito.')}><Icon name="wa" />Prenota un sopralluogo</a>
           </div>
-        </div>
       </div>
     </div>
 
@@ -140,9 +142,53 @@ const waBase = 'Ciao, ho calcolato il canone sul sito g8a.it.';
     const q: Record<string, number> = {};
     const wa = root.querySelector('[data-calc-wa]') as HTMLAnchorElement;
     const big = root.querySelector('[data-big]') as HTMLElement;
+    const stage = root.querySelector('[data-stage]') as HTMLElement;
     const base = root.dataset.wa || '';
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const fmt = (n: number) => n.toLocaleString('it-IT', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
     items.forEach((el) => (q[el.dataset.k!] = Number(el.querySelector('output')!.textContent)));
+
+    // Totale che "conta" fino al nuovo valore
+    let shown = 0, raf = 0;
+    const countTo = (to: number) => {
+      cancelAnimationFrame(raf);
+      const from = shown, t0 = performance.now(), dur = reduce ? 0 : 550;
+      const step = (t: number) => {
+        const k = dur ? Math.min(1, (t - t0) / dur) : 1;
+        shown = from + (to - from) * (1 - Math.pow(1 - k, 3));
+        root.querySelectorAll('[data-o="tot"]').forEach((o) => (o.textContent = fmt(shown)));
+        if (k < 1) raf = requestAnimationFrame(step);
+      };
+      raf = requestAnimationFrame(step);
+    };
+
+    // La scena: ogni dispositivo compare quando la sua quantità è maggiore di zero
+    const scene = () => {
+      const on = (k: string, v: boolean) => stage.querySelectorAll(`[data-s="${k}"]`).forEach((e) => e.classList.toggle('on', v));
+      ['fibra', 'backup', 'firewall', 'wifi', 'centralino', 'nas', 'ups', 'stampanti'].forEach((k) => on(k, (q[k] || 0) > 0));
+      ['wifi', 'nas', 'ups', 'stampanti'].forEach((k) => {
+        const n = stage.querySelector(`[data-n="${k}"]`)!;
+        n.textContent = `×${q[k]}`; n.classList.toggle('on', (q[k] || 0) > 1);
+      });
+      const pc = q.pc || 0, own = q.gestione || 0, tel = q.smartphone || 0, tot = pc + own;
+      on('lan', tot > 0 && ((q.fibra || 0) > 0 || (q.firewall || 0) > 0 || (q.nas || 0) > 0));
+      stage.querySelectorAll<HTMLElement>('[data-slot]').forEach((sl) => {
+        const i = Number(sl.dataset.slot);
+        sl.querySelector('.ufc__pc--g8a')!.classList.toggle('on', i < Math.min(pc, 10));
+        sl.querySelector('.ufc__pc--own')!.classList.toggle('on', i >= pc && i < Math.min(tot, 10));
+        sl.querySelector('.ufc__phone')!.classList.toggle('on', i < Math.min(tel, 10));
+      });
+      const more = stage.querySelector('[data-more]')!;
+      more.textContent = `+${tot - 10} PC`; more.classList.toggle('on', tot > 10);
+      const devices = Object.values(q).reduce((a, b) => a + b, 0);
+      stage.style.setProperty('--life', String(Math.min(1, devices / 12)));
+      const st = stage.querySelector('[data-status]')!;
+      st.innerHTML = !devices ? 'Il tuo ufficio è vuoto: aggiungi un PC'
+        : !tot ? 'Aggiungi i PC del tuo ufficio'
+        : (q.fibra || 0) > 0 ? `<b>●</b> Ufficio online: ${tot} ${tot === 1 ? 'postazione' : 'postazioni'} ${(q.backup || 0) > 0 ? 'con linea di backup' : 'in fibra FibraHero'}`
+        : `<b>●</b> ${tot} ${tot === 1 ? 'postazione pronta' : 'postazioni pronte'}: manca la connessione`;
+      stage.classList.remove('pop'); void stage.offsetWidth; stage.classList.add('pop');
+    };
 
     const upd = () => {
       let tot = 0, fh = 0;
@@ -154,28 +200,52 @@ const waBase = 'Ciao, ho calcolato il canone sul sito g8a.it.';
         tot += v; if (el.dataset.fh) fh += v;
         if (n > 0) righe.push(`${n} x ${el.dataset.t}`);
       });
-      root.querySelector('[data-o="tot"]')!.textContent = fmt(tot);
+      countTo(tot);
       root.querySelector('[data-o="fh"]')!.textContent = fh > 0 ? `di cui connettività FibraHero ${fmt(fh)} €` : '';
-      const txt = righe.length
-        ? `${base}\n${righe.join('\n')}\nTotale: da ${fmt(tot)} €/mese. Potete confermarmelo?`
-        : base;
+      const txt = righe.length ? `${base}\n${righe.join('\n')}\nTotale: da ${fmt(tot)} €/mese. Potete confermarmelo?` : base;
       wa.href = wa.href.replace(/text=.*$/, 'text=' + encodeURIComponent(txt));
       big.classList.toggle('is-hot', (q.pc || 0) + (q.gestione || 0) >= 10);
+      scene();
+    };
+
+    // Applica un pacchetto un pezzo alla volta: l'ufficio prende vita
+    let timers: number[] = [];
+    const ORDER = ['fibra', 'backup', 'firewall', 'wifi', 'pc', 'gestione', 'smartphone', 'stampanti', 'nas', 'ups', 'centralino'];
+    const applyPack = (p: Record<string, number>) => {
+      timers.forEach(clearTimeout); timers = [];
+      Object.keys(q).forEach((k) => (q[k] = 0)); upd();
+      if (reduce) { Object.assign(q, p); upd(); return; }
+      let t = 250;
+      ORDER.forEach((k) => {
+        for (let i = 0; i < (p[k] || 0); i++) {
+          timers.push(window.setTimeout(() => { q[k] = (q[k] || 0) + 1; upd(); }, t));
+          t += k === 'pc' || k === 'gestione' ? 160 : 260;
+        }
+      });
     };
 
     items.forEach((el) => el.querySelectorAll<HTMLButtonElement>('[data-d]').forEach((b) => b.addEventListener('click', () => {
+      timers.forEach(clearTimeout); timers = [];
       const k = el.dataset.k!, max = Number(el.dataset.max);
       q[k] = Math.max(0, Math.min(max, q[k] + Number(b.dataset.d)));
       root.querySelectorAll('.calc__pack').forEach((p) => p.classList.remove('is-on'));
       upd();
     })));
     root.querySelectorAll<HTMLButtonElement>('[data-pack-k]').forEach((b) => b.addEventListener('click', () => {
-      const p = packs[b.dataset.packK!] || {};
-      Object.keys(q).forEach((k) => (q[k] = p[k] ?? 0));
       root.querySelectorAll('.calc__pack').forEach((x) => x.classList.toggle('is-on', x === b));
-      upd();
+      applyPack(packs[b.dataset.packK!] || {});
     }));
+
+    // Al primo arrivo sulla sezione, l'ufficio "Studio 2 PC" si monta da solo
     upd();
+    const io = new IntersectionObserver((es) => {
+      if (es.some((e) => e.isIntersecting)) {
+        io.disconnect();
+        root.querySelector('[data-pack-k="studio"]')?.classList.add('is-on');
+        applyPack(packs.studio);
+      }
+    }, { threshold: 0.35 });
+    io.observe(stage);
   });
 </script>
 
@@ -199,8 +269,11 @@ const waBase = 'Ciao, ho calcolato il canone sul sito g8a.it.';
   .calc__st button { width: 2.2rem; height: 2.2rem; border-radius: 50%; border: 1px solid var(--line); background: #fff; font: inherit; font-size: 1.2rem; font-weight: 700; cursor: pointer; line-height: 1; }
   .calc__st button:hover { border-color: var(--red); color: var(--red); }
   .calc__st output { min-width: 1.6rem; text-align: center; font-weight: 800; font-size: 1.15rem; }
-  .calc__side { position: sticky; top: 6rem; display: grid; gap: 1rem; }
-  .calc__res { padding: clamp(1.5rem, 3vw, 2.2rem); border-radius: 24px; background: var(--ink); color: #fff; box-shadow: 0 30px 70px rgba(11, 11, 13, .25); }
+  .calc__row { grid-template-areas: 'list side' 'vol side'; }
+  .calc__list { grid-area: list; }
+  .calc__side { grid-area: side; position: sticky; top: 5.5rem; display: grid; gap: 1rem; }
+  .calc__big-vol { grid-area: vol; }
+  .calc__res { padding: clamp(1.3rem, 2.5vw, 1.8rem); border-radius: 24px; background: var(--ink); color: #fff; box-shadow: 0 30px 70px rgba(11, 11, 13, .25); }
   .calc__lbl { font-size: .8rem; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; color: #ff8a8a; }
   .calc__big { margin-top: .3rem; font-weight: 800; font-size: 1.3rem; }
   .calc__big b { font-stretch: 78%; font-variation-settings: 'wdth' 78; font-size: clamp(3rem, 6vw, 4.6rem); line-height: 1; background: linear-gradient(#fff, #ffb3ad); -webkit-background-clip: text; background-clip: text; color: transparent; }
@@ -220,6 +293,15 @@ const waBase = 'Ciao, ho calcolato il canone sul sito g8a.it.';
   .calc__wi { flex: none; display: grid; place-items: center; width: 2.4rem; height: 2.4rem; border-radius: 50%; background: var(--grad); color: #fff; }
   .calc__wl strong { display: block; }
   .calc__wl span { color: var(--muted); font-size: .92rem; }
-  @media (max-width: 960px) { .calc__row { grid-template-columns: 1fr; } .calc__side { position: static; } .calc__wl { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 960px) {
+    .calc__row { grid-template-columns: minmax(0, 1fr); grid-template-areas: none; }
+    .calc__side { display: contents; }
+    .calc__stage { order: -1; position: sticky; top: 4.4rem; z-index: 5; }
+    .calc__stage :global(.ufc__tot) { display: flex; }
+    .calc__stage :global(.ufc__status) { text-align: left; left: 3%; right: 42%; bottom: 4%; line-height: 1.25; }
+    .calc__stage :global(.ufc) { border-radius: 16px; }
+    .calc__list, .calc__res, .calc__big-vol { grid-area: auto; }
+    .calc__wl { grid-template-columns: 1fr 1fr; }
+  }
   @media (max-width: 600px) { .calc__wl { grid-template-columns: 1fr; } .calc__it { grid-template-columns: 1fr auto; } .calc__ic { display: none; } }
 </style>
