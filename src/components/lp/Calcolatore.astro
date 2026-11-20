@@ -163,7 +163,9 @@ const waBase = 'Ciao, ho calcolato il canone sul sito g8a.it.';
     };
 
     // La scena: ogni dispositivo compare quando la sua quantità è maggiore di zero
+    let gl: { update: (q: Record<string, number>) => void } | null = null;
     const scene = () => {
+      gl?.update({ ...q });
       const on = (k: string, v: boolean) => stage.querySelectorAll(`[data-s="${k}"]`).forEach((e) => e.classList.toggle('on', v));
       ['fibra', 'backup', 'firewall', 'wifi', 'centralino', 'nas', 'ups', 'stampanti'].forEach((k) => on(k, (q[k] || 0) > 0));
       ['wifi', 'nas', 'ups', 'stampanti'].forEach((k) => {
@@ -242,6 +244,15 @@ const waBase = 'Ciao, ho calcolato il canone sul sito g8a.it.';
       if (es.some((e) => e.isIntersecting)) {
         io.disconnect();
         root.querySelector('[data-pack-k="studio"]')?.classList.add('is-on');
+        // Ufficio 3D: si carica solo qui, e solo se il dispositivo lo regge
+        const lowEnd = (navigator as any).hardwareConcurrency && (navigator as any).hardwareConcurrency < 4;
+        if (!reduce && !lowEnd) {
+          import('../../scripts/ufficio3d').then(async (m) => {
+            const api = await m.mountUfficio3D(stage);
+            if (!api) return;
+            gl = api; stage.classList.add('is-3d'); api.update({ ...q });
+          }).catch(() => {});
+        }
         applyPack(packs.studio);
       }
     }, { threshold: 0.35 });
